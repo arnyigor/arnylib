@@ -22,7 +22,6 @@ public class OperationProvider implements Parcelable {
     }
 
     public OperationProvider(int id, int type, HashMap<String, Object> operationData) {
-        Log.i(OperationProvider.class.getSimpleName(), "OperationProvider: data = " + operationData);
         this.id = id;
         this.operationData = operationData;
         this.type = type;

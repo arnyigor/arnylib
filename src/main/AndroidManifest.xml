@@ -5,8 +5,9 @@
     <application android:allowBackup="true"
                  android:label="@string/app_name"
                  android:supportsRtl="true">
-        <service android:name=".network.ApiService"/>
         <service android:name=".network.QueryService"/>
+        <service android:name=".network.ApiSendService"/>
+        <service android:name=".service.Operations"/>
     </application>
 
 </manifest>

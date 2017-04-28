@@ -40,7 +40,6 @@ public abstract class AbstractIntentService extends IntentService {
     }
 
     protected void setOperation(OperationProvider operation) {
-        Log.i(AbstractIntentService.class.getSimpleName(), "setOperation: operatonId = " + operation.getId());
         AbstractIntentService.operation = operation;
     }
 
@@ -56,10 +55,10 @@ public abstract class AbstractIntentService extends IntentService {
 
 
     // Launching the service
-    public static void onStartOperation(Context context, int type, int code, HashMap<String,Object> operationData) {
-        context.startService(new Intent(context, AbstractIntentService.class)
+    public static void onStartOperation(Context context, int type, int id, HashMap<String,Object> operationData) {
+        context.startService(new Intent(context, Operations.class)
                 .putExtra(AbstractIntentService.EXTRA_KEY_OPERATION,
-                        new OperationProvider(code,type,operationData)));
+                        new OperationProvider(id,type,operationData)));
     }
 
 
@@ -91,7 +90,6 @@ public abstract class AbstractIntentService extends IntentService {
         protected void afterExecute(Runnable r, Throwable t) {
             super.afterExecute(r, t);
             final int active_count = tasks_left.decrementAndGet();
-            Log.i(ParallelThreadPoolExecutor.class.getSimpleName(), "afterExecute: active_count = " + active_count);
             if (active_count == 0) {
                 onDestroy();
             } else {
@@ -118,7 +116,6 @@ public abstract class AbstractIntentService extends IntentService {
 
     @NonNull
     private Intent initProadcastIntent() {
-        Log.i(AbstractIntentService.class.getSimpleName(), "initProadcastIntent: ");
         Intent intent = new Intent();
         intent.setAction(ACTION);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -130,7 +127,6 @@ public abstract class AbstractIntentService extends IntentService {
         Bundle extras = intent.getExtras();
         if (extras != null) {
             OperationProvider provider = extras.getParcelable(EXTRA_KEY_OPERATION);
-            Log.i(AbstractIntentService.class.getSimpleName(), "onHandleIntent: provider = " + provider.getId());
             int type = provider.getType();
             if (type == EXTRA_KEY_TYPE_SYNC) {
                 setQueue(provider);
@@ -141,18 +137,15 @@ public abstract class AbstractIntentService extends IntentService {
     }
 
     private void setQueue(OperationProvider provider) {
-        Log.i(AbstractIntentService.class.getSimpleName(), "setQueue: provider = " + provider.getId());
         if (operationsQueue.isEmpty()) {
             operationsQueue.add(provider);
             restartOperation();
         } else {
             operationsQueue.add(provider);
         }
-        Log.i(AbstractIntentService.class.getSimpleName(), "setQueue: operationsQueue size = " + operationsQueue.size());
     }
 
     private void restartOperation() {
-        Log.i(AbstractIntentService.class.getSimpleName(), "restartOperation: operationsQueue = " + operationsQueue);
         if (!operationsQueue.isEmpty()) {
             executeOperation(operationsQueue.get(0));
             operationsQueue.remove(0);
@@ -163,7 +156,6 @@ public abstract class AbstractIntentService extends IntentService {
     }
 
     private void executeOperation(final OperationProvider operation) {
-        Log.i(AbstractIntentService.class.getSimpleName(), "executeOperation: operation = " + operation.getId());
         setOperation(operation);
         runOperation(getOperation(), new OnOperationResult() {
             @Override
