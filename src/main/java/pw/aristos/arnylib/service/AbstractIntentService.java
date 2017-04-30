@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
-import pw.aristos.arnylib.network.AbstractNetworkService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,8 +54,8 @@ public abstract class AbstractIntentService extends IntentService {
 
 
     // Launching the service
-    public static void onStartOperation(Context context, int type, int id, HashMap<String,Object> operationData) {
-        context.startService(new Intent(context, AbstractNetworkService.class)
+    public static void onStartOperation(Context context,int type, int id, HashMap<String,Object> operationData) {
+        context.startService(new Intent(context,AbstractIntentService.class)
                 .putExtra(AbstractIntentService.EXTRA_KEY_OPERATION,
                         new OperationProvider(id,type,operationData)));
     }

@@ -9,19 +9,24 @@ import com.android.volley.*;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-public class ApiSendService extends IntentService {
+
+import pw.aristos.arnylib.utils.Utility;
+
+public class ApiService extends IntentService {
     protected static RequestQueue requestQueue;
     public static RequestQueue getRequestQueue(Context context) {
         if (requestQueue == null)
             requestQueue = Volley.newRequestQueue(context);
         return requestQueue;
     }
-    public ApiSendService() {
-        super("ApiSendService");
+    public ApiService() {
+        super("ApiService");
     }
     public static void apiRequest(final Context context, String url, JSONObject params, final OnStringRequestResult successCallback) {
         Log.i("api", " >> Api Request: " + url + " with params: " + params.toString());
@@ -88,7 +93,7 @@ public class ApiSendService extends IntentService {
         @Override
         protected Boolean doInBackground(Void... p) {
             RequestQueue queue = getRequestQueue(context);
-            StringRequest request1 = new StringRequest(apiMethod, url, new Response.Listener<String>() {
+            StringRequest request = new StringRequest(apiMethod, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     successCallback.onSuccess(response);
@@ -98,29 +103,19 @@ public class ApiSendService extends IntentService {
                 public void onErrorResponse(VolleyError error) {
                     successCallback.onError(error.toString());
                 }
-            });
-
-            GZipRequest request2 = new GZipRequest(apiMethod, url, new Response.Listener() {
-                @Override
-                public void onResponse(Object response) {
-                    successCallback.onSuccess(response.toString());
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    successCallback.onError(error.toString());
-                }
             }){
                 @Override
                 protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("Accept-Encoding","gzip");
-                    return params;
+                    try {
+                        return Utility.toMap(params);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    return new HashMap<>();
                 }
             };
 
-
-            request1.setRetryPolicy(new RetryPolicy() {
+            request.setRetryPolicy(new RetryPolicy() {
                 @Override
                 public int getCurrentTimeout() {
                     return DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 4;
@@ -137,7 +132,7 @@ public class ApiSendService extends IntentService {
                     successCallback.onError(error.getMessage());
                 }
             });
-            queue.add(request1);
+            queue.add(request);
             return true;
         }
     }
