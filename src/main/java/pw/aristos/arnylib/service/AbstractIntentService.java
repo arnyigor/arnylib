@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,9 +55,8 @@ public abstract class AbstractIntentService extends IntentService {
 
 
     // Launching the service
-    public static void onStartOperation(Context context,int type, int id, HashMap<String,Object> operationData) {
-        context.startService(new Intent(context,AbstractIntentService.class)
-                .putExtra(AbstractIntentService.EXTRA_KEY_OPERATION,
+    public static void onStartOperation(Intent intent,Context context,int type, int id, HashMap<String,Object> operationData) {
+        context.startService(intent.putExtra(AbstractIntentService.EXTRA_KEY_OPERATION,
                         new OperationProvider(id,type,operationData)));
     }
 
@@ -126,6 +126,7 @@ public abstract class AbstractIntentService extends IntentService {
         Bundle extras = intent.getExtras();
         if (extras != null) {
             OperationProvider provider = extras.getParcelable(EXTRA_KEY_OPERATION);
+            Log.d(AbstractIntentService.class.getSimpleName(), "onHandleIntent: provider ="  + provider.getId());
             int type = provider.getType();
             if (type == EXTRA_KEY_TYPE_SYNC) {
                 setQueue(provider);
