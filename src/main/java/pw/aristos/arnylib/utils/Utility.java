@@ -286,10 +286,44 @@ public class Utility {
         else return input;
     }
 
-
     public static boolean isEmailValid(String email) {
         String result = match(email, EMAIL_PATTERN,0);
         return !empty(result);
+    }
+
+    /**
+     * Чтение файлов assets,в папке
+     * @param folder
+     * @return
+     */
+    public static ArrayList<String> listAssetFiles(Context context, String folder) {
+        ArrayList<String> fileNames = new ArrayList<>();
+        if (context ==null){
+            return null;
+        }
+        try {
+            String[] files = context.getAssets().list(folder);
+            Collections.addAll(fileNames, files);
+            return fileNames;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String readAssetFile(Context context, String folder,String fileName){
+        InputStream input;
+        try {
+            input = context.getAssets().open(folder + "/"  + fileName);
+            int size = input.available();
+            byte[] buffer = new byte[size];
+            input.read(buffer);
+            input.close();
+            return new String(buffer);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

@@ -18,15 +18,15 @@ import java.util.Map;
 
 import pw.aristos.arnylib.utils.Utility;
 
-public class ApiService extends IntentService {
+public class NetworkService extends IntentService {
     protected static RequestQueue requestQueue;
     public static RequestQueue getRequestQueue(Context context) {
         if (requestQueue == null)
             requestQueue = Volley.newRequestQueue(context);
         return requestQueue;
     }
-    public ApiService() {
-        super("ApiService");
+    public NetworkService() {
+        super("NetworkService");
     }
     public static void apiRequest(final Context context, String url, JSONObject params, final OnStringRequestResult successCallback) {
         Log.i("api", " >> Api Request: " + url + " with params: " + params.toString());
