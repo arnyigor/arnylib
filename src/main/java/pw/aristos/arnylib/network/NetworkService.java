@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import com.android.volley.*;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -12,7 +13,11 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +33,44 @@ public class NetworkService extends IntentService {
     public NetworkService() {
         super("NetworkService");
     }
+
+    public static Document htmlPostRequest(String url, JSONObject params ) {
+        try {
+            HashMap<String, String> mapParams = getJsonObjectToHashMap(params);
+        return Jsoup.connect(url)
+                .data(mapParams)
+                .timeout(5000)
+                .post();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public  static Document htmlGetRequest(String url, JSONObject params ) {
+        try {
+            HashMap<String, String> mapParams = getJsonObjectToHashMap(params);
+           return  Jsoup.connect(url).data(mapParams).timeout(5000).get();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @NonNull
+    private static HashMap<String, String> getJsonObjectToHashMap(JSONObject params) throws JSONException {
+        HashMap<String, String> mapParams = new HashMap<>();
+        for(int i = 0; i<params.names().length(); i++){
+            mapParams.put(params.names().getString(i), (String) params.get(params.names().getString(i)));
+        }
+        return mapParams;
+    }
+
     public static void apiRequest(final Context context, String url, JSONObject params, final OnStringRequestResult successCallback) {
         Log.i("api", " >> Api Request: " + url + " with params: " + params.toString());
         HttpAsyncStringRequest httpAsyncRequest = new HttpAsyncStringRequest(url, params, new OnStringRequestResult() {
