@@ -227,4 +227,21 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return result;
     }
+
+    static int getInt(Cursor cursor, String columnindex) {
+        return Integer.parseInt(cursor.getString(cursor.getColumnIndex(columnindex)));
+    }
+
+    static String getString(Cursor cursor, String columnindex) {
+        return cursor.getString(cursor.getColumnIndex(columnindex));
+    }
+
+    static boolean getBoolean(Cursor cursor, String columnindex) {
+        return Boolean.parseBoolean(getString(cursor, columnindex));
+    }
+
+    static double getDouble(Cursor cursor, String columnindex) {
+        return Double.parseDouble(getString(cursor, columnindex));
+    }
+
 }
