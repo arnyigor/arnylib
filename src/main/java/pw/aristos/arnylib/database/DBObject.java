@@ -2,10 +2,12 @@ package pw.aristos.arnylib.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 
 public interface DBObject {
     ContentValues getObjectValues();
-    boolean removeObj(Context context);
-    boolean addObj(Context context);
-    boolean updateObg(Context context);
+    boolean dbRemoveObj(Context context);
+    boolean dbAddObj(Context context);
+    boolean dbUpdateObg(Context context);
+    void setCursorValues(Cursor cursor);
 }

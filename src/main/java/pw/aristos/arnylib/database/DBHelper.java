@@ -12,13 +12,21 @@ import pw.aristos.arnylib.utils.Utility;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 1;
     private static final String DB_NAME = "ARNYDB";
+    private static int dbVersion;
     private Context context;
 
     DBHelper(Context context) {
-        super(context, DB_NAME, null, DB_VERSION);
+        super(context, DB_NAME, null, getDbVersion());
         this.context = context;
+    }
+
+    private static int getDbVersion() {
+        int version = (int) Utility.round((System.currentTimeMillis() / 1000),0);
+        if (dbVersion <= 0) {
+            dbVersion = version;
+        }
+        return dbVersion;
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
