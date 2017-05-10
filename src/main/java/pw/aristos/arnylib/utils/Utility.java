@@ -5,6 +5,10 @@ import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -330,4 +334,35 @@ public class Utility {
         }
     }
 
+    public static ArrayList<String> getJsonObjectKeys(Gson gson,String  result) {
+        ArrayList<String> keys = new ArrayList<>();
+        try {
+            Iterator keysToCopyIterator = new JSONObject(gson.fromJson(result, JsonElement.class).toString()).keys();
+            while(keysToCopyIterator.hasNext()) {
+                keys.add((String) keysToCopyIterator.next());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return keys;
+    }
+
+    public static ArrayList<String> getJsonArrayKeys(JSONObject object) {
+        ArrayList<String> keys = new ArrayList<>();
+        Iterator<String> iterator = object.keys();
+        while(iterator.hasNext()) {
+            keys.add(iterator.next());
+        }
+        return keys;
+    }
+
+    public static String getJsonObjVal(String result, String key) {
+        Gson gson = new Gson();
+        ArrayList<String> keys = Utility.getJsonObjectKeys(gson,result);
+        JsonObject jsonObject = gson.fromJson(result, JsonElement.class).getAsJsonObject();
+        if (keys.contains(key)) {
+            return jsonObject.get(key).toString();
+        }
+        return "";
+    }
 }
