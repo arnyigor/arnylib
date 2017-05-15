@@ -1,4 +1,4 @@
-package pw.aristos.arnylib.utils;
+package com.arny.arnylib.utils;
 
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -88,6 +88,37 @@ public class Utility {
         }
         return list;
     }
+
+
+	public static JSONObject concat(JSONObject[] objs) {
+		ArrayList<JSONObject> jsonObjectArrayList = new ArrayList<>();
+		for (JSONObject o : objs) {
+			if (o.length() > 0) {
+				jsonObjectArrayList.add(o);
+			}
+		}
+		JSONObject merged = new JSONObject();
+		JSONObject[] jsonObjects = jsonObjectArrayList.toArray(
+				new JSONObject[jsonObjectArrayList.size()]);
+		for (JSONObject obj : jsonObjects) {
+			Iterator it = obj.keys();
+			while (it.hasNext()) {
+				String key = (String) it.next();
+				Object value = null;
+				try {
+					value = obj.get(key);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				try {
+					merged.put(key, value);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return merged;
+	}
 
     /**
      * Воспроизвести звук

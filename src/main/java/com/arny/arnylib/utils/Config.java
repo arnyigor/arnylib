@@ -1,4 +1,4 @@
-package pw.aristos.arnylib.utils;
+package com.arny.arnylib.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

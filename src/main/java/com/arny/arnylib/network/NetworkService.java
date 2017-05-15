@@ -1,4 +1,4 @@
-package pw.aristos.arnylib.network;
+package com.arny.arnylib.network;
 
 import android.app.IntentService;
 import android.content.Context;
@@ -15,13 +15,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import pw.aristos.arnylib.utils.Utility;
+import com.arny.arnylib.utils.Utility;
 
 public class NetworkService extends IntentService {
     protected static RequestQueue requestQueue;

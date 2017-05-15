@@ -1,9 +1,8 @@
-package pw.aristos.arnylib.service;
+package com.arny.arnylib.service;
 
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import java.util.HashMap;
 

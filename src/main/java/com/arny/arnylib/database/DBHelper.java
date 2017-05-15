@@ -1,4 +1,4 @@
-package pw.aristos.arnylib.database;
+package com.arny.arnylib.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 
-import pw.aristos.arnylib.utils.Utility;
+import com.arny.arnylib.utils.Utility;
 
 public class DBHelper extends SQLiteOpenHelper {
 

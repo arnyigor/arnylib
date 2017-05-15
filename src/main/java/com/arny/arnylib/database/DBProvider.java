@@ -1,4 +1,4 @@
-package pw.aristos.arnylib.database;
+package com.arny.arnylib.database;
 
 
 import android.content.ContentValues;

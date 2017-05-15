@@ -1,4 +1,4 @@
-package pw.aristos.arnylib.service;
+package com.arny.arnylib.service;
 
 import android.app.IntentService;
 import android.content.Context;

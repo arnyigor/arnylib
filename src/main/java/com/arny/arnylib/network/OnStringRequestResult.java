@@ -1,4 +1,4 @@
-package pw.aristos.arnylib.network;
+package com.arny.arnylib.network;
 
 public interface OnStringRequestResult {
 	void onSuccess(String result);
