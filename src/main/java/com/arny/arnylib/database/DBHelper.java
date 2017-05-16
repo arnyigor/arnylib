@@ -22,7 +22,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private static int getDbVersion() {
-        int version = (int) Utility.round((System.currentTimeMillis() / 1000),0);
+        int version = (int) Utility.round((System.currentTimeMillis() / 1000),0)+10;
         if (dbVersion <= 0) {
             dbVersion = version;
         }
