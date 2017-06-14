@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">arnylib</string>
+    <string name="list_dialog_title">Выберите действие</string>
 </resources>

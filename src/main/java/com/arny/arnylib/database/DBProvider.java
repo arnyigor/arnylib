@@ -15,6 +15,12 @@ public class DBProvider {
         return rowID;
     }
 
+	public static long insertOrUpdateDB(String table, ContentValues contentValues, Context context) {
+		long rowID = connectDB(context).insertWithOnConflict(table, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+		disconnectDB();
+		return rowID;
+	}
+
     public static Cursor selectDB(String table, String[] columns, String where, String orderBy, Context context) {
         return connectDB(context).query(table, columns, where, null, null, null, orderBy);
     }
@@ -60,10 +66,27 @@ public class DBProvider {
         dbHelper.close();
     }
 
-    private static SQLiteDatabase connectDB(Context context) {
+    private static synchronized SQLiteDatabase connectDB(Context context) {
         if (dbHelper != null)
             dbHelper.close();
         dbHelper = new DBHelper(context);
         return dbHelper.getWritableDatabase();
     }
+
+	public static int getCursorInt(Cursor cursor, String columnindex) {
+		return cursor.getInt(cursor.getColumnIndex(columnindex));
+	}
+
+
+	public static String getCursorString(Cursor cursor, String columnindex) {
+		return cursor.getString(cursor.getColumnIndex(columnindex));
+	}
+
+	public static boolean getCursorBoolean(Cursor cursor, String columnindex) {
+		return Boolean.parseBoolean(getCursorString(cursor, columnindex));
+	}
+
+	public static double getCursorDouble(Cursor cursor, String columnindex) {
+		return Double.parseDouble(getCursorString(cursor, columnindex));
+	}
 }

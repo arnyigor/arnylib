@@ -70,6 +70,23 @@ public class NetworkService extends IntentService {
         return mapParams;
     }
 
+	public static void apiRequest(final Context context,int method, String url, JSONObject params, final OnStringRequestResult successCallback) {
+		Log.i("api", " >> Api Request: " + url + " with params: " + params.toString());
+		HttpAsyncStringRequest httpAsyncRequest = new HttpAsyncStringRequest(method,url, params, new OnStringRequestResult() {
+			@Override
+			public void onSuccess(String result) {
+				successCallback.onSuccess(result);
+			}
+
+			@Override
+			public void onError(String error) {
+				Log.e("api", " << Api Response Error: " + error);
+				successCallback.onError(error);
+			}
+		}, context);
+		httpAsyncRequest.execute((Void) null);
+	}
+
     public static void apiRequest(final Context context, String url, JSONObject params, final OnStringRequestResult successCallback) {
         Log.i("api", " >> Api Request: " + url + " with params: " + params.toString());
         HttpAsyncStringRequest httpAsyncRequest = new HttpAsyncStringRequest(url, params, new OnStringRequestResult() {
@@ -105,6 +122,23 @@ public class NetworkService extends IntentService {
         asyncJsonRequest.execute((Void) null);
     }
 
+	public static void apiRequest(final Context context,int method,  String url, JSONObject params, final OnJSONRequestResult successCallback) {
+		Log.i("api", " >> Api Request: " + url + " with params: " + params.toString());
+
+		HttpAsyncJsonRequest asyncJsonRequest = new HttpAsyncJsonRequest(method,url, params, new OnJSONRequestResult() {
+			@Override
+			public void onResult(JSONObject object) {
+				successCallback.onResult(object);
+			}
+
+			@Override
+			public void onError(String error) {
+				Log.e("api", " << Api Response Error: " + error);
+				successCallback.onError(error);
+			}
+		}, context);
+		asyncJsonRequest.execute((Void) null);
+	}
 
     @Override
     protected void onHandleIntent(Intent intent) {

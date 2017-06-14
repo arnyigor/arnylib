@@ -12,7 +12,7 @@ import com.arny.arnylib.utils.Utility;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private static final String DB_NAME = "ARNYDB";
+    private static final String DB_NAME = "secretbox";
     private static int dbVersion;
     private Context context;
 
@@ -114,7 +114,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 Cursor cursor = db.rawQuery("SELECT * FROM migrations WHERE filename = '"+name+"'", null);
                 if (cursor != null && cursor.getCount()>0){
                     cursor.moveToFirst();
-                    String dbName = cursor.getString(cursor.getColumnIndex("filename"));
+                    String dbName = DBProvider.getCursorString(cursor, "filename");
                     if (!Utility.empty(dbName)){
                         toDel.add(dbName+".sql");
                     }
@@ -228,20 +228,5 @@ public class DBHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    static int getInt(Cursor cursor, String columnindex) {
-        return Integer.parseInt(cursor.getString(cursor.getColumnIndex(columnindex)));
-    }
-
-    static String getString(Cursor cursor, String columnindex) {
-        return cursor.getString(cursor.getColumnIndex(columnindex));
-    }
-
-    static boolean getBoolean(Cursor cursor, String columnindex) {
-        return Boolean.parseBoolean(getString(cursor, columnindex));
-    }
-
-    static double getDouble(Cursor cursor, String columnindex) {
-        return Double.parseDouble(getString(cursor, columnindex));
-    }
 
 }

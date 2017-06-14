@@ -1,10 +1,16 @@
 package com.arny.arnylib.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import android.os.Vibrator;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.ViewTreeObserver;
+import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -33,6 +39,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Utility {
+
+	/**
+	 * Повибрировать :)
+	 *
+	 * @param duration Длительность в ms, например, 500 - полсекунды
+	 * @param context
+	 */
+	public static void vibrate(int duration, Context context) {
+		Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+		v.vibrate(duration);
+	}
 
     public static String trimInside(String text) {
         return text.trim().replace(" ", "");
@@ -89,7 +106,6 @@ public class Utility {
         return list;
     }
 
-
 	public static JSONObject concat(JSONObject[] objs) {
 		ArrayList<JSONObject> jsonObjectArrayList = new ArrayList<>();
 		for (JSONObject o : objs) {
@@ -134,7 +150,6 @@ public class Utility {
             e.printStackTrace();
         }
     }
-
 
     /**
      * Remove the file extension from a filename, that may include a path.
@@ -365,6 +380,24 @@ public class Utility {
         }
     }
 
+	/**
+	 * Конвертирование из dp в px
+	 */
+	public static float convertDPtoPX(int dp, Context context) {
+		Resources resources = context.getResources();
+		DisplayMetrics metrics = resources.getDisplayMetrics();
+		return dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+	}
+
+	/**
+	 * Конвертирование из px в dp
+	 */
+	public static float convertPXtoDP(int px, Context context) {
+		Resources resources = context.getResources();
+		DisplayMetrics metrics = resources.getDisplayMetrics();
+		return px / ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+	}
+
     public static ArrayList<String> getJsonObjectKeys(Gson gson,String  result) {
         ArrayList<String> keys = new ArrayList<>();
         try {
@@ -396,4 +429,36 @@ public class Utility {
         }
         return "";
     }
+
+	public static double getTimeDiff(long starttime) {
+		return (double) (System.currentTimeMillis() - starttime) / 1000;
+	}
+
+	public static void addTextEllipseToEnd(final TextView tv, final String fileExtension) {
+		if (tv.getTag() == null) {
+			tv.setTag(tv.getText());
+		}
+		ViewTreeObserver vto = tv.getViewTreeObserver();
+		vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+			@SuppressWarnings("deprecation")
+			@Override
+			public void onGlobalLayout() {
+				try {
+					ViewTreeObserver obs = tv.getViewTreeObserver();
+					obs.removeGlobalOnLayoutListener(this);
+					String text = tv.getLayout().getText().toString();
+					if (text.endsWith("…")) {
+						int endIndex = text.indexOf("…");
+						text = text.substring(0, endIndex);
+						text = text.substring(0, endIndex-fileExtension.length()-3)+"…" +fileExtension ;
+						tv.setText(text);
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
+
+	}
 }

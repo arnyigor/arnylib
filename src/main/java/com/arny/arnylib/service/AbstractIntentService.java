@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import com.arny.arnylib.utils.Logcat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -126,7 +127,7 @@ public abstract class AbstractIntentService extends IntentService {
         Bundle extras = intent.getExtras();
         if (extras != null) {
             OperationProvider provider = extras.getParcelable(EXTRA_KEY_OPERATION);
-            Log.d(AbstractIntentService.class.getSimpleName(), "onHandleIntent: provider ="  + provider.getId());
+            Logcat.d(AbstractIntentService.class.getSimpleName(), "onHandleIntent: provider ="  + provider.getId());
             int type = provider.getType();
             if (type == EXTRA_KEY_TYPE_SYNC) {
                 setQueue(provider);

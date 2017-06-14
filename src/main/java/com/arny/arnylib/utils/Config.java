@@ -59,6 +59,11 @@ public class Config {
         return settings.getInt(key, 0);
     }
 
+	public static Long getLong(String key, Context context) {
+		settings = getSettings(context);
+		return settings.getLong(key, 0);
+	}
+
     /**
      * Получение конфига по ключу
      * @param key
@@ -120,6 +125,13 @@ public class Config {
         editor.putInt(key, value);
         editor.apply();
     }
+
+	public static void setLong(String key, long value, Context context) {
+		settings = getSettings(context);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putLong(key, value);
+		editor.apply();
+	}
 
     /**
      * Удаление ключа из конфига
