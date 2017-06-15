@@ -108,8 +108,9 @@ public abstract class AbstractIntentService extends IntentService {
         public void run() {
             Bundle extras = intent.getExtras();
             if (extras != null) {
-                OperationProvider provider = extras.getParcelable(EXTRA_KEY_OPERATION);
-                executeOperation(provider);
+                OperationProvider provider = (OperationProvider)extras.getSerializable(EXTRA_KEY_OPERATION);
+	            Log.i(Task.class.getSimpleName(), "run: provider = " + provider);
+	            executeOperation(provider);
             }
         }
     }
@@ -126,7 +127,7 @@ public abstract class AbstractIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Bundle extras = intent.getExtras();
         if (extras != null) {
-            OperationProvider provider = extras.getParcelable(EXTRA_KEY_OPERATION);
+            OperationProvider provider = (OperationProvider)extras.getSerializable(EXTRA_KEY_OPERATION);
             Logcat.d(AbstractIntentService.class.getSimpleName(), "onHandleIntent: provider ="  + provider.getId());
             int type = provider.getType();
             if (type == EXTRA_KEY_TYPE_SYNC) {
@@ -172,8 +173,12 @@ public abstract class AbstractIntentService extends IntentService {
     }
 
     private void sendOperationResult(OperationProvider provider) {
-        Intent intent = initProadcastIntent();
-        intent.putExtra(EXTRA_KEY_OPERATION , provider);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+	    Log.i(AbstractIntentService.class.getSimpleName(), "sendOperationResult: provider = " + provider);
+	    Intent intent = initProadcastIntent();
+	    ExtendedDataHolder extras = ExtendedDataHolder.getInstance();
+	    extras.putExtra(EXTRA_KEY_OPERATION , provider);
+	    Log.i(AbstractIntentService.class.getSimpleName(), "sendOperationResult: extras = " + extras.getExtra(EXTRA_KEY_OPERATION));
+	    intent.putExtra(EXTRA_KEY_OPERATION , provider);
+	    LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }

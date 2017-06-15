@@ -19,6 +19,10 @@ public abstract class RotationWeakAsyncTask extends AsyncTask<Void, Void, Void> 
         void onTaskFinished(int i);
     }
 
+	public interface OnTaskFinishedResult {
+		void onTaskFinished(String res);
+	}
+
     public abstract void run();
 
     public static boolean startNewTask(RotationWeakAsyncTask task, OnTaskFinishedListener l, int requestID) {
@@ -35,8 +39,12 @@ public abstract class RotationWeakAsyncTask extends AsyncTask<Void, Void, Void> 
         showProgressIfNeed();
         return true;
     }
+	public RotationWeakAsyncTask(Context context, String resulttxt,boolean show) {
+		setContext(context,resulttxt,show);
+	}
+
 	public RotationWeakAsyncTask(Context context, String resulttxt) {
-		setContext(context,resulttxt);
+		setContext(context,resulttxt,false);
 	}
 
 	public RotationWeakAsyncTask(Context context) {
@@ -48,13 +56,19 @@ public abstract class RotationWeakAsyncTask extends AsyncTask<Void, Void, Void> 
         setOnFinishedListener(l);
     }
 
-    private static void setContext(Context con,String res) {
+	private static void setContext(Context con,String res) {
+		setContext(con,res,false);
+	}
+
+    private static void setContext(Context con,String res,boolean show) {
         context = new WeakReference(con);
         stringResult = new WeakReference(res);
         if (con == null) {
             destroyProgress();
         } else {
-            showProgressIfNeed();
+	        if (show) {
+		        showProgressIfNeed();
+	        }
         }
     }
 

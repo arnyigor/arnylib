@@ -4,15 +4,20 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class OperationProvider implements Parcelable {
+public class OperationProvider implements Serializable {
     private int id,type;
     private boolean finished, success;
     private HashMap<String, Object> operationData;
     private String result;
 
-    public OperationProvider(Bundle extras) {
+	@Override
+	public String toString() {
+		return "id:" + id + "; finished:" + finished + "; success:" + success + "; operationData" + operationData;
+	}
+	public OperationProvider(Bundle extras) {
         this.id = extras.getInt(AbstractIntentService.EXTRA_KEY_OPERATION_ID);
         this.finished = extras.getBoolean(AbstractIntentService.EXTRA_KEY_OPERATION_FINISH);
         this.success = extras.getBoolean(AbstractIntentService.EXTRA_KEY_OPERATION_FINISH_SUCCESS);
@@ -25,27 +30,6 @@ public class OperationProvider implements Parcelable {
         this.operationData = operationData;
         this.type = type;
     }
-
-    protected OperationProvider(Parcel in) {
-        id = in.readInt();
-        type = in.readInt();
-        finished = in.readByte() != 0;
-        success = in.readByte() != 0;
-        result = in.readString();
-        operationData = (HashMap<String, Object>) in.readSerializable();
-    }
-
-    public static final Creator<OperationProvider> CREATOR = new Creator<OperationProvider>() {
-        @Override
-        public OperationProvider createFromParcel(Parcel in) {
-            return new OperationProvider(in);
-        }
-
-        @Override
-        public OperationProvider[] newArray(int size) {
-            return new OperationProvider[size];
-        }
-    };
 
     public void setOperationData(HashMap<String, Object> operationData) {
         this.operationData = operationData;
@@ -81,21 +65,6 @@ public class OperationProvider implements Parcelable {
 
     public String getResult() {
         return result;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeInt(type);
-        dest.writeByte((byte) (finished ? 1 : 0));
-        dest.writeByte((byte) (success ? 1 : 0));
-        dest.writeString(result);
-        dest.writeSerializable(this.operationData);
     }
 
     public int getType() {
