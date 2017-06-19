@@ -10,7 +10,7 @@ import com.android.volley.*;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
+import com.arny.arnylib.utils.Utility;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -19,8 +19,6 @@ import org.jsoup.nodes.Document;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.arny.arnylib.utils.Utility;
 
 public class NetworkService extends IntentService {
     protected static RequestQueue requestQueue;
@@ -104,10 +102,10 @@ public class NetworkService extends IntentService {
         httpAsyncRequest.execute((Void) null);
     }
 
-    public static void apiRequest(final Context context, String url, JSONObject params, final OnJSONRequestResult successCallback) {
+    public static void apiRequest(final Context context, String url, JSONObject params, final OnJSONObjectResult successCallback) {
         Log.i("api", " >> Api Request: " + url + " with params: " + params.toString());
 
-        HttpAsyncJsonRequest asyncJsonRequest = new HttpAsyncJsonRequest(url, params, new OnJSONRequestResult() {
+        HttpAsyncJsonRequest asyncJsonRequest = new HttpAsyncJsonRequest(url, params, new OnJSONObjectResult() {
             @Override
             public void onResult(JSONObject object) {
                 successCallback.onResult(object);
@@ -122,10 +120,10 @@ public class NetworkService extends IntentService {
         asyncJsonRequest.execute((Void) null);
     }
 
-	public static void apiRequest(final Context context,int method,  String url, JSONObject params, final OnJSONRequestResult successCallback) {
+	public static void apiRequest(final Context context,int method,  String url, JSONObject params, final OnJSONObjectResult successCallback) {
 		Log.i("api", " >> Api Request: " + url + " with params: " + params.toString());
 
-		HttpAsyncJsonRequest asyncJsonRequest = new HttpAsyncJsonRequest(method,url, params, new OnJSONRequestResult() {
+		HttpAsyncJsonRequest asyncJsonRequest = new HttpAsyncJsonRequest(method,url, params, new OnJSONObjectResult() {
 			@Override
 			public void onResult(JSONObject object) {
 				successCallback.onResult(object);
@@ -215,20 +213,20 @@ public class NetworkService extends IntentService {
 
 
     private static class HttpAsyncJsonRequest extends AsyncTask<Void, Void, Boolean> {
-        private final OnJSONRequestResult successCallback;
+        private final OnJSONObjectResult successCallback;
         String url;
         JSONObject params;
         Context context;
         int apiMethod;
 
-        HttpAsyncJsonRequest(String requestUrl, JSONObject requestParams, final OnJSONRequestResult successCallback, Context context) {
+        HttpAsyncJsonRequest(String requestUrl, JSONObject requestParams, final OnJSONObjectResult successCallback, Context context) {
             this.successCallback = successCallback;
             params = requestParams;
             url = requestUrl;
             this.apiMethod = Request.Method.GET;
             this.context = context;
         }
-       HttpAsyncJsonRequest(int apiMethod, String requestUrl, JSONObject requestParams, final OnJSONRequestResult successCallback, Context context) {
+       HttpAsyncJsonRequest(int apiMethod, String requestUrl, JSONObject requestParams, final OnJSONObjectResult successCallback, Context context) {
             this.successCallback = successCallback;
             params = requestParams;
             url = requestUrl;
