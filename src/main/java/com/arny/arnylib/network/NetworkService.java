@@ -10,6 +10,10 @@ import com.android.volley.*;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.arny.arnylib.utils.Utility;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,6 +87,48 @@ public class NetworkService extends IntentService {
 			}
 		}, context);
 		httpAsyncRequest.execute((Void) null);
+	}
+
+
+	public static void apiGetRequest(String url,String tag,final OnJSONObjectResult result){
+		AndroidNetworking.get(url)
+				.setTag(tag)
+				.setPriority(Priority.LOW)
+				.build()
+				.getAsJSONObject(new JSONObjectRequestListener() {
+					@Override
+					public void onResponse(JSONObject response) {
+						result.onResult(response);
+					}
+
+					@Override
+					public void onError(ANError anError) {
+						result.onError(anError.getMessage());
+					}
+				});
+	}
+
+	public static void canselApiRequest(String tag){
+		AndroidNetworking.forceCancel(tag);  // All the requests with the given tag will be cancelled , even if any percent threshold is set , it will be cancelled forcefully.
+	}
+
+	public static void apiPostRequest(String url, String tag, JSONObject params, final OnJSONObjectResult result){
+		AndroidNetworking.post(url)
+				.addJSONObjectBody(params)
+				.setTag(tag)
+				.setPriority(Priority.MEDIUM)
+				.build()
+				.getAsJSONObject(new JSONObjectRequestListener() {
+					@Override
+					public void onResponse(JSONObject response) {
+						result.onResult(response);
+					}
+
+					@Override
+					public void onError(ANError anError) {
+						result.onError(anError.getMessage());
+					}
+				});
 	}
 
     public static void apiRequest(final Context context, String url, JSONObject params, final OnStringRequestResult successCallback) {
