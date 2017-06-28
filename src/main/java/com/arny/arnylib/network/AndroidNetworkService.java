@@ -44,16 +44,20 @@ public class AndroidNetworkService extends IntentService {
 		apiBuildRequest(url, method, params, null, result);
 	}
 
+public static void apiBuildRequest(String url, int method, JSONObject params, final OnJSONObjectResult result) {
+		apiBuildRequest(url, method, params, null, result);
+	}
+
 	public static void apiBuildRequest(String url, int method, JSONObject params, JSONObject headers, final OnJSONObjectResult result){
 		ANRequest.GetRequestBuilder getRequestBuilder = new ANRequest.GetRequestBuilder(url, method);
 		StringBuilder builder = new StringBuilder();
 		builder.append(" >> Api Request: ");
-		builder.append(" url ");
+		builder.append(" ur: ");
 		builder.append(url);
 		if (headers != null) {
 			try {
 				getRequestBuilder.addHeaders(getJsonObjectToHashMap(headers));
-				builder.append(" headers ");
+				builder.append("; headers: ");
 				builder.append(headers);
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -62,12 +66,14 @@ public class AndroidNetworkService extends IntentService {
 		if (params != null) {
 			try {
 				getRequestBuilder.addPathParameter(getJsonObjectToHashMap(params));
+				builder.append(" params: ");
+				builder.append(params);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
 		ANRequest anRequest = getRequestBuilder.build();
-		Log.i("api", " >> Api Request: " + url + " with params: " + params);
+		Log.i("api", builder.toString());
 		anRequest.getAsJSONObject(new JSONObjectRequestListener() {
 			@Override
 			public void onResponse(JSONObject response) {
@@ -84,9 +90,15 @@ public class AndroidNetworkService extends IntentService {
 
 	public static void apiBuildRequest(String url, int method, JSONObject params, JSONObject headers, final OnStringRequestResult result){
 		ANRequest.GetRequestBuilder getRequestBuilder = new ANRequest.GetRequestBuilder(url, method);
+		StringBuilder builder = new StringBuilder();
+		builder.append(" >> Api Request: ");
+		builder.append(" ur: ");
+		builder.append(url);
 		if (headers != null) {
 			try {
 				getRequestBuilder.addHeaders(getJsonObjectToHashMap(headers));
+				builder.append("; headers: ");
+				builder.append(headers);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -94,13 +106,14 @@ public class AndroidNetworkService extends IntentService {
 		if (params != null) {
 			try {
 				getRequestBuilder.addPathParameter(getJsonObjectToHashMap(params));
+				builder.append(" params: ");
+				builder.append(params);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
 		ANRequest anRequest = getRequestBuilder.build();
-		Log.i("api", " >> Api Request: " + url + " with params: " + params);
-
+		Log.i("api", builder.toString());
 		anRequest.getAsString(new StringRequestListener() {
 			@Override
 			public void onResponse(String response) {
