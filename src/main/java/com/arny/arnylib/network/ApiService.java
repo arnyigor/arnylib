@@ -15,9 +15,9 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-public class AndroidNetworkService extends IntentService {
-	public AndroidNetworkService() {
-		super("AndroidNetworkService");
+public class ApiService extends IntentService {
+	public ApiService() {
+		super("ApiService");
 	}
 
 	@Override

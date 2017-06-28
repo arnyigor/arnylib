@@ -4,7 +4,7 @@
     <application android:allowBackup="true"
                  android:label="@string/app_name"
                  android:supportsRtl="true">
-        <service android:name="com.arny.arnylib.network.AndroidNetworkService"/>
+        <service android:name="com.arny.arnylib.network.ApiService"/>
     </application>
 
 </manifest>

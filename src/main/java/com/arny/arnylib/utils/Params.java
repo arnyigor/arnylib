@@ -3,15 +3,19 @@ package com.arny.arnylib.utils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.Iterator;
+
 public class Params {
 	private JSONObject params;
 	private JSONObject nodeObject;
 	private String nodeString;
 	private JSONArray nodeArray;
+
 	public Params(JSONObject params) {
 		this.params = params;
 	}
+
 	public Params(String params) {
 		try {
 			this.params = new JSONObject(params);
@@ -20,27 +24,35 @@ public class Params {
 			e.printStackTrace();
 		}
 	}
+
 	public Params() {
 		this.params = new JSONObject();
 	}
+
 	public JSONObject getNodeObject() {
 		return nodeObject;
 	}
+
 	public void setNodeObject(JSONObject nodeObject) {
 		this.nodeObject = nodeObject;
 	}
+
 	public String getNodeString() {
 		return nodeString;
 	}
+
 	public void setNodeString(String nodeString) {
 		this.nodeString = nodeString;
 	}
+
 	public JSONArray getNodeArray() {
 		return nodeArray;
 	}
+
 	public void setNodeArray(JSONArray nodeArray) {
 		this.nodeArray = nodeArray;
 	}
+
 	public String getParam(String path, String defaultVal) {
 		String result;
 		resetParams();
@@ -54,6 +66,7 @@ public class Params {
 		}
 		return result;
 	}
+
 	public String getParam(String path) {
 		if (getParams() == null) {
 			return null;
@@ -78,7 +91,32 @@ public class Params {
 		}
 		return result;
 	}
+
 	public boolean setParam(String path, Object val) {
+		return setParamVal(path, val);
+	}
+
+	public boolean setParam(String path, String val) {
+		return setParamVal(path, val);
+	}
+
+	public boolean setParam(String path, int val) {
+		return setParamVal(path, val);
+	}
+
+	public boolean setParam(String path, double val) {
+		return setParamVal(path, val);
+	}
+
+	public boolean setParam(String path, JSONArray val) {
+		return setParamVal(path, val);
+	}
+
+	public boolean setParam(String path, JSONObject val) {
+		return setParamVal(path, val);
+	}
+
+	private boolean setParamVal(String path, Object val) {
 		JSONObject jsonObject = getParams();
 		try {
 			setProperty(jsonObject, path, val);
@@ -88,6 +126,7 @@ public class Params {
 		}
 		return false;
 	}
+
 	public boolean removeParam(String path) {
 		JSONObject jsonObject = getParams();
 		try {
@@ -98,6 +137,7 @@ public class Params {
 		}
 		return false;
 	}
+
 	private JSONObject unsetProperty(JSONObject jsonObject, String keys) throws JSONException {
 		String[] keyMain = keys.split("\\.");
 		for (String keym : keyMain) {
@@ -132,9 +172,11 @@ public class Params {
 					}
 				}
 			}
+
 		}
 		return jsonObject;
 	}
+
 	private JSONObject setProperty(JSONObject jsonObject, String keys, Object valueNew) throws JSONException {
 		String[] keyMain = keys.split("\\.");
 		for (String keym : keyMain) {
@@ -176,9 +218,11 @@ public class Params {
 					jsonObject = jsonObject.put(keym, valueNew);
 				}
 			}
+
 		}
 		return jsonObject;
 	}
+
 	private void parseJsonPath(String path) throws JSONException {
 		Object obj;
 		String[] pathArr = path.split("\\.");
@@ -210,11 +254,13 @@ public class Params {
 			}
 		}
 	}
+
 	private void resetParams() {
 		setNodeArray(null);
 		setNodeObject(null);
 		setNodeString(null);
 	}
+
 	public JSONObject getParam(String path, JSONObject defaultVal) {
 		JSONObject result;
 		setNodeObject(getParams());
@@ -228,6 +274,7 @@ public class Params {
 		resetParams();
 		return result;
 	}
+
 	public JSONArray getParam(String path, JSONArray defaultVal) {
 		JSONArray result;
 		setNodeObject(getParams());
@@ -241,15 +288,19 @@ public class Params {
 		resetParams();
 		return result;
 	}
+
 	public JSONObject getParams() {
 		return params;
 	}
+
 	public String getStringParams() {
 		return String.valueOf(params);
 	}
+
 	public void setParams(JSONObject params) {
 		this.params = params;
 	}
+
 	public void setParams(String params) {
 		try {
 			this.params = new JSONObject(params);
@@ -257,5 +308,10 @@ public class Params {
 			this.params = new JSONObject();
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return getStringParams();
 	}
 }

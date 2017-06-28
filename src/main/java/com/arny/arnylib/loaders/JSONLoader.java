@@ -1,4 +1,4 @@
-package com.arny.arnylib.utils;
+package com.arny.arnylib.loaders;
 
 import android.content.Context;
 import android.os.SystemClock;
