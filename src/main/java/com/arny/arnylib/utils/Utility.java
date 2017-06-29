@@ -5,16 +5,13 @@ import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-
 import android.os.Vibrator;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,17 +21,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -74,8 +61,8 @@ public class Utility {
         return retMap;
     }
 
-    public static Map<String, String> toMap(JSONObject object) throws JSONException {
-        Map<String, String> map = new HashMap<String, String>();
+    public static HashMap <String, String> toMap(JSONObject object) throws JSONException {
+	    HashMap<String, String> map = new HashMap<String, String>();
 
         Iterator<String> keysItr = object.keys();
         while (keysItr.hasNext()) {
