@@ -66,22 +66,43 @@ public class ApiService extends IntentService {
 	}
 
 	public static void apiBuildRequest(String url, int method, JSONObject params, final OnStringRequestResult result) {
-		apiBuildRequest(url, method, params, null, result);
+		switch (method) {
+			case Method.GET:
+				apiBuildGetRequest(url, params, null, result);
+				break;
+			case Method.POST:
+				apiBuildPostRequest(url, method,params, null, result);
+				break;
+			case Method.PUT:
+				apiBuildPostRequest(url, method,params, null, result);
+				break;
+		}
 	}
 
 	public static void apiBuildRequest(String url, int method, JSONObject params, final OnJSONObjectResult result) {
-		apiBuildRequest(url, method, params, null, result);
+		switch (method) {
+			case Method.GET:
+				apiBuildGetRequest(url, params, null, result);
+				break;
+			case Method.POST:
+				apiBuildPostRequest(url, method,params, null, result);
+				break;
+			case Method.PUT:
+				apiBuildPostRequest(url, method,params, null, result);
+				break;
+		}
 	}
 
-	public static void apiBuildRequest(String url, int method, JSONObject params, JSONObject headers, final OnJSONObjectResult result) {
-		ANRequest.GetRequestBuilder getRequestBuilder = new ANRequest.GetRequestBuilder(url, method);
+	public static void apiBuildGetRequest(String url ,JSONObject params, JSONObject headers, final OnJSONObjectResult result) {
+		ANRequest.GetRequestBuilder requestBuilder = new ANRequest.GetRequestBuilder(url);
 		StringBuilder builder = new StringBuilder();
 		builder.append(" >> Api Request: ");
 		builder.append(" ur: ");
 		builder.append(url);
+
 		if (headers != null) {
 			try {
-				getRequestBuilder.addHeaders(getJsonObjectToHashMap(headers));
+				requestBuilder.addHeaders(getJsonObjectToHashMap(headers));
 				builder.append("; headers: ");
 				builder.append(headers);
 			} catch (JSONException e) {
@@ -90,14 +111,14 @@ public class ApiService extends IntentService {
 		}
 		if (params != null) {
 			try {
-				getRequestBuilder.addPathParameter(getJsonObjectToHashMap(params));
+				requestBuilder.addPathParameter(getJsonObjectToHashMap(params));
 				builder.append(" params: ");
 				builder.append(params);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
-		ANRequest anRequest = getRequestBuilder.build();
+		ANRequest anRequest = requestBuilder.build();
 		Log.i("api", builder.toString());
 		anRequest.getAsJSONObject(new JSONObjectRequestListener() {
 			@Override
@@ -116,8 +137,8 @@ public class ApiService extends IntentService {
 		});
 	}
 
-	public static void apiBuildRequest(String url, int method, JSONObject params, JSONObject headers, final OnStringRequestResult result) {
-		ANRequest.GetRequestBuilder getRequestBuilder = new ANRequest.GetRequestBuilder(url, method);
+	public static void apiBuildGetRequest(String url, JSONObject params, JSONObject headers, final OnStringRequestResult result) {
+		ANRequest.GetRequestBuilder getRequestBuilder = new ANRequest.GetRequestBuilder(url);
 		StringBuilder builder = new StringBuilder();
 		builder.append(" >> Api Request: ");
 		builder.append(" ur: ");
@@ -156,4 +177,98 @@ public class ApiService extends IntentService {
 			}
 		});
 	}
+
+	/**
+	 * apiBuildPostRequest
+	 * @param url request url
+	 * @param method (GET,POST,PUT)
+	 * @param params (JSONobject)
+	 * @param headers (JSONObject)
+	 * @param result (JSONObject or String)
+	 */
+	public static void apiBuildPostRequest(String url, int method, JSONObject params, JSONObject headers, final OnJSONObjectResult result) {
+		ANRequest.PostRequestBuilder requestBuilder = new ANRequest.PostRequestBuilder(url, method);
+		StringBuilder builder = new StringBuilder();
+		builder.append(" >> Api Request: ");
+		builder.append(" ur: ");
+		builder.append(url);
+
+		if (headers != null) {
+			try {
+				requestBuilder.addHeaders(getJsonObjectToHashMap(headers));
+				builder.append("; headers: ");
+				builder.append(headers);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		if (params != null) {
+			try {
+				requestBuilder.addPathParameter(getJsonObjectToHashMap(params));
+				builder.append(" params: ");
+				builder.append(params);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		ANRequest anRequest = requestBuilder.build();
+		Log.i("api", builder.toString());
+		anRequest.getAsJSONObject(new JSONObjectRequestListener() {
+			@Override
+			public void onResponse(JSONObject response) {
+				Log.i("api", " <<  Api Response success: " + response);
+				result.onSuccess(response);
+			}
+
+			@Override
+			public void onError(ANError error) {
+				Log.e("api", " <<  Api Response error Detail: " + error.getErrorDetail());
+				Log.e("api", " <<  Api Response error Body: " + error.getErrorBody());
+				Log.e("api", " <<  Api Response error Code: " + error.getErrorCode());
+				result.onError(error.getErrorDetail());
+			}
+		});
+	}
+
+	public static void apiBuildPostRequest(String url, int method, JSONObject params, JSONObject headers, final OnStringRequestResult result) {
+		ANRequest.PostRequestBuilder getRequestBuilder = new ANRequest.PostRequestBuilder(url, method);
+		StringBuilder builder = new StringBuilder();
+		builder.append(" >> Api Request: ");
+		builder.append(" ur: ");
+		builder.append(url);
+		if (headers != null) {
+			try {
+				getRequestBuilder.addHeaders(getJsonObjectToHashMap(headers));
+				builder.append("; headers: ");
+				builder.append(headers);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		if (params != null) {
+			try {
+				getRequestBuilder.addPathParameter(getJsonObjectToHashMap(params));
+				builder.append(" params: ");
+				builder.append(params);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		ANRequest anRequest = getRequestBuilder.build();
+		Log.i("api", builder.toString());
+		anRequest.getAsString(new StringRequestListener() {
+			@Override
+			public void onResponse(String response) {
+				Log.i("api", " <<  Api Response success: " + response);
+				result.onSuccess(response);
+			}
+
+			@Override
+			public void onError(ANError anError) {
+				Log.e("api", " <<  Api Response error: " + anError.getErrorDetail());
+				result.onError(anError.getErrorDetail());
+			}
+		});
+	}
+
 }

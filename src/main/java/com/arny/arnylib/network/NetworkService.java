@@ -27,6 +27,16 @@ public class NetworkService extends IntentService {
 			requestQueue = Volley.newRequestQueue(context);
 		return requestQueue;
 	}
+	public static HashMap<String, String> getJsonObjectToHashMap(JSONObject params) throws JSONException {
+		HashMap<String, String> mapParams = new HashMap<>();
+		if (params.names() != null) {
+			for(int i = 0; i<params.names().length(); i++){
+				mapParams.put(params.names().getString(i), (String) params.get(params.names().getString(i)));
+			}
+		}
+		Log.i(NetworkService.class.getSimpleName(), "getJsonObjectToHashMap: mapParams = " + mapParams);
+		return mapParams;
+	}
 
 	public NetworkService() {
 		super("NetworkService");
@@ -153,7 +163,7 @@ public class NetworkService extends IntentService {
 	}
 
 	public static void apiRequest(final Context context, int method, String url, JSONObject params, JSONObject headers, final OnJSONObjectResult successCallback) {
-		Log.i("api", " >> Api Request: " + url + " with params: " + params.toString());
+		Log.i("api", " >> Api Request: " + url + " method "+ method +" with params: " + params.toString());
 
 		HttpAsyncJsonRequest asyncJsonRequest = new HttpAsyncJsonRequest(context, method, url, params, headers, new OnJSONObjectResult() {
 			@Override
@@ -178,6 +188,8 @@ public class NetworkService extends IntentService {
 		private Context context;
 		private int apiMethod;
 
+
+
 		private HttpAsyncStringRequest(Context context, int apiMethod, String requestUrl, JSONObject requestParams, JSONObject headers, final OnStringRequestResult successCallback) {
 			this.successCallback = successCallback;
 			params = requestParams;
@@ -185,6 +197,10 @@ public class NetworkService extends IntentService {
 			this.apiMethod = apiMethod;
 			this.context = context;
 			this.headers = headers;
+			Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "HttpAsyncStringRequest: url = " + url);
+			Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "HttpAsyncStringRequest: params = " + params);
+			Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "HttpAsyncStringRequest: apiMethod = " + apiMethod);
+			Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "HttpAsyncStringRequest: headers = " + headers);
 		}
 
 		@Override
@@ -204,7 +220,7 @@ public class NetworkService extends IntentService {
 				@Override
 				protected Map<String, String> getParams() {
 					try {
-						return Utility.toMap(params);
+						return getJsonObjectToHashMap(params);
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -214,7 +230,7 @@ public class NetworkService extends IntentService {
 				@Override
 				public Map<String, String> getHeaders() throws AuthFailureError {
 					try {
-						return Utility.toMap(headers);
+						return getJsonObjectToHashMap(headers);
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -255,11 +271,15 @@ public class NetworkService extends IntentService {
 
 		private HttpAsyncJsonRequest(Context context, int apiMethod, String requestUrl, JSONObject requestParams, JSONObject headers, final OnJSONObjectResult successCallback) {
 			this.successCallback = successCallback;
-			params = requestParams;
-			url = requestUrl;
+			this.params = requestParams;
+			this.url = requestUrl;
 			this.apiMethod = apiMethod;
 			this.context = context;
 			this.headers = headers;
+			Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "HttpAsyncJsonRequest: url = " + url);
+			Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "HttpAsyncJsonRequest: params = " + params);
+			Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "HttpAsyncJsonRequest: apiMethod = " + apiMethod);
+			Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "HttpAsyncJsonRequest: headers = " + headers);
 		}
 
 		@Override
@@ -279,7 +299,9 @@ public class NetworkService extends IntentService {
 				@Override
 				protected Map<String, String> getParams() {
 					try {
-						return Utility.toMap(params);
+						if (params != null) {
+							return getJsonObjectToHashMap(params);
+						}
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -289,11 +311,12 @@ public class NetworkService extends IntentService {
 				@Override
 				public Map<String, String> getHeaders() throws AuthFailureError {
 					try {
-						return Utility.toMap(headers);
+						if (headers != null) {
+							return getJsonObjectToHashMap(headers);
+						}
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
-
 					return new HashMap<>();
 				}
 			};
