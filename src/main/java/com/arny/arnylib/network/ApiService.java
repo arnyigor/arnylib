@@ -25,7 +25,7 @@ public class ApiService extends IntentService {
 	}
 
 	@NonNull
-	private static HashMap<String, String> getJsonObjectToHashMap(JSONObject params) throws JSONException {
+	public static HashMap<String, String> getJsonObjectToHashMap(JSONObject params) throws JSONException {
 		HashMap<String, String> mapParams = new HashMap<>();
 		for (int i = 0; i < params.names().length(); i++) {
 			mapParams.put(params.names().getString(i), (String) params.get(params.names().getString(i)));
@@ -108,7 +108,9 @@ public class ApiService extends IntentService {
 
 			@Override
 			public void onError(ANError error) {
-				Log.e("api", " <<  Api Response error: " + error.getErrorDetail());
+				Log.e("api", " <<  Api Response error Detail: " + error.getErrorDetail());
+				Log.e("api", " <<  Api Response error Body: " + error.getErrorBody());
+				Log.e("api", " <<  Api Response error Code: " + error.getErrorCode());
 				result.onError(error.getErrorDetail());
 			}
 		});
