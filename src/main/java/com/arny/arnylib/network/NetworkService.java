@@ -146,7 +146,6 @@ public class NetworkService extends IntentService {
 	}
 
 	public static void apiRequest(final Context context, int method, String url, JSONObject params, JSONObject headers, final OnStringRequestResult successCallback) {
-		Log.i("api", " >> Api Request: " + url + " with params: " + params.toString());
 		HttpAsyncStringRequest httpAsyncRequest = new HttpAsyncStringRequest(context, method, url, params, headers, new OnStringRequestResult() {
 			@Override
 			public void onSuccess(String result) {
@@ -155,7 +154,6 @@ public class NetworkService extends IntentService {
 
 			@Override
 			public void onError(String error) {
-				Log.e("api", " << Api Response Error: " + error);
 				successCallback.onError(error);
 			}
 		});
@@ -163,7 +161,6 @@ public class NetworkService extends IntentService {
 	}
 
 	public static void apiRequest(final Context context, int method, String url, JSONObject params, JSONObject headers, final OnJSONObjectResult successCallback) {
-		Log.i("api", " >> Api Request: " + url + " method "+ method +" with params: " + params.toString());
 
 		HttpAsyncJsonRequest asyncJsonRequest = new HttpAsyncJsonRequest(context, method, url, params, headers, new OnJSONObjectResult() {
 			@Override
@@ -173,7 +170,6 @@ public class NetworkService extends IntentService {
 
 			@Override
 			public void onError(String error) {
-				Log.e("api", " << Api Response Error: " + error);
 				successCallback.onError(error);
 			}
 		});
@@ -197,10 +193,7 @@ public class NetworkService extends IntentService {
 			this.apiMethod = apiMethod;
 			this.context = context;
 			this.headers = headers;
-			Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "HttpAsyncStringRequest: url = " + url);
-			Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "HttpAsyncStringRequest: params = " + params);
-			Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "HttpAsyncStringRequest: apiMethod = " + apiMethod);
-			Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "HttpAsyncStringRequest: headers = " + headers);
+			Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "HttpAsyncStringRequest: url = " + url + "; params:" + params+ "; apiMethod:" + apiMethod+"; headers:" + headers);
 		}
 
 		@Override
@@ -209,11 +202,13 @@ public class NetworkService extends IntentService {
 			StringRequest request = new StringRequest(apiMethod, url, new Response.Listener<String>() {
 				@Override
 				public void onResponse(String response) {
+					Log.i("api", " << Api onResponse: " + response);
 					successCallback.onSuccess(response);
 				}
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
+					Log.e("api", " << Api onErrorResponse: " + error.toString());
 					successCallback.onError(error.toString());
 				}
 			}) {
@@ -276,10 +271,7 @@ public class NetworkService extends IntentService {
 			this.apiMethod = apiMethod;
 			this.context = context;
 			this.headers = headers;
-			Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "HttpAsyncJsonRequest: url = " + url);
-			Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "HttpAsyncJsonRequest: params = " + params);
-			Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "HttpAsyncJsonRequest: apiMethod = " + apiMethod);
-			Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "HttpAsyncJsonRequest: headers = " + headers);
+			Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "HttpAsyncJsonRequest: url = " + url + "; params:" + params+ "; apiMethod:" + apiMethod+"; headers:" + headers);
 		}
 
 		@Override
@@ -288,11 +280,13 @@ public class NetworkService extends IntentService {
 			JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(apiMethod, url, params, new Response.Listener<JSONObject>() {
 				@Override
 				public void onResponse(JSONObject response) {
+					Log.i("api", " << Api onResponse: " + response);
 					successCallback.onSuccess(response);
 				}
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
+					Log.e("api", " << Api onErrorResponse: " + error.toString());
 					successCallback.onError(error.toString());
 				}
 			}) {
