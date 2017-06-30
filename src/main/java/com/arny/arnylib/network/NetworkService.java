@@ -76,7 +76,6 @@ public class NetworkService extends IntentService {
 	}
 
 	public static void apiRequest(final Context context, String url, JSONObject params, final OnStringRequestResult successCallback) {
-		Log.i("api", " >> Api Request: " + url + " with params: " + params.toString());
 		HttpAsyncStringRequest httpAsyncRequest = new HttpAsyncStringRequest(context, Request.Method.GET, url, params, new JSONObject(), new OnStringRequestResult() {
 			@Override
 			public void onSuccess(String result) {
@@ -85,7 +84,6 @@ public class NetworkService extends IntentService {
 
 			@Override
 			public void onError(String error) {
-				Log.e("api", " << Api Response Error: " + error);
 				successCallback.onError(error);
 			}
 		});
@@ -93,17 +91,15 @@ public class NetworkService extends IntentService {
 	}
 
 	public static void apiRequest(final Context context, String url, JSONObject params, final OnJSONObjectResult successCallback) {
-		Log.i("api", " >> Api Request: " + url + " with params: " + params.toString());
 
 		HttpAsyncJsonRequest asyncJsonRequest = new HttpAsyncJsonRequest(context, Request.Method.GET, url, params, new JSONObject(), new OnJSONObjectResult() {
 			@Override
-			public void onSuccess(JSONObject object) {
-				successCallback.onSuccess(object);
+			public void onSuccess(JSONObject result) {
+				successCallback.onSuccess(result);
 			}
 
 			@Override
 			public void onError(String error) {
-				Log.e("api", " << Api Response Error: " + error);
 				successCallback.onError(error);
 			}
 		});
@@ -111,7 +107,6 @@ public class NetworkService extends IntentService {
 	}
 
 	public static void apiRequest(final Context context, int method, String url, JSONObject params, final OnStringRequestResult successCallback) {
-		Log.i("api", " >> Api Request: " + url + " with params: " + params.toString());
 		HttpAsyncStringRequest httpAsyncRequest = new HttpAsyncStringRequest(context, method, url, params, new JSONObject(), new OnStringRequestResult() {
 			@Override
 			public void onSuccess(String result) {
@@ -128,17 +123,15 @@ public class NetworkService extends IntentService {
 	}
 
 	public static void apiRequest(final Context context, int method, String url, JSONObject params, final OnJSONObjectResult successCallback) {
-		Log.i("api", " >> Api Request: " + url + " with params: " + params.toString());
 
 		HttpAsyncJsonRequest asyncJsonRequest = new HttpAsyncJsonRequest(context, method, url, params, new JSONObject(), new OnJSONObjectResult() {
 			@Override
-			public void onSuccess(JSONObject object) {
-				successCallback.onSuccess(object);
+			public void onSuccess(JSONObject result) {
+				successCallback.onSuccess(result);
 			}
 
 			@Override
 			public void onError(String error) {
-				Log.e("api", " << Api Response Error: " + error);
 				successCallback.onError(error);
 			}
 		});
@@ -164,8 +157,8 @@ public class NetworkService extends IntentService {
 
 		HttpAsyncJsonRequest asyncJsonRequest = new HttpAsyncJsonRequest(context, method, url, params, headers, new OnJSONObjectResult() {
 			@Override
-			public void onSuccess(JSONObject object) {
-				successCallback.onSuccess(object);
+			public void onSuccess(JSONObject result) {
+				successCallback.onSuccess(result);
 			}
 
 			@Override
@@ -208,8 +201,14 @@ public class NetworkService extends IntentService {
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
-					Log.e("api", " << Api onErrorResponse: " + error.toString());
-					successCallback.onError(error.toString());
+					if (error.networkResponse != null) {
+						Log.e("api", " << Api onErrorResponse = code:"+error.networkResponse.statusCode+"; data:" + new String(error.networkResponse.data));
+						successCallback.onError("code:" + error.networkResponse.statusCode + "; data:" +new String(error.networkResponse.data) );
+					}else{
+						Log.e("api", " << Api onErrorResponse "+error.getMessage());
+						successCallback.onError(error.getMessage());
+					}
+
 				}
 			}) {
 				@Override
@@ -233,24 +232,6 @@ public class NetworkService extends IntentService {
 					return new HashMap<>();
 				}
 			};
-
-			request.setRetryPolicy(new RetryPolicy() {
-				@Override
-				public int getCurrentTimeout() {
-					return DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 4;
-				}
-
-				@Override
-				public int getCurrentRetryCount() {
-					return 3;
-				}
-
-				@Override
-				public void retry(VolleyError error) throws VolleyError {
-					Log.e("http", "HTTP Retry Error:", error);
-					successCallback.onError(error.getMessage());
-				}
-			});
 			queue.add(request);
 			return true;
 		}
@@ -286,8 +267,13 @@ public class NetworkService extends IntentService {
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
-					Log.e("api", " << Api onErrorResponse: " + error.toString());
-					successCallback.onError(error.toString());
+					if (error.networkResponse != null) {
+						Log.e("api", " << Api onErrorResponse = code:"+error.networkResponse.statusCode+"; data:" + new String(error.networkResponse.data));
+						successCallback.onError("code:" + error.networkResponse.statusCode + "; data:" +new String(error.networkResponse.data) );
+					}else{
+						Log.e("api", " << Api onErrorResponse "+error.getMessage());
+						successCallback.onError(error.getMessage());
+					}
 				}
 			}) {
 				@Override
@@ -314,23 +300,6 @@ public class NetworkService extends IntentService {
 					return new HashMap<>();
 				}
 			};
-			jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
-				@Override
-				public int getCurrentTimeout() {
-					return DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 4;
-				}
-
-				@Override
-				public int getCurrentRetryCount() {
-					return 3;
-				}
-
-				@Override
-				public void retry(VolleyError error) throws VolleyError {
-					Log.e("http", "HTTP Retry Error:", error);
-					successCallback.onError(error.getMessage());
-				}
-			});
 			queue.add(jsonObjectRequest);
 			return true;
 		}

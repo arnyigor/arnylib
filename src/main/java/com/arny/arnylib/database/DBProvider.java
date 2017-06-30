@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 public class DBProvider {
+
     private static DBHelper dbHelper = null;
 
     public static long insertDB(String table, ContentValues contentValues, Context context) {
@@ -57,10 +58,11 @@ public class DBProvider {
         return rowCount;
     }
 
-    public static void isDB(Context context) {
-        connectDB(context).getVersion();
-        disconnectDB();
-    }
+	public static void initDB(Context context,String name) {
+		DBHelper.dbName = name;
+		connectDB(context).getVersion();
+		disconnectDB();
+	}
 
     private static void disconnectDB() {
         dbHelper.close();

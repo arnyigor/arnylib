@@ -5,39 +5,37 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import com.arny.arnylib.utils.Utility;
 
 import java.util.ArrayList;
 
-import com.arny.arnylib.utils.Utility;
+class DBHelper extends SQLiteOpenHelper {
 
-public class DBHelper extends SQLiteOpenHelper {
-
-    private static final String DB_NAME = "secretbox";
     private static int dbVersion;
+    static String dbName;
     private Context context;
 
     DBHelper(Context context) {
-        super(context, DB_NAME, null, getDbVersion());
+        super(context, dbName, null, getDbVersion());
         this.context = context;
     }
-
-    private static int getDbVersion() {
+	private static int getDbVersion() {
         int version = (int) Utility.round((System.currentTimeMillis() / 1000),0)+10;
         if (dbVersion <= 0) {
             dbVersion = version;
         }
         return dbVersion;
     }
-    @Override
+	@Override
     public void onCreate(SQLiteDatabase db) {
         setTableMigrations(db);
         dbMigrations(db, context);
     }
-    @Override
+	@Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         dbMigrations(db, context);
     }
-    /**
+	/**
      * Создание таблицы миграций
      * @param db
      */
@@ -49,7 +47,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "applytime TEXT(20) NOT NULL"
                 + ");");
     }
-    /**
+	/**
      * Миграции базы данных
      * @param db
      * @param context
@@ -63,7 +61,7 @@ public class DBHelper extends SQLiteOpenHelper {
         filenames = newMigrations(db, filenames);
         runMigration(db, filenames, context);
     }
-    /**
+	/**
      * Проверяем наличие таблицы
      * @param db
      * @param tableName
@@ -80,7 +78,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return false;
     }
-    private void clearDb(SQLiteDatabase db){
+	private void clearDb(SQLiteDatabase db){
         db.beginTransaction();
         try {
             Cursor cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master", null);
@@ -99,7 +97,7 @@ public class DBHelper extends SQLiteOpenHelper {
             db.endTransaction();
         }
     }
-    /**
+	/**
      * Исключение миграций которые уже есть в таблице
      * @param db
      * @param filenames
@@ -134,7 +132,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return filenames;
     }
-    /**
+	/**
      * Запуск миграций из файлов
      * @param db
      * @param filenames
@@ -167,7 +165,7 @@ public class DBHelper extends SQLiteOpenHelper {
             }
         }
     }
-    /**
+	/**
      * Сортировка файлов по датам и префиксам,lib,потом app,
      * @param files
      * @return ArrayList<String>
@@ -212,6 +210,7 @@ public class DBHelper extends SQLiteOpenHelper {
         libsinfo.clear();
         return result;
     }
+
     /**
      * Восстанавливаем имя файла
      * @param dates
@@ -227,6 +226,4 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return result;
     }
-
-
 }
