@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
@@ -70,27 +71,39 @@ public class DroidUtils {
 		}
 	}
 
-	public static void confirmDialog(Context context, String title, String content, String btnOkText, String btnCancelText, final ConfirmDialogListener confirmDialogListener) {
+	public static void confirmDialog(Context context, String title, String content, String btnOkText, String btnCancelText, final ConfirmDialogListener dialogListener) {
 		AlertDialog.Builder builder = new AlertDialog.Builder((new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog)));
-//		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//		View dialogView = inflater.inflate(R.layout.alertdialog_custom_view, null);
-//		builder.setView(dialogView);
 		builder.setTitle(title);
 		builder.setMessage(content);
-//		TextView tvContent = (TextView) dialogView.findViewById(R.id.dialog_content);
-//		tvContent.setText(content);
 		builder.setPositiveButton(btnOkText, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
-				confirmDialogListener.onConfirm();
+				dialogListener.onConfirm();
 			}
 		});
 		builder.setNegativeButton(btnCancelText, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				confirmDialogListener.onCancel();
+				dialogListener.onCancel();
 				dialog.dismiss();
+			}
+		});
+		AlertDialog dialog = builder.create();
+		dialog.setCancelable(false);
+		dialog.show();
+	}
+
+
+	public static void alertDialog(Context context, String title, String content, String btnOkText, final AlertDialogListener dialogListener) {
+		AlertDialog.Builder builder = new AlertDialog.Builder((new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog)));
+		builder.setTitle(title);
+		builder.setMessage(content);
+		builder.setPositiveButton(btnOkText, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				dialogListener.onConfirm();
 			}
 		});
 		AlertDialog dialog = builder.create();
@@ -113,5 +126,17 @@ public class DroidUtils {
 		});
 		AlertDialog dialog = builder.create();
 		dialog.show();
+	}
+
+	public static void shareApp(Context context, String subject, String content, String chooseText){
+		try {
+			Intent i = new Intent(Intent.ACTION_SEND);
+			i.setType("text/plain");
+			i.putExtra(Intent.EXTRA_SUBJECT, subject);
+			i.putExtra(Intent.EXTRA_TEXT, content);
+			context.startActivity(Intent.createChooser(i, chooseText));
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
