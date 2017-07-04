@@ -1,4 +1,4 @@
-package com.arny.arnylib.loaders;
+package com.arny.arnylib.interfaces;
 
 public interface LoadingView {
 

@@ -460,4 +460,25 @@ public class Utility {
 		}
 		return result;
 	}
+
+	public static Float[] interpolate(float oldCnt, float newcnt, int cnt) {
+		float diff = newcnt - oldCnt;
+		float onePoint = diff / cnt;
+		float current = oldCnt;
+		ArrayList<Float> arr = new ArrayList<>();
+		while (true) {
+			arr.add(current);
+			current = current + onePoint;
+			if (current >= newcnt) {
+				break;
+			}
+		}
+		arr.add(newcnt);
+
+		Float[] tointer = new Float[arr.size()];
+		for (int i = 0; i < arr.size(); i++) {
+			tointer[i] = arr.get(i);
+		}
+		return tointer;
+	}
 }

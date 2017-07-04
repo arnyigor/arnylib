@@ -9,6 +9,8 @@ import com.android.volley.*;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.arny.arnylib.interfaces.OnJSONObjectResult;
+import com.arny.arnylib.interfaces.OnStringRequestResult;
 import com.arny.arnylib.utils.Utility;
 import org.json.JSONException;
 import org.json.JSONObject;

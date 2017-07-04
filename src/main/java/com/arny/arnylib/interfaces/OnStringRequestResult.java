@@ -1,4 +1,4 @@
-package com.arny.arnylib.network;
+package com.arny.arnylib.interfaces;
 
 public interface OnStringRequestResult {
 	void onSuccess(String result);

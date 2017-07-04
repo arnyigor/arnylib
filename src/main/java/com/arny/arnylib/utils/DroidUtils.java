@@ -10,6 +10,9 @@ import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.support.v7.view.ContextThemeWrapper;
 import com.arny.arnylib.R;
+import com.arny.arnylib.interfaces.AlertDialogListener;
+import com.arny.arnylib.interfaces.ConfirmDialogListener;
+import com.arny.arnylib.interfaces.ListDialogListener;
 import com.arny.arnylib.models.SMS;
 
 import java.util.ArrayList;

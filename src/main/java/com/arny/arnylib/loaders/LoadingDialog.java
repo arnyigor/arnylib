@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import com.arny.arnylib.R;
+import com.arny.arnylib.interfaces.LoadingView;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;

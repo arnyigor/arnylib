@@ -1,4 +1,4 @@
-package com.arny.arnylib.utils;
+package com.arny.arnylib.interfaces;
 
 public interface AlertDialogListener {
 	void onConfirm();

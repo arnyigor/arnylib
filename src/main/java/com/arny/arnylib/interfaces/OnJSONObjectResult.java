@@ -1,4 +1,4 @@
-package com.arny.arnylib.network;
+package com.arny.arnylib.interfaces;
 
 import org.json.JSONObject;
 public interface OnJSONObjectResult {
