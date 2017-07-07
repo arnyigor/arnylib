@@ -80,15 +80,15 @@ public class DBProvider {
 	}
 
 
-	public static String getCursorString(Cursor cursor, String columnindex) {
-		return cursor.getString(cursor.getColumnIndex(columnindex));
+	public static String getCursorString(Cursor cursor, String columnname) {
+		return cursor.getString(cursor.getColumnIndex(columnname));
 	}
 
-	public static boolean getCursorBoolean(Cursor cursor, String columnindex) {
-		return Boolean.parseBoolean(getCursorString(cursor, columnindex));
+	public static boolean getCursorBoolean(Cursor cursor, String columnname) {
+		return Boolean.parseBoolean(getCursorString(cursor, columnname));
 	}
 
-	public static double getCursorDouble(Cursor cursor, String columnindex) {
-		return Double.parseDouble(getCursorString(cursor, columnindex));
+	public static double getCursorDouble(Cursor cursor, String columnname) {
+		return Double.parseDouble(getCursorString(cursor, columnname));
 	}
 }
