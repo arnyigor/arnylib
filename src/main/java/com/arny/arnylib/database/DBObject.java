@@ -39,7 +39,7 @@ public abstract class DBObject {
 				fieldToMap.put(field.getName(), attr.name());
 			}
 		}
-		return fieldToMap.get(fieldname);
+		return fieldToMap.get("").toString();
 	}
 
 //	public ContentValues getContentValue(String fieldname){

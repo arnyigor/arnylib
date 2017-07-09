@@ -1,6 +1,6 @@
 package com.arny.arnylib.interfaces;
 
-import com.arny.arnylib.models.FragmentData;
+import com.arny.arnylib.models.DataTransfer;
 public interface ActivityCommunicator{
-	 void passDataToActivity(FragmentData data);
+	 void passDataToActivity(DataTransfer data);
 }

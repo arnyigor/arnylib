@@ -29,18 +29,7 @@ import java.util.regex.Pattern;
 
 public class Utility {
 
-	/**
-	 * Повибрировать :)
-	 *
-	 * @param duration Длительность в ms, например, 500 - полсекунды
-	 * @param context
-	 */
-	public static void vibrate(int duration, Context context) {
-		Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-		v.vibrate(duration);
-	}
-
-    public static String trimInside(String text) {
+	public static String trimInside(String text) {
         return text.trim().replace(" ", "");
     }
 
