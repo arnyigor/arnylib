@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.view.ContextThemeWrapper;
-import android.util.Log;
 import com.arny.arnylib.R;
 import com.arny.arnylib.interfaces.AlertDialogListener;
 import com.arny.arnylib.interfaces.ConfirmDialogListener;
@@ -158,16 +157,18 @@ public class DroidUtils {
 	}
 
 	public static String dumpIntent(Intent data){
-		Bundle bundle = data.getExtras();
-		if (bundle != null) {
-			StringBuilder stringBuilder = new StringBuilder();
-			for (String key : bundle.keySet()) {
-				Object value = bundle.get(key);
-				if (value != null) {
-					stringBuilder.append(String.format("key:%s  val:%s  classname:(%s)", key, value.toString(), value.getClass().getName()));
+		if (data != null) {
+			Bundle bundle = data.getExtras();
+			if (bundle != null) {
+				StringBuilder stringBuilder = new StringBuilder();
+				for (String key : bundle.keySet()) {
+					Object value = bundle.get(key);
+					if (value != null) {
+						stringBuilder.append(String.format("key:%s  val:%s  classname:(%s)", key, value.toString(), value.getClass().getName()));
+					}
 				}
+				return stringBuilder.toString();
 			}
-			return stringBuilder.toString();
 		}
 		return null;
 	}

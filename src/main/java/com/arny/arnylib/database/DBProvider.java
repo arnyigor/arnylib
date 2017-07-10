@@ -16,7 +16,17 @@ public class DBProvider {
         return rowID;
     }
 
-	public static long insertOrUpdateDB(String table, ContentValues contentValues, Context context) {
+	public static int insertReplaceDB(Context context, String table, String where, String[] args, ContentValues cv){
+		Cursor cursor = selectDB(table, null, where,args,null,context);
+//		String dumb = DroidUtils.dumpCursor(cursor);
+		if (cursor != null && cursor.moveToFirst()) {
+			return updateDB(table, cv, where,args, context);
+		}else{
+			return (int) insertDB(table, cv, context);
+		}
+	}
+
+	public static long insertOrUpdateDB(Context context, String table, ContentValues contentValues) {
 		long rowID = connectDB(context).insertWithOnConflict(table, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
 		disconnectDB();
 		return rowID;
@@ -79,6 +89,10 @@ public class DBProvider {
 		return cursor.getInt(cursor.getColumnIndex(columnname));
 	}
 
+
+	public static long getCursorLong(Cursor cursor, String columnname) {
+		return cursor.getLong(cursor.getColumnIndex(columnname));
+	}
 
 	public static String getCursorString(Cursor cursor, String columnname) {
 		return cursor.getString(cursor.getColumnIndex(columnname));

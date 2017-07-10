@@ -30,6 +30,6 @@ public class DataTransfer {
 
 	@Override
 	public String toString() {
-		return "method:" + method + " content:" + content;
+		return "method:" + method + " content:" + content.toString();
 	}
 }
