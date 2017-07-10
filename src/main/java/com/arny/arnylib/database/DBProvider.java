@@ -75,8 +75,8 @@ public class DBProvider {
         return dbHelper.getWritableDatabase();
     }
 
-	public static int getCursorInt(Cursor cursor, String columnindex) {
-		return cursor.getInt(cursor.getColumnIndex(columnindex));
+	public static int getCursorInt(Cursor cursor, String columnname) {
+		return cursor.getInt(cursor.getColumnIndex(columnname));
 	}
 
 
