@@ -269,6 +269,7 @@ public class NetworkService extends IntentService {
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
+					Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "onErrorResponse: error = " + error);
 					if (error.networkResponse != null) {
 						Log.e("api", " << Api onErrorResponse = code:"+error.networkResponse.statusCode+"; data:" + new String(error.networkResponse.data));
 						successCallback.onError("code:" + error.networkResponse.statusCode + "; data:" +new String(error.networkResponse.data) );

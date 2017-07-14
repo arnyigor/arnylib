@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.view.ContextThemeWrapper;
+import android.util.Log;
 import com.arny.arnylib.R;
 import com.arny.arnylib.interfaces.AlertDialogListener;
 import com.arny.arnylib.interfaces.ConfirmDialogListener;
@@ -60,19 +61,27 @@ public class DroidUtils {
 	}
 
 	public static void hideProgress(ProgressDialog pDialog) {
-		if (pDialog != null) {
-			if (pDialog.isShowing()) {
-				pDialog.dismiss();
+		try {
+			if (pDialog != null) {
+				if (pDialog.isShowing()) {
+					pDialog.dismiss();
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
-	public static void showProgress(String notif, ProgressDialog pDialog) {
-		if (pDialog != null) {
-			pDialog.setMessage(notif);
-			if (!pDialog.isShowing()) {
-				pDialog.show();
+	public static void showProgress(ProgressDialog pDialog, String notif) {
+		try {
+			if (pDialog != null) {
+				pDialog.setMessage(notif);
+				if (!pDialog.isShowing()) {
+					pDialog.show();
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -97,6 +106,22 @@ public class DroidUtils {
 		AlertDialog dialog = builder.create();
 		dialog.setCancelable(false);
 		dialog.show();
+	}
+
+	public static void alertConfirmDialog(Context context, String title, final AlertDialogListener alertDialogListener) {
+		new AlertDialog.Builder(context).setTitle(title + "?")
+				.setNegativeButton(context.getResources().getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				}).setPositiveButton(context.getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				alertDialogListener.onConfirm();
+			}
+		}).show();
 	}
 
 
