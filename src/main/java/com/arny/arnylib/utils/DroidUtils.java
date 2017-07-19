@@ -1,5 +1,6 @@
 package com.arny.arnylib.utils;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -7,11 +8,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.view.ContextThemeWrapper;
+import android.support.v7.widget.AppCompatDrawableManager;
 import android.util.Log;
+import android.view.View;
 import com.arny.arnylib.R;
 import com.arny.arnylib.interfaces.AlertDialogListener;
 import com.arny.arnylib.interfaces.ConfirmDialogListener;
@@ -168,6 +173,20 @@ public class DroidUtils {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Set backgroundTint to {@link View} across all targeting platform level.
+	 * @param view the {@link View} to tint.
+	 * @param color color used to tint.
+	 */
+	@SuppressLint("RestrictedApi")
+	public static void tintView(View view, int color) {
+		final Drawable d = view.getBackground();
+		final Drawable nd = d.getConstantState().newDrawable();
+		nd.setColorFilter(AppCompatDrawableManager.getPorterDuffColorFilter(
+				color, PorterDuff.Mode.SRC_IN));
+		view.setBackground(nd);
 	}
 
 	/**
