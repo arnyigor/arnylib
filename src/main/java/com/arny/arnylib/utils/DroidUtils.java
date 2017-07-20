@@ -6,17 +6,26 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.AppCompatDrawableManager;
+import android.text.Html;
+import android.text.Spanned;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.TextView;
 import com.arny.arnylib.R;
 import com.arny.arnylib.interfaces.AlertDialogListener;
 import com.arny.arnylib.interfaces.ConfirmDialogListener;
@@ -215,5 +224,82 @@ public class DroidUtils {
 			}
 		}
 		return null;
+	}
+
+	public static Spanned fromHtml(String html){
+		Spanned result;
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+			result = Html.fromHtml(html,Html.FROM_HTML_MODE_LEGACY);
+		} else {
+			result = Html.fromHtml(html);
+		}
+		return result;
+	}
+
+	public static void addTextEllipseToEnd(final TextView tv, final String fileExtension) {
+		if (tv.getTag() == null) {
+			tv.setTag(tv.getText());
+		}
+		ViewTreeObserver vto = tv.getViewTreeObserver();
+		vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+			@SuppressWarnings("deprecation")
+			@Override
+			public void onGlobalLayout() {
+				try {
+					ViewTreeObserver obs = tv.getViewTreeObserver();
+					obs.removeGlobalOnLayoutListener(this);
+					String text = tv.getLayout().getText().toString();
+					if (text.endsWith("…")) {
+						int endIndex = text.indexOf("…");
+						text = text.substring(0, endIndex);
+						text = text.substring(0, endIndex-fileExtension.length()-3)+"…" +fileExtension ;
+						tv.setText(text);
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
+
+	}
+
+	/**
+	 * Конвертирование из dp в px
+	 */
+	public static float convertDPtoPX(int dp, Context context) {
+		Resources resources = context.getResources();
+		DisplayMetrics metrics = resources.getDisplayMetrics();
+		return dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+	}
+
+	/**
+	 * Конвертирование из px в dp
+	 */
+	public static float convertPXtoDP(int px, Context context) {
+		Resources resources = context.getResources();
+		DisplayMetrics metrics = resources.getDisplayMetrics();
+		return px / ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+	}
+
+	/**
+	 * Воспроизвести звук
+	 *
+	 * @param resourceId ID звукового ресурса
+	 * @param context    Контекст
+	 */
+	public static void playSound(int resourceId, Context context) {
+	    try {
+	        MediaPlayer mp = MediaPlayer.create(context, resourceId);
+	        mp.start();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+
+	public static boolean isConnected(Context context) {
+	    ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+	    return !(networkInfo == null || !networkInfo.isConnected() || !networkInfo.isAvailable());
 	}
 }

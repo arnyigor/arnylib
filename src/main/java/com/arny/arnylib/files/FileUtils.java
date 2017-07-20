@@ -1283,14 +1283,14 @@ public class FileUtils {
 	}
 
 	public static Bitmap getThumb(String finalFilePath, Context context, int widthDP, int heightDP) {
-		return ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(finalFilePath), (int) Utility.convertDPtoPX(widthDP,context),  (int) Utility.convertDPtoPX(heightDP,context));
+		return ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(finalFilePath), (int) DroidUtils.convertDPtoPX(widthDP,context),  (int) DroidUtils.convertDPtoPX(heightDP,context));
 	}
 
 	public static Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight, Context context) {
 		int width = bm.getWidth();
 		int height = bm.getHeight();
-		float scaleWidth = ((float) (int) Utility.convertDPtoPX(newWidth, context)) / width;
-		float scaleHeight = ((float) (int) Utility.convertDPtoPX(newHeight, context)) / height;
+		float scaleWidth = ((float) (int) DroidUtils.convertDPtoPX(newWidth, context)) / width;
+		float scaleHeight = ((float) (int) DroidUtils.convertDPtoPX(newHeight, context)) / height;
 		// CREATE A MATRIX FOR THE MANIPULATION
 		Matrix matrix = new Matrix();
 		// RESIZE THE BIT MAP
