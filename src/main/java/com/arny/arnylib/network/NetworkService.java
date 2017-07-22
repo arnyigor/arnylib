@@ -234,6 +234,7 @@ public class NetworkService extends IntentService {
 					return new HashMap<>();
 				}
 			};
+			request.setTag(url);
 			queue.add(request);
 			return true;
 		}
@@ -303,6 +304,7 @@ public class NetworkService extends IntentService {
 					return new HashMap<>();
 				}
 			};
+			jsonObjectRequest.setTag(url);
 			queue.add(jsonObjectRequest);
 			return true;
 		}
