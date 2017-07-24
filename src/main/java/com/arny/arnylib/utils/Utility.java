@@ -172,6 +172,10 @@ public class Utility {
         return dates;
     }
 
+    public static boolean matcher(String regex, String string) {
+        return Pattern.matches(regex, string);
+    }
+
     public static String match(String where,String pattern,int groupnum){
         Pattern p = Pattern.compile(pattern);
         Matcher m = p.matcher(where);
