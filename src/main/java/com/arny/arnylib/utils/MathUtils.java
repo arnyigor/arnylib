@@ -1,9 +1,20 @@
 package com.arny.arnylib.utils;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Random;
 
 public class MathUtils {
+
+
+    public static String simpleDoubleFormat(double d) {
+        if (d == 0) {
+            return "0";
+        }
+        DecimalFormat df = new DecimalFormat("0");
+        df.setMaximumFractionDigits(340);
+        return df.format(d).replace(",",".");
+    }
 
     /**
      * дробная часть числа
