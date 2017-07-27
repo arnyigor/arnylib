@@ -32,6 +32,7 @@ import com.arny.arnylib.interfaces.ConfirmDialogListener;
 import com.arny.arnylib.interfaces.ListDialogListener;
 import com.arny.arnylib.models.SMS;
 
+import java.io.*;
 import java.util.ArrayList;
 public class DroidUtils {
 
@@ -302,4 +303,36 @@ public class DroidUtils {
 	    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 	    return !(networkInfo == null || !networkInfo.isConnected() || !networkInfo.isAvailable());
 	}
+
+
+
+    /**
+     * Converting objects to byte arrays
+     */
+    public static byte[] object2Bytes( Object o ) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream( baos );
+            oos.writeObject( o );
+            return baos.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    /**
+     * Converting byte arrays to objects
+     */
+    public static Object bytes2Object( byte raw[] ) {
+        try {
+            ByteArrayInputStream bais = new ByteArrayInputStream( raw );
+            ObjectInputStream ois = new ObjectInputStream( bais );
+            return ois.readObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
