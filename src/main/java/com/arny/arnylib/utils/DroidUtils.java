@@ -10,6 +10,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
@@ -22,13 +23,19 @@ import android.support.v7.widget.AppCompatDrawableManager;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.DisplayMetrics;
-import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import com.arny.arnylib.R;
 import com.arny.arnylib.interfaces.AlertDialogListener;
 import com.arny.arnylib.interfaces.ConfirmDialogListener;
+import com.arny.arnylib.interfaces.InputDialogListener;
 import com.arny.arnylib.interfaces.ListDialogListener;
 import com.arny.arnylib.models.SMS;
 
@@ -100,6 +107,115 @@ public class DroidUtils {
 		}
 	}
 
+    public static void simpleInputDialog(Context context, String title,String content, String btnOkText, String btnCancelText, int inputType, final InputDialogListener inputDialogListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder((new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog)));
+        builder.setTitle(title);
+        LinearLayout.LayoutParams params =
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        TextView tv = new TextView(context);
+        tv.setText(content);
+        tv.setLayoutParams(params);
+        final EditText etResult = new EditText(context);
+        etResult.setLayoutParams(params);
+        layout.addView(tv);
+        layout.addView(etResult);
+        builder.setView(layout);
+        etResult.findFocus();
+        etResult.setInputType(inputType);
+        builder.setPositiveButton(btnOkText, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String fullText = etResult.getText().toString().trim();
+                inputDialogListener.onConfirm(fullText);
+                if (fullText.length() > 0) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.setNegativeButton(btnCancelText, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+
+    public static void simpleInputDialog(Context context, String title,String content,String preEdit, String btnOkText, String btnCancelText, int inputType, final InputDialogListener inputDialogListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder((new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog)));
+        builder.setTitle(title);
+        LinearLayout.LayoutParams params =
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        TextView tv = new TextView(context);
+        tv.setText(content);
+        tv.setPadding(20, 10, 20, 10); // in pixels (left, top, right, bottom)
+        tv.setLayoutParams(params);
+        final EditText etResult = new EditText(context);
+        etResult.setText(preEdit);
+        etResult.setPadding(20, 10, 20, 10); // in pixels (left, top, right, bottom)
+        etResult.setLayoutParams(params);
+        layout.addView(tv);
+        layout.addView(etResult);
+        builder.setView(layout);
+        etResult.findFocus();
+        etResult.setInputType(inputType);
+        builder.setPositiveButton(btnOkText, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String fullText = etResult.getText().toString().trim();
+                inputDialogListener.onConfirm(fullText);
+                if (fullText.length() > 0) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.setNegativeButton(btnCancelText, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+
+
+    public static void simpleInputDialog(Context context, String title, String btnOkText, String btnCancelText, int inputType, final InputDialogListener inputDialogListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder((new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog)));
+        builder.setTitle(title);
+        final EditText etResult = new EditText(context);
+        builder.setView(etResult);
+        etResult.findFocus();
+        etResult.setInputType(inputType);
+        builder.setPositiveButton(btnOkText, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                inputDialogListener.onConfirm(etResult.getText().toString().trim());
+            }
+        });
+        builder.setNegativeButton(btnCancelText, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+
 	public static void confirmDialog(Context context, String title, String content, String btnOkText, String btnCancelText, final ConfirmDialogListener dialogListener) {
 		AlertDialog.Builder builder = new AlertDialog.Builder((new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog)));
 		builder.setTitle(title);
@@ -139,11 +255,28 @@ public class DroidUtils {
 		}).show();
 	}
 
+    public static void alertDialog(Context context, String title, String btnOkText, final AlertDialogListener dialogListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder((new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog)));
+        builder.setTitle(title);
+        builder.setPositiveButton(btnOkText, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                dialogListener.onConfirm();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+
 
 	public static void alertDialog(Context context, String title, String content, String btnOkText, final AlertDialogListener dialogListener) {
 		AlertDialog.Builder builder = new AlertDialog.Builder((new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog)));
 		builder.setTitle(title);
-		builder.setMessage(content);
+        if (content != null) {
+            builder.setMessage(content);
+        }
 		builder.setPositiveButton(btnOkText, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -160,9 +293,13 @@ public class DroidUtils {
 		return DatabaseUtils.dumpCursorToString(cursor);
 	}
 
-	public static void listDialog(Context context, String[] items, final ListDialogListener listDialogListener) {
+    public static void listDialog(Context context, String[] items, final ListDialogListener listDialogListener) {
+        listDialog(context, items, context.getResources().getString(R.string.list_dialog_title), listDialogListener);
+    }
+
+    public static void listDialog(Context context, String[] items, String title, final ListDialogListener listDialogListener) {
 		AlertDialog.Builder builder = new AlertDialog.Builder((new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog)));
-		builder.setTitle(context.getResources().getString(R.string.list_dialog_title));
+		builder.setTitle(title);
 		builder.setItems(items, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int item) {
@@ -304,16 +441,14 @@ public class DroidUtils {
 	    return !(networkInfo == null || !networkInfo.isConnected() || !networkInfo.isAvailable());
 	}
 
-
-
     /**
      * Converting objects to byte arrays
      */
-    public static byte[] object2Bytes( Object o ) {
+    public static byte[] object2Bytes(Object o) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream( baos );
-            oos.writeObject( o );
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(o);
             return baos.toByteArray();
         } catch (IOException e) {
             e.printStackTrace();
@@ -321,18 +456,23 @@ public class DroidUtils {
         }
     }
 
-
     /**
      * Converting byte arrays to objects
      */
-    public static Object bytes2Object( byte raw[] ) {
+    public static Object bytes2Object(byte raw[]) {
         try {
-            ByteArrayInputStream bais = new ByteArrayInputStream( raw );
-            ObjectInputStream ois = new ObjectInputStream( bais );
+            ByteArrayInputStream bais = new ByteArrayInputStream(raw);
+            ObjectInputStream ois = new ObjectInputStream(bais);
             return ois.readObject();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static void refreshActivity(Context context, Class<?> refreshedClass) {
+        Intent intent = new Intent(context, refreshedClass);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
     }
 }
