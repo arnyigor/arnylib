@@ -397,4 +397,22 @@ public class Utility {
 		}
 		return tointer;
 	}
+
+    public static <T> boolean contains(ArrayList<T>array, T v) {
+        for (T e : array) {
+            if (v.equals(e)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static <T> boolean contains(final T[] array, T v) {
+        for (T e : array) {
+            if (v.equals(e)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
