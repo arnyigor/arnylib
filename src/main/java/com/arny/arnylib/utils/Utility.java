@@ -407,6 +407,13 @@ public class Utility {
         return false;
     }
 
+    public static void iterHashMap(Map<String,Object> map){
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+        }
+    }
+
     public static <T> boolean contains(final T[] array, T v) {
         for (T e : array) {
             if (v.equals(e)) {
