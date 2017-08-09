@@ -172,7 +172,7 @@ public class NetworkService extends IntentService {
 	}
 
 	private static class HttpAsyncStringRequest extends AsyncTask<Void, Void, Boolean> {
-		private final OnStringRequestResult successCallback;
+		private final OnStringRequestResult result;
 		private String url;
 		private JSONObject params;
 		private JSONObject headers;
@@ -181,8 +181,8 @@ public class NetworkService extends IntentService {
 
 
 
-		private HttpAsyncStringRequest(Context context, int apiMethod, String requestUrl, JSONObject requestParams, JSONObject headers, final OnStringRequestResult successCallback) {
-			this.successCallback = successCallback;
+		private HttpAsyncStringRequest(Context context, int apiMethod, String requestUrl, JSONObject requestParams, JSONObject headers, final OnStringRequestResult result) {
+			this.result = result;
 			params = requestParams;
 			url = requestUrl;
 			this.apiMethod = apiMethod;
@@ -198,17 +198,17 @@ public class NetworkService extends IntentService {
 				@Override
 				public void onResponse(String response) {
 					Log.i("api", " << Api onResponse: " + response);
-					successCallback.onSuccess(response);
+					result.onSuccess(response);
 				}
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
 					if (error.networkResponse != null) {
 						Log.e("api", " << Api onErrorResponse = code:"+error.networkResponse.statusCode+"; data:" + new String(error.networkResponse.data));
-						successCallback.onError("code:" + error.networkResponse.statusCode + "; data:" +new String(error.networkResponse.data) );
+						result.onError("code:" + error.networkResponse.statusCode + "; data:" +new String(error.networkResponse.data) );
 					}else{
 						Log.e("api", " << Api onErrorResponse "+error.getMessage());
-						successCallback.onError(error.getMessage());
+						result.onError(error.getMessage());
 					}
 
 				}
@@ -222,6 +222,27 @@ public class NetworkService extends IntentService {
 					}
 					return new HashMap<>();
 				}
+
+                @Override
+                public Request<?> setRetryPolicy(RetryPolicy retryPolicy) {
+                    return super.setRetryPolicy(new RetryPolicy() {
+                        @Override
+                        public int getCurrentTimeout() {
+                            return 10000;
+                        }
+
+                        @Override
+                        public int getCurrentRetryCount() {
+                            return 3;
+                        }
+
+                        @Override
+                        public void retry(VolleyError error) throws VolleyError {
+                            Log.e("api", " << Api onErrorResponse "+error.getMessage());
+                            result.onError(error.getMessage());
+                        }
+                    });
+                }
 
 				@Override
 				public Map<String, String> getHeaders() throws AuthFailureError {
@@ -241,15 +262,15 @@ public class NetworkService extends IntentService {
 	}
 
 	private static class HttpAsyncJsonRequest extends AsyncTask<Void, Void, Boolean> {
-		private OnJSONObjectResult successCallback;
+		private OnJSONObjectResult result;
 		private String url;
 		private JSONObject params;
 		private JSONObject headers;
 		private Context context;
 		private int apiMethod;
 
-		private HttpAsyncJsonRequest(Context context, int apiMethod, String requestUrl, JSONObject requestParams, JSONObject headers, final OnJSONObjectResult successCallback) {
-			this.successCallback = successCallback;
+		private HttpAsyncJsonRequest(Context context, int apiMethod, String requestUrl, JSONObject requestParams, JSONObject headers, final OnJSONObjectResult result) {
+			this.result = result;
 			this.params = requestParams;
 			this.url = requestUrl;
 			this.apiMethod = apiMethod;
@@ -265,7 +286,7 @@ public class NetworkService extends IntentService {
 				@Override
 				public void onResponse(JSONObject response) {
 					Log.i("api", " << Api onResponse: " + response);
-					successCallback.onSuccess(response);
+					result.onSuccess(response);
 				}
 			}, new Response.ErrorListener() {
 				@Override
@@ -273,10 +294,10 @@ public class NetworkService extends IntentService {
 					Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "onErrorResponse: error = " + error);
 					if (error.networkResponse != null) {
 						Log.e("api", " << Api onErrorResponse = code:"+error.networkResponse.statusCode+"; data:" + new String(error.networkResponse.data));
-						successCallback.onError("code:" + error.networkResponse.statusCode + "; data:" +new String(error.networkResponse.data) );
+						result.onError("code:" + error.networkResponse.statusCode + "; data:" +new String(error.networkResponse.data) );
 					}else{
 						Log.e("api", " << Api onErrorResponse "+error.getMessage());
-						successCallback.onError(error.getMessage());
+						result.onError(error.getMessage());
 					}
 				}
 			}) {
@@ -292,7 +313,28 @@ public class NetworkService extends IntentService {
 					return new HashMap<>();
 				}
 
-				@Override
+                @Override
+                public Request<?> setRetryPolicy(RetryPolicy retryPolicy) {
+                    return super.setRetryPolicy(new RetryPolicy() {
+                        @Override
+                        public int getCurrentTimeout() {
+                            return 30000;
+                        }
+
+                        @Override
+                        public int getCurrentRetryCount() {
+                            return 1;
+                        }
+
+                        @Override
+                        public void retry(VolleyError error) throws VolleyError {
+                            Log.e("api", " << Api onErrorResponse "+error.getMessage());
+                            result.onError(error.getMessage());
+                        }
+                    });
+                }
+
+                @Override
 				public Map<String, String> getHeaders() throws AuthFailureError {
 					try {
 						if (headers != null) {
