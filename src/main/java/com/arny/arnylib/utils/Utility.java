@@ -422,4 +422,12 @@ public class Utility {
         }
         return false;
     }
+
+    public static void setJsonParam(JSONObject params, String col, String val) {
+        try {
+            params.put(col, val);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }

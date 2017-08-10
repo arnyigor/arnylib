@@ -223,26 +223,26 @@ public class NetworkService extends IntentService {
 					return new HashMap<>();
 				}
 
-                @Override
-                public Request<?> setRetryPolicy(RetryPolicy retryPolicy) {
-                    return super.setRetryPolicy(new RetryPolicy() {
-                        @Override
-                        public int getCurrentTimeout() {
-                            return 10000;
-                        }
-
-                        @Override
-                        public int getCurrentRetryCount() {
-                            return 3;
-                        }
-
-                        @Override
-                        public void retry(VolleyError error) throws VolleyError {
-                            Log.e("api", " << Api onErrorResponse "+error.getMessage());
-                            result.onError(error.getMessage());
-                        }
-                    });
-                }
+//                @Override
+//                public Request<?> setRetryPolicy(RetryPolicy retryPolicy) {
+//                    return super.setRetryPolicy(new RetryPolicy() {
+//                        @Override
+//                        public int getCurrentTimeout() {
+//                            return 10000;
+//                        }
+//
+//                        @Override
+//                        public int getCurrentRetryCount() {
+//                            return 3;
+//                        }
+//
+//                        @Override
+//                        public void retry(VolleyError error) throws VolleyError {
+//                            Log.e("api", " << Api onErrorResponse "+error.getMessage());
+//                            result.onError(error.getMessage());
+//                        }
+//                    });
+//                }
 
 				@Override
 				public Map<String, String> getHeaders() throws AuthFailureError {
@@ -313,26 +313,26 @@ public class NetworkService extends IntentService {
 					return new HashMap<>();
 				}
 
-                @Override
-                public Request<?> setRetryPolicy(RetryPolicy retryPolicy) {
-                    return super.setRetryPolicy(new RetryPolicy() {
-                        @Override
-                        public int getCurrentTimeout() {
-                            return 30000;
-                        }
-
-                        @Override
-                        public int getCurrentRetryCount() {
-                            return 1;
-                        }
-
-                        @Override
-                        public void retry(VolleyError error) throws VolleyError {
-                            Log.e("api", " << Api onErrorResponse "+error.getMessage());
-                            result.onError(error.getMessage());
-                        }
-                    });
-                }
+//                @Override
+//                public Request<?> setRetryPolicy(RetryPolicy retryPolicy) {
+//                    return super.setRetryPolicy(new RetryPolicy() {
+//                        @Override
+//                        public int getCurrentTimeout() {
+//                            return 30000;
+//                        }
+//
+//                        @Override
+//                        public int getCurrentRetryCount() {
+//                            return 1;
+//                        }
+//
+//                        @Override
+//                        public void retry(VolleyError error) throws VolleyError {
+//                            Log.e("api", " << Api onErrorResponse "+error.getMessage());
+//                            result.onError(error.getMessage());
+//                        }
+//                    });
+//                }
 
                 @Override
 				public Map<String, String> getHeaders() throws AuthFailureError {
