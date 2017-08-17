@@ -202,6 +202,12 @@ public class Utility {
         return (new SimpleDateFormat("dd MMM yyyy HH:mm:ss.sss", Locale.getDefault())).format(new Date(System.currentTimeMillis()));
     }
 
+    public static boolean isTimeOlderMins(int min,long time) {
+        long now = System.currentTimeMillis();
+        long diff =  now-time ;
+        return  (diff /(1000 *  60 )) > min;
+    }
+
     public static String getDateTime(String format) {
         return (new SimpleDateFormat(format, Locale.getDefault())).format(new Date(System.currentTimeMillis()));
     }
