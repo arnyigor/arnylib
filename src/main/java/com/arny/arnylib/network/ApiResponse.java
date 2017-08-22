@@ -1,6 +1,6 @@
 package com.arny.arnylib.network;
 
-public class DummyObject {
+public class ApiResponse {
 
     private String mTitle;
     private String mBody;

@@ -29,18 +29,8 @@ public class NetworkService extends IntentService {
 			requestQueue = Volley.newRequestQueue(context);
 		return requestQueue;
 	}
-	public static HashMap<String, String> getJsonObjectToHashMap(JSONObject params) throws JSONException {
-		HashMap<String, String> mapParams = new HashMap<>();
-		if (params.names() != null) {
-			for(int i = 0; i<params.names().length(); i++){
-				mapParams.put(params.names().getString(i), (String) params.get(params.names().getString(i)));
-			}
-		}
-		Log.i(NetworkService.class.getSimpleName(), "getJsonObjectToHashMap: mapParams = " + mapParams);
-		return mapParams;
-	}
 
-	public NetworkService() {
+    public NetworkService() {
 		super("NetworkService");
 	}
 
@@ -203,51 +193,23 @@ public class NetworkService extends IntentService {
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
-					if (error.networkResponse != null) {
-						Log.e("api", " << Api onErrorResponse = code:"+error.networkResponse.statusCode+"; data:" + new String(error.networkResponse.data));
-						result.onError("code:" + error.networkResponse.statusCode + "; data:" +new String(error.networkResponse.data) );
-					}else{
-						Log.e("api", " << Api onErrorResponse "+error.getMessage());
-						result.onError(error.getMessage());
-					}
-
+                    result.onError(ApiUtils.getVolleyError(error));
 				}
 			}) {
 				@Override
 				protected Map<String, String> getParams() {
 					try {
-						return getJsonObjectToHashMap(params);
+						return ApiUtils.getJsonObjectToHashMap(params);
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
 					return new HashMap<>();
 				}
 
-//                @Override
-//                public Request<?> setRetryPolicy(RetryPolicy retryPolicy) {
-//                    return super.setRetryPolicy(new RetryPolicy() {
-//                        @Override
-//                        public int getCurrentTimeout() {
-//                            return 10000;
-//                        }
-//
-//                        @Override
-//                        public int getCurrentRetryCount() {
-//                            return 3;
-//                        }
-//
-//                        @Override
-//                        public void retry(VolleyError error) throws VolleyError {
-//                            Log.e("api", " << Api onErrorResponse "+error.getMessage());
-//                            result.onError(error.getMessage());
-//                        }
-//                    });
-//                }
-
 				@Override
 				public Map<String, String> getHeaders() throws AuthFailureError {
 					try {
-						return getJsonObjectToHashMap(headers);
+						return ApiUtils.getJsonObjectToHashMap(headers);
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -261,7 +223,7 @@ public class NetworkService extends IntentService {
 		}
 	}
 
-	private static class HttpAsyncJsonRequest extends AsyncTask<Void, Void, Boolean> {
+    private static class HttpAsyncJsonRequest extends AsyncTask<Void, Void, Boolean> {
 		private OnJSONObjectResult result;
 		private String url;
 		private JSONObject params;
@@ -291,21 +253,14 @@ public class NetworkService extends IntentService {
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
-					Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "onErrorResponse: error = " + error);
-					if (error.networkResponse != null) {
-						Log.e("api", " << Api onErrorResponse = code:"+error.networkResponse.statusCode+"; data:" + new String(error.networkResponse.data));
-						result.onError("code:" + error.networkResponse.statusCode + "; data:" +new String(error.networkResponse.data) );
-					}else{
-						Log.e("api", " << Api onErrorResponse "+error.getMessage());
-						result.onError(error.getMessage());
-					}
+                    result.onError(ApiUtils.getVolleyError(error));
 				}
 			}) {
 				@Override
 				protected Map<String, String> getParams() {
 					try {
 						if (params != null) {
-							return getJsonObjectToHashMap(params);
+							return ApiUtils.getJsonObjectToHashMap(params);
 						}
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -313,32 +268,11 @@ public class NetworkService extends IntentService {
 					return new HashMap<>();
 				}
 
-//                @Override
-//                public Request<?> setRetryPolicy(RetryPolicy retryPolicy) {
-//                    return super.setRetryPolicy(new RetryPolicy() {
-//                        @Override
-//                        public int getCurrentTimeout() {
-//                            return 30000;
-//                        }
-//
-//                        @Override
-//                        public int getCurrentRetryCount() {
-//                            return 1;
-//                        }
-//
-//                        @Override
-//                        public void retry(VolleyError error) throws VolleyError {
-//                            Log.e("api", " << Api onErrorResponse "+error.getMessage());
-//                            result.onError(error.getMessage());
-//                        }
-//                    });
-//                }
-
                 @Override
 				public Map<String, String> getHeaders() throws AuthFailureError {
 					try {
 						if (headers != null) {
-							return getJsonObjectToHashMap(headers);
+							return ApiUtils.getJsonObjectToHashMap(headers);
 						}
 					} catch (JSONException e) {
 						e.printStackTrace();

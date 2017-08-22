@@ -31,11 +31,9 @@ public class GsonPostRequest<T> extends JsonRequest<T> {
      * @param listener      is the listener for the right answer
      * @param errorListener is the listener for the wrong answer
      */
-    public GsonPostRequest
-    (String url, String body, Type type, Gson gson,
+    public GsonPostRequest (String url, String body, Type type, Gson gson,
      Response.Listener<T> listener, Response.ErrorListener errorListener) {
         super(Method.POST, url, body, listener, errorListener);
-
         this.gson = gson;
         this.type = type;
         this.listener = listener;

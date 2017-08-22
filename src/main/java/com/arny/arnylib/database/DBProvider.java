@@ -5,6 +5,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DBProvider {
 
@@ -105,4 +110,20 @@ public class DBProvider {
 	public static double getCursorDouble(Cursor cursor, String columnname) {
 		return Double.parseDouble(getCursorString(cursor, columnname));
 	}
+
+
+    public static String getColumns(Object cls){
+        Field[] clsFields = cls.getClass().getDeclaredFields();
+        StringBuilder builder = new StringBuilder();
+        for (Field field : clsFields) {
+            try {
+                String msg = "fld = " + "(" + field.getType() + ") " + field.getName() + " = " + field.get(cls) + ", ";
+                builder.append(msg);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return builder.toString();
+    }
+
 }

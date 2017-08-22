@@ -20,7 +20,25 @@ public abstract class DBObject {
 		for (Field field : clsFields) {
 			System.out.println("field = " + field);
 			try {
-				Log.i(DBObject.class.getSimpleName(), "getColumn: fld = " +"(" + field.getType() + ") " + field.getName() + " = " + field.get(cls) + ", ");
+				Log.i(DBObject.class.getSimpleName(), "isObjectIquals: fld = " +"(" + field.getType() + ") " + field.getName() + " = " + field.get(cls) + ", ");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			Column attr = field.getAnnotation(Column.class);
+			if (attr != null) {
+				fieldToMap.put(field.getName(), attr.name());
+			}
+		}
+		return fieldToMap.get(fieldname);
+	}
+
+	public static String isObjectIquals(String fieldname, Object klass){
+		Field[] clsFields = klass.getClass().getDeclaredFields();
+		Map<String, String> fieldToMap = new HashMap<>();
+		for (Field field : clsFields) {
+			System.out.println("field = " + field);
+			try {
+				Log.i(DBObject.class.getSimpleName(), "isObjectIquals: fld = " +"(" + field.getType() + ") " + field.getName() + " = " + field.get(klass) + ", ");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -62,7 +80,7 @@ public abstract class DBObject {
 					fieldToMap.put(field.getName(), attr.name());
 				}
 
-				Log.i(DBObject.class.getSimpleName(), "getColumn: fld = " + "(" + field.getType() + ") " + field.getName() + " = " + field.get(cls) + ", ");
+				Log.i(DBObject.class.getSimpleName(), "isObjectIquals: fld = " + "(" + field.getType() + ") " + field.getName() + " = " + field.get(cls) + ", ");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -78,7 +96,7 @@ public abstract class DBObject {
 //			if (attr != null) {
 //				try {
 //					ContentValues values = new ContentValues();
-//					Log.i(DBObject.class.getSimpleName(), "getColumn: fld = " +"(" + field.getType() + ") " + field.getName() + " = " + field.get(cls) + ", ");
+//					Log.i(DBObject.class.getSimpleName(), "isObjectIquals: fld = " +"(" + field.getType() + ") " + field.getName() + " = " + field.get(cls) + ", ");
 //					values.put(attr.name(),field.get(cls));
 //
 //					fieldToMap.put(field.getName(), );
