@@ -159,4 +159,8 @@ public class DBProvider {
         return builder.toString();
     }
 
+	public static  <T> void saveObject(Context context, String table, T o) {
+		ContentValues values = new MicroOrm().toContentValues(o);
+		insertOrUpdateDB(context,table, values);
+	}
 }

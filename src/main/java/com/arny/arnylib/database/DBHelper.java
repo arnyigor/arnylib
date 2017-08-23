@@ -62,7 +62,7 @@ class DBHelper extends SQLiteOpenHelper {
      * @return
      */
     private boolean isTableExists(SQLiteDatabase db,String tableName) {
-        Cursor cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '?' ", new String[]{tableName});
+        Cursor cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '"+tableName+"' ",null);
         if(cursor!=null && cursor.getCount()>0) {
             if(cursor.getCount()>0) {
                 cursor.close();
@@ -103,7 +103,7 @@ class DBHelper extends SQLiteOpenHelper {
             String name = Utility.removeExtension(fName);
             db.beginTransaction();
             try {
-                Cursor cursor = db.rawQuery("SELECT * FROM migrations WHERE filename = '?'", new String[]{name});
+                Cursor cursor = db.rawQuery("SELECT * FROM migrations WHERE filename = '"+name+"'", null);
                 if (cursor != null && cursor.getCount()>0){
                     cursor.moveToFirst();
                     String dbName = DBProvider.getCursorString(cursor, "filename");
