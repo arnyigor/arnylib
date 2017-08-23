@@ -5,14 +5,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
+import org.chalup.microorm.MicroOrm;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DBProvider {
 
@@ -76,8 +74,9 @@ public class DBProvider {
         return rowCount;
     }
 
-	public static void initDB(Context context,String name) {
+	public static void initDB(Context context,String name,int version) {
 		DBHelper.dbName = name;
+		DBHelper.dbVersion = version;
 		connectDB(context).getVersion();
 		disconnectDB();
 	}
@@ -115,12 +114,12 @@ public class DBProvider {
 	}
 
 
-    public static <T> List<T> getCursorSendQueues(Cursor cursor) {
-        List<T> queue = new ArrayList<>();
+    public static <T> ArrayList<T> getCursorObjectList(Cursor cursor, Class<?> clazz) {
+        ArrayList<T> queue = new ArrayList<>();
         if (cursor != null && cursor.getCount() > 0) {
             if (cursor.moveToFirst()) {
                 do {
-                    setList(cursor, queue);
+                    queue.add((T)new MicroOrm().fromCursor(cursor, clazz));
                 } while (cursor.moveToNext());
                 cursor.close();
             }
@@ -128,19 +127,14 @@ public class DBProvider {
         return queue;
     }
 
-    private static <T> void setList(Cursor cursor, List<T> queue) {
-        for (T t : queue) {
-        }
-    }
-
-    public <T> ArrayList<T> SelectAll(Class<T> clazz, Cursor cursor){
-        ArrayList<T> list = new ArrayList<>();
-        Field[] fields = clazz.getFields();
-        try {
-            Constructor<T> constructor = clazz.getConstructor(clazz);
-            list.add(constructor.newInstance(  ));
-        }catch(Exception ex){
-            return list;
+    public static <T> T getCursorObject(Cursor cursor, Class<?> clazz) {
+        List<T> queue = new ArrayList<>();
+        if (cursor != null && cursor.getCount() > 0) {
+            if (cursor.moveToFirst()) {
+                T obj = (T) new MicroOrm().fromCursor(cursor, clazz);
+                cursor.close();
+                return obj;
+            }
         }
         return null;
     }

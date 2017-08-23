@@ -11,21 +11,15 @@ import java.util.ArrayList;
 
 class DBHelper extends SQLiteOpenHelper {
 
-    private static int dbVersion;
+    static int dbVersion;
     static String dbName;
     private Context context;
 
     DBHelper(Context context) {
-        super(context, dbName, null, getDbVersion());
+        super(context, dbName, null, dbVersion);
         this.context = context;
     }
-	private static int getDbVersion() {
-        int version = (int) Utility.round((System.currentTimeMillis() / 1000),0)+10;
-        if (dbVersion <= 0) {
-            dbVersion = version;
-        }
-        return dbVersion;
-    }
+
 	@Override
     public void onCreate(SQLiteDatabase db) {
         setTableMigrations(db);
@@ -68,7 +62,7 @@ class DBHelper extends SQLiteOpenHelper {
      * @return
      */
     private boolean isTableExists(SQLiteDatabase db,String tableName) {
-        Cursor cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '"+tableName+"'", null);
+        Cursor cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '?' ", new String[]{tableName});
         if(cursor!=null && cursor.getCount()>0) {
             if(cursor.getCount()>0) {
                 cursor.close();
@@ -109,7 +103,7 @@ class DBHelper extends SQLiteOpenHelper {
             String name = Utility.removeExtension(fName);
             db.beginTransaction();
             try {
-                Cursor cursor = db.rawQuery("SELECT * FROM migrations WHERE filename = '"+name+"'", null);
+                Cursor cursor = db.rawQuery("SELECT * FROM migrations WHERE filename = '?'", new String[]{name});
                 if (cursor != null && cursor.getCount()>0){
                     cursor.moveToFirst();
                     String dbName = DBProvider.getCursorString(cursor, "filename");

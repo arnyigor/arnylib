@@ -30,5 +30,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.github.GrenderG:Toasty:1.1.4'
     compile 'com.github.bumptech.glide:glide:3.8.0'
+    compile 'org.chalup.microorm:microorm:0.8.0'
     compile 'com.amitshekhar.android:android-networking:1.0.0'
 }
