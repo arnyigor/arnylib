@@ -7,8 +7,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DBProvider {
@@ -112,16 +115,52 @@ public class DBProvider {
 	}
 
 
+    public static <T> List<T> getCursorSendQueues(Cursor cursor) {
+        List<T> queue = new ArrayList<>();
+        if (cursor != null && cursor.getCount() > 0) {
+            if (cursor.moveToFirst()) {
+                do {
+                    setList(cursor, queue);
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+        }
+        return queue;
+    }
+
+    private static <T> void setList(Cursor cursor, List<T> queue) {
+        for (T t : queue) {
+        }
+    }
+
+    public <T> ArrayList<T> SelectAll(Class<T> clazz, Cursor cursor){
+        ArrayList<T> list = new ArrayList<>();
+        Field[] fields = clazz.getFields();
+        try {
+            Constructor<T> constructor = clazz.getConstructor(clazz);
+            list.add(constructor.newInstance(  ));
+        }catch(Exception ex){
+            return list;
+        }
+        return null;
+    }
+
     public static String getColumns(Object cls){
         Field[] clsFields = cls.getClass().getDeclaredFields();
         StringBuilder builder = new StringBuilder();
         for (Field field : clsFields) {
+            field.setAccessible(true);
             try {
                 String msg = "fld = " + "(" + field.getType() + ") " + field.getName() + " = " + field.get(cls) + ", ";
-                builder.append(msg);
+                boolean isVersionID = field.getName().equalsIgnoreCase("serialVersionUID");
+                boolean isChange = field.getName().equalsIgnoreCase("$change");
+                if (!isChange && !isVersionID) {
+                    builder.append(msg);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            field.setAccessible(false);
         }
         return builder.toString();
     }

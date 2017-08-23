@@ -1,16 +1,14 @@
 package com.arny.arnylib.network;
 
 import android.util.Log;
-import com.android.volley.NetworkResponse;
-import com.android.volley.ParseError;
-import com.android.volley.Request;
-import com.android.volley.Response;
+import com.android.volley.*;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 /**
  * Convert a JsonElement into a list of objects or an object with Google Gson.
@@ -21,6 +19,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class GsonGetRequest<T> extends Request<T> {
     private final Gson gson;
+    private final Map<String, String> headers;
     private final Response.Listener<T> listener;
 
     /**
@@ -29,10 +28,16 @@ public class GsonGetRequest<T> extends Request<T> {
      * @param listener      is the listener for the right answer
      * @param errorListener is the listener for the wrong answer
      */
-    public GsonGetRequest(String url, Response.Listener<T> listener, Response.ErrorListener errorListener) {
+    public GsonGetRequest(String url,Map<String, String> headers, Response.Listener<T> listener, Response.ErrorListener errorListener) {
         super(Method.GET, url, errorListener);
         this.gson = new Gson();
+        this.headers = headers;
         this.listener = listener;
+    }
+
+    @Override
+    public Map<String, String> getHeaders() throws AuthFailureError {
+        return headers != null ? headers : super.getHeaders();
     }
 
     @Override

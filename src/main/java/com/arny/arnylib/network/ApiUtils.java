@@ -8,15 +8,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 public class ApiUtils {
 
-    public static <T> ArrayList<T> convert(JsonArray jArr) {
+    public static <T> T getResponse(Object response, Class cls) {
+        String name = response.getClass().getSimpleName();
+        Log.i(ApiUtils.class.getSimpleName(), "getResponse: class: " + name + " response = " + response);
+        return (T) new Gson().fromJson(String.valueOf(response), cls);
+    }
+
+    public static <T> ArrayList<T> convertArray(JsonArray jArr, Class<?> clazz) {
         ArrayList<T> list = new ArrayList<T>();
         try {
             for (int i = 0, l = jArr.size(); i < l; i++) {
-                list.add((T) jArr.get(i));
+                list.add((T) new Gson().fromJson(jArr.get(i), clazz));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -49,11 +54,5 @@ public class ApiUtils {
         }
         Log.e("api", " << Api onErrorResponse message = " + message);
         return message;
-    }
-
-    public static <T> T getResponse(Object response, Class cls) {
-        String name = response.getClass().getSimpleName();
-        Log.i(ApiUtils.class.getSimpleName(), "getResponse: class: " + name + " response = " + response);
-        return (T) new Gson().fromJson(String.valueOf(response), cls);
     }
 }
