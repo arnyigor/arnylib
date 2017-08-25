@@ -32,4 +32,9 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.8.0'
     compile 'org.chalup.microorm:microorm:0.8.0'
     compile 'com.amitshekhar.android:android-networking:1.0.0'
+    compile "com.mikepenz:iconics-core:2.9.1@aar"
+    compile "com.mikepenz:iconics-views:2.9.2@aar"
+    compile 'com.mikepenz:google-material-typeface:3.0.1.1.original@aar'
+    compile 'com.mikepenz:material-design-iconic-typeface:2.2.0.3@aar'
+    compile 'com.mikepenz:fontawesome-typeface:4.7.0.1@aar'
 }

@@ -145,7 +145,7 @@ public class DBProvider {
         for (Field field : clsFields) {
             field.setAccessible(true);
             try {
-                String msg = "fld = " + "(" + field.getType() + ") " + field.getName() + " = " + field.get(cls) + ", ";
+                String msg = "(" + field.getType() + ") " + field.getName() + " = " + field.get(cls) + ", ";
                 boolean isVersionID = field.getName().equalsIgnoreCase("serialVersionUID");
                 boolean isChange = field.getName().equalsIgnoreCase("$change");
                 if (!isChange && !isVersionID) {

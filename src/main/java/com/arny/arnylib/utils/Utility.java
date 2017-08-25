@@ -1,5 +1,6 @@
 package com.arny.arnylib.utils;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.media.MediaPlayer;
@@ -29,8 +30,21 @@ import java.util.regex.Pattern;
 
 public class Utility {
 
+    private static final String TIME_SEPARATOR_TWICE_DOT = ":";
+    private static final String TIME_SEPARATOR_DOT = ".";
+
 	public static String trimInside(String text) {
         return text.trim().replace(" ", "");
+    }
+
+    public static synchronized boolean isMyServiceRunning(Class<?> serviceClass, Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static final String EMAIL_PATTERN =
@@ -187,6 +201,45 @@ public class Utility {
         return null;
     }
 
+    public static String strLogTime(int logtime) {
+        int h = logtime / 60;
+        int m = logtime % 60;
+        return pad(h) + TIME_SEPARATOR_TWICE_DOT + pad(m);
+    }
+
+    public static int[] bubbleSort(int[] arr) {
+        for (int i = arr.length - 1; i >= 0; i--) {
+            for (int j = 0; j < i; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    int t = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = t;
+                }
+            }
+        }
+        return arr;
+    }
+
+    public static String dateFormatChooser(String myTimestamp) {
+        HashMap<String, String> pregs = new HashMap<>();
+        pregs.put("^[0-9]{1,2}\\.[0-9]{2}\\.[0-9]{4}$", "dd.MM.yyyy");
+        pregs.put("^[0-9]{1,2}\\.[0-9]{2}\\.[0-9]{2}$", "dd.MM.yy");
+        pregs.put("^[0-9]{1,2}\\-\\.*\\-[0-9]{2}$", "dd-MMM-yy");
+        pregs.put("^[0-9]{1,2}\\-.*\\-[0-9]{4}$", "dd-MMM-yyyy");
+        pregs.put("^[0-9]{1,2}\\s\\.*\\s[0-9]{2}$", "dd MMM yy");
+        pregs.put("^[0-9]{1,2}\\s\\.*\\s[0-9]{4}$", "dd MMM yyyy");
+        pregs.put("^[0-9]{1,2}\\s[0-9]{2}\\s[0-9]{2}$", "dd MM yy");
+        pregs.put("^[0-9]{1,2}\\s[0-9]{2}\\s[0-9]{4}$", "dd MM yyyy");
+        String format = "dd MMM yyyy";
+        for (HashMap.Entry<String, String> entry : pregs.entrySet()) {
+            if (Pattern.matches(entry.getKey(), myTimestamp)) {
+                format = entry.getValue();
+                break;
+            }
+        }
+        return format;
+    }
+
     public static String getDateTime(long milliseconds, String format) {
         milliseconds = (milliseconds == 0) ? Calendar.getInstance().getTimeInMillis() : milliseconds;
         format = (format == null) ? "dd MMM yyyy HH:mm:ss.sss" : format;
@@ -329,6 +382,19 @@ public class Utility {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    /**
+     * add '0' to number before 10
+     * @param number
+     * @return
+     */
+    public static String pad(int number) {
+        if (number >= 10) {
+            return String.valueOf(number);
+        } else {
+            return "0" + String.valueOf(number);
         }
     }
 
