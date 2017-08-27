@@ -9,6 +9,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+
     }
     buildTypes {
         release {
@@ -37,4 +38,5 @@ dependencies {
     compile 'com.mikepenz:google-material-typeface:3.0.1.1.original@aar'
     compile 'com.mikepenz:material-design-iconic-typeface:2.2.0.3@aar'
     compile 'com.mikepenz:fontawesome-typeface:4.7.0.1@aar'
+    compile 'com.jakewharton:butterknife:8.8.1'
 }
