@@ -1,4 +1,5 @@
 package com.arny.arnylib.adapters;
+import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.view.View;
 
@@ -20,10 +21,16 @@ public final class SimpleBindableAdapter<T, VH extends BindableViewHolder> exten
 		this.vhClass = vhClass;
 	}
 
+	public SimpleBindableAdapter(Context context,@LayoutRes int layoutId, Class<VH> vhClass) {
+		this.context = context;
+		this.layoutId = layoutId;
+		this.vhClass = vhClass;
+	}
+
 	@Override
 	protected void onBindItemViewHolder(BindableViewHolder viewHolder, int position, int type) {
 		//вставляем данные во ViewHolder, ради этого метода мы и создавали BindableViewHolder
-		viewHolder.bindView(position, getItem(position), actionListener);
+		viewHolder.bindView(context,position, getItem(position), actionListener);
 	}
 
 	@Override

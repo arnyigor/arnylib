@@ -1,5 +1,6 @@
 package com.arny.arnylib.adapters;
 
+import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,6 +30,7 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
 			return getGridSpan(position);
 		}
 	};
+	public Context context;
 
 	public int getRealItemCount() {
 		return items.size();
