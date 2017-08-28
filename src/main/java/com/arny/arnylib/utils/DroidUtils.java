@@ -18,8 +18,10 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.annotation.AnimRes;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.AppCompatDrawableManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.DisplayMetrics;
@@ -28,6 +30,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -474,5 +478,14 @@ public class DroidUtils {
         Intent intent = new Intent(context, refreshedClass);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
+    }
+
+
+    public static void runLayoutAnimation(final RecyclerView recyclerView, @AnimRes int anim) {
+        final Context context = recyclerView.getContext();
+        final LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(context, anim);
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
     }
 }

@@ -163,4 +163,9 @@ public class DBProvider {
 		ContentValues values = new MicroOrm().toContentValues(o);
 		insertOrUpdateDB(context,table, values);
 	}
+
+    public static <T> long saveObjectRow(Context context, String table, T o) {
+        ContentValues values = new MicroOrm().toContentValues(o);
+        return insertOrUpdateDB(context,table, values);
+    }
 }
