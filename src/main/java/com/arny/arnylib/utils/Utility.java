@@ -486,6 +486,13 @@ public class Utility {
         }
     }
 
+    public static String stringContains(String where, String[] cases,String[] answers) {
+        for (int i = 0; i < cases.length; i++) {
+            if (where.contains(cases[i])) return answers[i];
+        }
+        return where;
+    }
+
     public static <T> boolean contains(final T[] array, T v) {
         for (T e : array) {
             if (v.equals(e)) {
