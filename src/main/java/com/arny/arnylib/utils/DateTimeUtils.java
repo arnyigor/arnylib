@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class DateTimeUtils {
 
     public static final String[] RU_MONTHES_FULL = new String[]{"января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"};
-    public static final String[] RU_MONTHES_LO = new String[]{"дек","янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя"};
+    public static final String[] RU_MONTHES_LO = new String[]{"дек","янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя"};
     public static final String[] RU_MONTHES_UP = new String[]{"Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"};
     private static final String TIME_SEPARATOR_TWICE_DOT = ":";
     private static final String TIME_SEPARATOR_DOT = ".";
@@ -90,7 +90,7 @@ public class DateTimeUtils {
         DateFormatSymbols formatSimbols = getFormatString(myTimestamp);
         Locale locale = getLocale(myTimestamp);
         SimpleDateFormat formatter = new SimpleDateFormat(format,locale);
-        if (locale.getCountry().equals("RU")) {
+        if (locale.getISO3Language().equalsIgnoreCase("rus")) {
             formatter.setDateFormatSymbols(formatSimbols);
         }
         Date date;
