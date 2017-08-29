@@ -10,12 +10,21 @@ import com.arny.arnylib.utils.Utility;
 import java.util.ArrayList;
 
 class DBHelper extends SQLiteOpenHelper {
-
     static int dbVersion;
     static String dbName;
     private Context context;
+    private static DBHelper mInstance;
 
-    DBHelper(Context context) {
+    public static DBHelper getInstance(Context ctx) {
+        // Use the application context, which will ensure that you
+        // don't accidentally leak an Activity's context.
+        if (mInstance == null) {
+            mInstance = new DBHelper(ctx.getApplicationContext());
+        }
+        return mInstance;
+    }
+
+    private DBHelper(Context context) {
         super(context, dbName, null, dbVersion);
         this.context = context;
     }

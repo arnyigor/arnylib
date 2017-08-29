@@ -4,8 +4,10 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 public class BasePermissions {
+    public static final int REQUEST_PERMISSIONS = 1111;
 	private static final String PERMISSION_FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
 	private static final String PERMISSION_COARSE_LOCATION = android.Manifest.permission.ACCESS_COARSE_LOCATION;
 	private static final String PERMISSION_READ_STORAGE = android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -35,9 +37,9 @@ public class BasePermissions {
 	public static boolean isReceiveSMSPermissonGranted(Context context) {
 		return ActivityCompat.checkSelfPermission(context, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
 	}
-//	public static boolean isBroadcastSMSPermissonGranted(Context context) {
-//		return ActivityCompat.checkSelfPermission(context, Manifest.permission.BROADCAST_SMS) == PackageManager.PERMISSION_GRANTED;
-//	}
+	public static boolean isBroadcastSMSPermissonGranted(Context context) {
+		return ActivityCompat.checkSelfPermission(context, Manifest.permission.BROADCAST_SMS) == PackageManager.PERMISSION_GRANTED;
+	}
 	public static boolean isSendSMSPermissonGranted(Context context) {
 		return ActivityCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED;
 	}

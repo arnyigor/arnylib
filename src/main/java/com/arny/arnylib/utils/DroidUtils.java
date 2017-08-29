@@ -196,7 +196,7 @@ public class DroidUtils {
 
 
     public static void simpleInputDialog(Context context, String title, String btnOkText, String btnCancelText, int inputType, final InputDialogListener inputDialogListener) {
-        AlertDialog.Builder builder = new AlertDialog.Builder((new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog)));
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
         final EditText etResult = new EditText(context);
         builder.setView(etResult);
@@ -206,7 +206,12 @@ public class DroidUtils {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                inputDialogListener.onConfirm(etResult.getText().toString().trim());
+                String s = etResult.getText().toString();
+                if (Utility.empty(s)) {
+                    inputDialogListener.onError("empty");
+                }else{
+                    inputDialogListener.onConfirm(s.trim());
+                }
             }
         });
         builder.setNegativeButton(btnCancelText, new DialogInterface.OnClickListener() {
@@ -221,7 +226,7 @@ public class DroidUtils {
     }
 
 	public static void confirmDialog(Context context, String title, String content, String btnOkText, String btnCancelText, final ConfirmDialogListener dialogListener) {
-		AlertDialog.Builder builder = new AlertDialog.Builder((new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog)));
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(title);
 		builder.setMessage(content);
 		builder.setPositiveButton(btnOkText, new DialogInterface.OnClickListener() {

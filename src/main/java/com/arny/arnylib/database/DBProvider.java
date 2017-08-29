@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import org.chalup.microorm.MicroOrm;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,7 @@ public class DBProvider {
 
     public static long insertDB(String table, ContentValues contentValues, Context context) {
         long rowID = connectDB(context).insert(table, null, contentValues);
-        disconnectDB();
+        disconnectDB(context);
         return rowID;
     }
 
@@ -34,7 +33,7 @@ public class DBProvider {
 
 	public static long insertOrUpdateDB(Context context, String table, ContentValues contentValues) {
 		long rowID = connectDB(context).insertWithOnConflict(table, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
-		disconnectDB();
+		disconnectDB(context);
 		return rowID;
 	}
 
@@ -52,25 +51,25 @@ public class DBProvider {
 
     public static int deleteDB(String table, String where, Context context) {
         int rowCount = connectDB(context).delete(table, where, null);
-        disconnectDB();
+        disconnectDB(context);
         return rowCount;
     }
 
     public static int deleteDB(String table, String where, String[] whereArgs, Context context) {
         int rowCount = connectDB(context).delete(table, where, whereArgs);
-        disconnectDB();
+        disconnectDB(context);
         return rowCount;
     }
 
     public static int updateDB(String table, ContentValues contentValues, String where, Context context) {
         int rowCount = connectDB(context).update(table, contentValues, where, null);
-        disconnectDB();
+        disconnectDB(context);
         return rowCount;
     }
 
     public static int updateDB(String table, ContentValues contentValues, String where, String[] whereArgs, Context context) {
         int rowCount = connectDB(context).update(table, contentValues, where, whereArgs);
-        disconnectDB();
+        disconnectDB(context);
         return rowCount;
     }
 
@@ -78,18 +77,18 @@ public class DBProvider {
 		DBHelper.dbName = name;
 		DBHelper.dbVersion = version;
 		connectDB(context).getVersion();
-		disconnectDB();
+		disconnectDB(context);
 	}
 
-    private static void disconnectDB() {
-        dbHelper.close();
+    private static void disconnectDB(Context context) {
+        SQLiteDatabase db = DBHelper.getInstance(context).getReadableDatabase();
+        if (db != null && db.isOpen()) {
+            db.close();
+        }
     }
 
     private static synchronized SQLiteDatabase connectDB(Context context) {
-        if (dbHelper != null)
-            dbHelper.close();
-        dbHelper = new DBHelper(context);
-        return dbHelper.getWritableDatabase();
+        return DBHelper.getInstance(context).getWritableDatabase();
     }
 
 	public static int getCursorInt(Cursor cursor, String columnname) {
