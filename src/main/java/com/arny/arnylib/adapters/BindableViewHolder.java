@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 public abstract class BindableViewHolder<T> extends RecyclerView.ViewHolder {
 
-	private Context context;
+	protected Context context;
 
 	public BindableViewHolder(View itemView) {
         super(itemView);

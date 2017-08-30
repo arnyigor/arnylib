@@ -101,10 +101,11 @@ public class DroidUtils {
 	public static void showProgress(ProgressDialog pDialog, String notif) {
 		try {
 			if (pDialog != null) {
-				pDialog.setMessage(notif);
+				hideProgress(pDialog);
 				if (!pDialog.isShowing()) {
 					pDialog.show();
 				}
+				pDialog.setMessage(notif);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
