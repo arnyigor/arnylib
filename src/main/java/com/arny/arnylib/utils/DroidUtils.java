@@ -42,6 +42,7 @@ import com.arny.arnylib.interfaces.ConfirmDialogListener;
 import com.arny.arnylib.interfaces.InputDialogListener;
 import com.arny.arnylib.interfaces.ListDialogListener;
 import com.arny.arnylib.models.SMS;
+import com.arny.arnylib.network.Connectivity;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -493,5 +494,20 @@ public class DroidUtils {
         recyclerView.setLayoutAnimation(controller);
         recyclerView.getAdapter().notifyDataSetChanged();
         recyclerView.scheduleLayoutAnimation();
+    }
+
+    public static String getNetworkInfo(Context context) {
+        boolean connected = Connectivity.isConnected(context);
+        boolean connectedWifi = Connectivity.isConnectedWifi(context);
+        boolean connectedMobile = Connectivity.isConnectedMobile(context);
+        boolean connectedFast = Connectivity.isConnectedFast(context);
+        StringBuilder builder = new StringBuilder();
+        builder.append(connected ? "Online" : "Offline");
+        if (connected) {
+            builder.append(";WIFI:").append(connectedWifi ? "ON" : "OFF");
+            builder.append(";Mobile:").append(connectedMobile ? "ДА" : "Нет");
+            builder.append(connectedFast ? ";Fast" : "Slow");
+        }
+        return builder.toString();
     }
 }

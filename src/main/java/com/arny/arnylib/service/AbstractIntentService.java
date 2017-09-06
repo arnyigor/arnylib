@@ -175,9 +175,6 @@ public abstract class AbstractIntentService extends IntentService {
     private void sendOperationResult(OperationProvider provider) {
 	    Log.i(AbstractIntentService.class.getSimpleName(), "sendOperationResult: provider = " + provider);
 	    Intent intent = initProadcastIntent();
-	    ExtendedDataHolder extras = ExtendedDataHolder.getInstance();
-	    extras.putExtra(EXTRA_KEY_OPERATION , provider);
-	    Log.i(AbstractIntentService.class.getSimpleName(), "sendOperationResult: extras = " + extras.getExtra(EXTRA_KEY_OPERATION));
 	    intent.putExtra(EXTRA_KEY_OPERATION , provider);
 	    LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
