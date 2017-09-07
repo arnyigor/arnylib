@@ -503,8 +503,8 @@ public class DroidUtils {
         StringBuilder builder = new StringBuilder();
         builder.append(connected ? "Online" : "Offline");
         if (connected) {
-            builder.append(";TYPE:").append(connectedWifi ? "WIFI" : "Mobile");
-            builder.append(connectedFast ? ";Fast" : "Slow");
+            builder.append(connectedWifi ? ";WIFI" : ";Mobile");
+            builder.append(connectedFast ? ";Fast" : ";Slow");
         }
         return builder.toString();
     }
