@@ -11,6 +11,15 @@
                  android:label="@string/app_name"
                  android:supportsRtl="true">
         <service android:name="com.arny.arnylib.network.NetworkService"/>
+
+        <receiver
+                android:name="com.arny.arnylib.service.NetworkChangeReceiver"
+                android:label="NetworkChangeReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

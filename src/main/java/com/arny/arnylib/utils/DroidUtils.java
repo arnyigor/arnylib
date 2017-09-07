@@ -499,13 +499,11 @@ public class DroidUtils {
     public static String getNetworkInfo(Context context) {
         boolean connected = Connectivity.isConnected(context);
         boolean connectedWifi = Connectivity.isConnectedWifi(context);
-        boolean connectedMobile = Connectivity.isConnectedMobile(context);
         boolean connectedFast = Connectivity.isConnectedFast(context);
         StringBuilder builder = new StringBuilder();
         builder.append(connected ? "Online" : "Offline");
         if (connected) {
-            builder.append(";WIFI:").append(connectedWifi ? "ON" : "OFF");
-            builder.append(";Mobile:").append(connectedMobile ? "ДА" : "Нет");
+            builder.append(";TYPE:").append(connectedWifi ? "WIFI" : "Mobile");
             builder.append(connectedFast ? ";Fast" : "Slow");
         }
         return builder.toString();
