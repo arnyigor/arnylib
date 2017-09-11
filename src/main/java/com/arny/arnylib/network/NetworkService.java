@@ -6,12 +6,15 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import com.android.volley.*;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.arny.arnylib.interfaces.OnJSONArrayResult;
 import com.arny.arnylib.interfaces.OnJSONObjectResult;
 import com.arny.arnylib.interfaces.OnStringRequestResult;
 import com.arny.arnylib.utils.Utility;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -67,38 +70,54 @@ public class NetworkService extends IntentService {
 		}
 	}
 
-	public static void apiRequest(final Context context, String url, JSONObject params, final OnStringRequestResult successCallback) {
+	public static void apiRequest(final Context context, String url, JSONObject params, final OnStringRequestResult callback) {
 		HttpAsyncStringRequest httpAsyncRequest = new HttpAsyncStringRequest(context, Request.Method.GET, url, params, new JSONObject(), new OnStringRequestResult() {
 			@Override
 			public void onSuccess(String result) {
-				successCallback.onSuccess(result);
+                callback.onSuccess(result);
 			}
 
 			@Override
 			public void onError(String error) {
-				successCallback.onError(error);
+                callback.onError(error);
 			}
 		});
 		httpAsyncRequest.execute((Void) null);
 	}
 
-	public static void apiRequest(final Context context, String url, JSONObject params, final OnJSONObjectResult successCallback) {
+	public static void apiRequest(final Context context, String url, JSONObject params, final OnJSONObjectResult callback) {
 
-		HttpAsyncJsonRequest asyncJsonRequest = new HttpAsyncJsonRequest(context, Request.Method.GET, url, params, new JSONObject(), new OnJSONObjectResult() {
+		HttpAsyncObjectRequest asyncJsonRequest = new HttpAsyncObjectRequest(context, Request.Method.GET, url, params, new JSONObject(), new OnJSONObjectResult() {
 			@Override
 			public void onSuccess(JSONObject result) {
-				successCallback.onSuccess(result);
+                callback.onSuccess(result);
 			}
 
 			@Override
 			public void onError(String error) {
-				successCallback.onError(error);
+                callback.onError(error);
 			}
 		});
 		asyncJsonRequest.execute((Void) null);
 	}
 
-	public static void apiRequest(final Context context, int method, String url, JSONObject params, final OnStringRequestResult successCallback) {
+    public static void apiRequest(final Context context, String url, JSONObject params, JSONObject headers, final OnJSONArrayResult callback) {
+
+        HttpAsyncArrayRequest asyncJsonRequest = new HttpAsyncArrayRequest(context, Request.Method.GET, url, params, headers, new OnJSONArrayResult() {
+            @Override
+            public void onSuccess(JSONArray result) {
+                callback.onSuccess(result);
+            }
+
+            @Override
+            public void onError(String error) {
+                callback.onError(error);
+            }
+        });
+        asyncJsonRequest.execute((Void) null);
+    }
+
+    public static void apiRequest(final Context context, int method, String url, JSONObject params, final OnStringRequestResult successCallback) {
 		HttpAsyncStringRequest httpAsyncRequest = new HttpAsyncStringRequest(context, method, url, params, new JSONObject(), new OnStringRequestResult() {
 			@Override
 			public void onSuccess(String result) {
@@ -116,7 +135,7 @@ public class NetworkService extends IntentService {
 
 	public static void apiRequest(final Context context, int method, String url, JSONObject params, final OnJSONObjectResult successCallback) {
 
-		HttpAsyncJsonRequest asyncJsonRequest = new HttpAsyncJsonRequest(context, method, url, params, new JSONObject(), new OnJSONObjectResult() {
+		HttpAsyncObjectRequest asyncJsonRequest = new HttpAsyncObjectRequest(context, method, url, params, new JSONObject(), new OnJSONObjectResult() {
 			@Override
 			public void onSuccess(JSONObject result) {
 				successCallback.onSuccess(result);
@@ -147,7 +166,7 @@ public class NetworkService extends IntentService {
 
 	public static void apiRequest(final Context context, int method, String url, JSONObject params, JSONObject headers, final OnJSONObjectResult successCallback) {
 
-		HttpAsyncJsonRequest asyncJsonRequest = new HttpAsyncJsonRequest(context, method, url, params, headers, new OnJSONObjectResult() {
+		HttpAsyncObjectRequest asyncJsonRequest = new HttpAsyncObjectRequest(context, method, url, params, headers, new OnJSONObjectResult() {
 			@Override
 			public void onSuccess(JSONObject result) {
 				successCallback.onSuccess(result);
@@ -178,7 +197,7 @@ public class NetworkService extends IntentService {
 			this.apiMethod = apiMethod;
 			this.context = context;
 			this.headers = headers;
-			Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "HttpAsyncStringRequest: url = " + url + "; params:" + params+ "; apiMethod:" + apiMethod+"; headers:" + headers);
+			Log.i(HttpAsyncObjectRequest.class.getSimpleName(), "HttpAsyncStringRequest: url = " + url + "; params:" + params+ "; apiMethod:" + apiMethod+"; headers:" + headers);
 		}
 
 		@Override
@@ -193,28 +212,18 @@ public class NetworkService extends IntentService {
 			}, new Response.ErrorListener() {
 				@Override
 				public void onErrorResponse(VolleyError error) {
+                    Log.e("api", " << Api onResponse: " + error);
                     result.onError(ApiUtils.getVolleyError(error));
 				}
 			}) {
 				@Override
 				protected Map<String, String> getParams() {
-					try {
-						return ApiUtils.getJsonObjectToHashMap(params);
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-					return new HashMap<>();
+                    return ApiUtils.getJsonObjectToHashMap(params);
 				}
 
 				@Override
 				public Map<String, String> getHeaders() throws AuthFailureError {
-					try {
-						return ApiUtils.getJsonObjectToHashMap(headers);
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-
-					return new HashMap<>();
+                    return ApiUtils.getJsonObjectToHashMap(headers);
 				}
 			};
 			request.setTag(url);
@@ -223,7 +232,7 @@ public class NetworkService extends IntentService {
 		}
 	}
 
-    private static class HttpAsyncJsonRequest extends AsyncTask<Void, Void, Boolean> {
+    private static class HttpAsyncObjectRequest extends AsyncTask<Void, Void, Boolean> {
 		private OnJSONObjectResult result;
 		private String url;
 		private JSONObject params;
@@ -231,14 +240,14 @@ public class NetworkService extends IntentService {
 		private Context context;
 		private int apiMethod;
 
-		private HttpAsyncJsonRequest(Context context, int apiMethod, String requestUrl, JSONObject requestParams, JSONObject headers, final OnJSONObjectResult result) {
+		private HttpAsyncObjectRequest(Context context, int apiMethod, String requestUrl, JSONObject requestParams, JSONObject headers, final OnJSONObjectResult result) {
 			this.result = result;
 			this.params = requestParams;
 			this.url = requestUrl;
 			this.apiMethod = apiMethod;
 			this.context = context;
 			this.headers = headers;
-			Log.i(HttpAsyncJsonRequest.class.getSimpleName(), "HttpAsyncJsonRequest: url = " + url + "; params:" + params+ "; apiMethod:" + apiMethod+"; headers:" + headers);
+			Log.i(HttpAsyncObjectRequest.class.getSimpleName(), "HttpAsyncObjectRequest: url = " + url + "; params:" + params+ "; apiMethod:" + apiMethod+"; headers:" + headers);
 		}
 
 		@Override
@@ -258,26 +267,12 @@ public class NetworkService extends IntentService {
 			}) {
 				@Override
 				protected Map<String, String> getParams() {
-					try {
-						if (params != null) {
-							return ApiUtils.getJsonObjectToHashMap(params);
-						}
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-					return new HashMap<>();
+                    return ApiUtils.getJsonObjectToHashMap(params);
 				}
 
                 @Override
 				public Map<String, String> getHeaders() throws AuthFailureError {
-					try {
-						if (headers != null) {
-							return ApiUtils.getJsonObjectToHashMap(headers);
-						}
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-					return new HashMap<>();
+                    return ApiUtils.getJsonObjectToHashMap(headers);
 				}
 			};
 			jsonObjectRequest.setTag(url);
@@ -285,5 +280,59 @@ public class NetworkService extends IntentService {
 			return true;
 		}
 	}
+
+    private static class HttpAsyncArrayRequest extends AsyncTask<Void, Void, Boolean> {
+        private final OnJSONArrayResult result;
+        private String url;
+        private JSONObject params;
+        private JSONObject headers;
+        private Context context;
+        private int apiMethod;
+
+        private HttpAsyncArrayRequest(Context context, int apiMethod, String requestUrl, JSONObject requestParams, JSONObject headers, final OnJSONArrayResult result) {
+            this.result = result;
+            params = requestParams;
+            url = requestUrl;
+            this.apiMethod = apiMethod;
+            this.context = context;
+            this.headers = headers;
+            Log.i(HttpAsyncObjectRequest.class.getSimpleName(), "HttpAsyncStringRequest: url = " + url + "; params:" + params+ "; apiMethod:" + apiMethod+"; headers:" + headers);
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... p) {
+            RequestQueue queue = getRequestQueue(context);
+            JsonArrayRequest request = new JsonArrayRequest(apiMethod, url, null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    result.onSuccess(response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    result.onError(ApiUtils.getVolleyError(error));
+                }
+            });
+            request.setRetryPolicy(new RetryPolicy() {
+                @Override
+                public int getCurrentTimeout() {
+                    return 30 * 1000;
+                }
+
+                @Override
+                public int getCurrentRetryCount() {
+                    return 2;
+                }
+
+                @Override
+                public void retry(VolleyError error) throws VolleyError {
+
+                }
+            });
+            request.setTag(url);
+            queue.add(request);
+            return true;
+        }
+    }
 
 }

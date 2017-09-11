@@ -30,12 +30,16 @@ public class ApiUtils {
         return list;
     }
 
-    public static HashMap<String, String> getJsonObjectToHashMap(JSONObject params) throws JSONException {
+    public static HashMap<String, String> getJsonObjectToHashMap(JSONObject params) {
         HashMap<String, String> mapParams = new HashMap<>();
-        if (params.names() != null) {
-            for (int i = 0; i < params.names().length(); i++) {
-                mapParams.put(params.names().getString(i), (String) params.get(params.names().getString(i)));
+        try {
+            if (params.names() != null) {
+                for (int i = 0; i < params.names().length(); i++) {
+                    mapParams.put(params.names().getString(i), (String) params.get(params.names().getString(i)));
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         Log.i(NetworkService.class.getSimpleName(), "getJsonObjectToHashMap: mapParams = " + mapParams);
         return mapParams;
