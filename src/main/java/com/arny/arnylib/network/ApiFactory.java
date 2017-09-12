@@ -10,37 +10,34 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.util.concurrent.TimeUnit;
 public class ApiFactory {
-    private static Retrofit retrofit = null;
-	private static ApiFactory instance = new ApiFactory();
-	public static ApiFactory getInstance() {
-		return instance;
+    private static ApiFactory instance = new ApiFactory();
 
-	}
-	private ApiFactory(){}
+    public static ApiFactory getInstance() {
+        return instance;
 
-	private Retrofit getRetrofit(String baseUrl) {
-		Gson gson = new GsonBuilder()
-				.setLenient()
-				.create();
-		OkHttpClient client = new OkHttpClient.Builder()
+    }
+
+    private ApiFactory() {
+    }
+
+    private Retrofit getRetrofit(String baseUrl) {
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+        OkHttpClient client = new OkHttpClient.Builder()
                 .followRedirects(true)
                 .connectTimeout(20, TimeUnit.SECONDS)
-                .readTimeout(20,TimeUnit.SECONDS)
-				.build();
-        if (retrofit==null) {
-            retrofit = new Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .client(client)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .build();
-        }
-        return retrofit;
-	}
+                .readTimeout(20, TimeUnit.SECONDS)
+                .build();
+        return new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+    }
 
-
-	public <S> S createService(Class<S> serviceClass,String baseUrl) {
-		return getRetrofit(baseUrl).create(serviceClass);
-	}
-
+    public <S> S createService(Class<S> serviceClass, String baseUrl) {
+        return getRetrofit(baseUrl).create(serviceClass);
+    }
 
 }
