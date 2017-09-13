@@ -5,11 +5,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
 import org.chalup.microorm.MicroOrm;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 public class DBProvider {
 
@@ -167,4 +171,28 @@ public class DBProvider {
         ContentValues values = new MicroOrm().toContentValues(o);
         return insertOrUpdateDB(context,table, values);
     }
+
+	public static <T> Callable<T> getCallable(final String table, final Class<T> clazz, final Context context) {
+		return new Callable<T>() {
+			@Override
+			public T call() {
+				Cursor curs = connectDB(context).query(table, null, null, null, null, null, null);
+				return getCursorObject(curs, clazz);
+			}
+		};
+	}
+
+	public static <T> Observable<T> makeObservable(final String table, final Class<Object> clazz, final Context context) {
+		return Observable.defer(new Callable<ObservableSource<? extends T>>() {
+			@Override
+			public ObservableSource<? extends T> call() throws Exception {
+				return Observable.fromCallable(getCallable(table, clazz, context)).map(new Function<Object, T>() {
+					@Override
+					public T apply(Object o) throws Exception {
+						return (T)o;
+					}
+				});
+			}
+		});
+	}
 }
