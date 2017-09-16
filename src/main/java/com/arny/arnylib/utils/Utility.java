@@ -502,7 +502,7 @@ public class Utility {
         return false;
     }
 
-    public static void setJsonParam(JSONObject params, String col, String val) {
+    public static void setJsonParam(JSONObject params, String col, Object val) {
         try {
             params.put(col, val);
         } catch (JSONException e) {
