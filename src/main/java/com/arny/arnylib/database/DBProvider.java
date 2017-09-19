@@ -145,10 +145,11 @@ public class DBProvider {
     public static String getColumns(Object cls){
         Field[] clsFields = cls.getClass().getDeclaredFields();
         StringBuilder builder = new StringBuilder();
+        builder.append("\n");
         for (Field field : clsFields) {
             field.setAccessible(true);
             try {
-                String msg =  "\n" + field.getName() + " = " + field.get(cls) + ", ";
+                String msg =   field.getName() + " = " + field.get(cls);
                 boolean isVersionID = field.getName().equalsIgnoreCase("serialVersionUID");
                 boolean isChange = field.getName().equalsIgnoreCase("$change");
                 if (!isChange && !isVersionID) {
@@ -158,6 +159,7 @@ public class DBProvider {
                 e.printStackTrace();
             }
             field.setAccessible(false);
+            builder.append(", ");
         }
         return builder.toString();
     }

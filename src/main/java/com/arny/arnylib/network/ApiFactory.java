@@ -22,17 +22,17 @@ public class ApiFactory {
     }
 
     private Retrofit getRetrofit(String baseUrl) {
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
-        OkHttpClient client = new OkHttpClient.Builder()
-                .followRedirects(true)
-                .connectTimeout(20, TimeUnit.SECONDS)
-                .readTimeout(20, TimeUnit.SECONDS)
-                .build();
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+        Gson gson = new GsonBuilder().setLenient().create();
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.connectTimeout(10, TimeUnit.SECONDS);
+        httpClient.readTimeout(10, TimeUnit.SECONDS);
+        httpClient.followRedirects(true);
+        httpClient.addInterceptor(logging);
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
-                .client(client)
+                .client(httpClient.build())
 		        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
