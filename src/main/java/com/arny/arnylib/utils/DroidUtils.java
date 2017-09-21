@@ -43,6 +43,7 @@ import com.arny.arnylib.interfaces.InputDialogListener;
 import com.arny.arnylib.interfaces.ListDialogListener;
 import com.arny.arnylib.models.SMS;
 import com.arny.arnylib.network.Connectivity;
+import io.reactivex.Observable;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -507,5 +508,12 @@ public class DroidUtils {
             builder.append(connectedFast ? ";Fast" : ";Slow");
         }
         return builder.toString();
+    }
+
+    public static <T> Observable<T> makeObservable(T t){
+        return Observable.create(e -> {
+            e.onNext(t);
+            e.onComplete();
+        });
     }
 }

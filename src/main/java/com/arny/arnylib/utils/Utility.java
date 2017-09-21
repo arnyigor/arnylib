@@ -2,19 +2,10 @@ package com.arny.arnylib.utils;
 
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.res.Resources;
-import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Vibrator;
-import android.text.Html;
-import android.text.Spanned;
-import android.util.DisplayMetrics;
-import android.view.ViewTreeObserver;
-import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import io.reactivex.Observable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -509,4 +500,5 @@ public class Utility {
             e.printStackTrace();
         }
     }
+
 }
