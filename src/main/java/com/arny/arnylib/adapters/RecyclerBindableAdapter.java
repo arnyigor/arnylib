@@ -15,6 +15,8 @@ import android.widget.FrameLayout;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
@@ -106,6 +108,14 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
 
     public List<T> getItems() {
         return items;
+    }
+
+    public void sort(Comparator<T> comparator) {
+        if (items == null || items.isEmpty()) {
+            return;
+        }
+        Collections.sort(getItems(), comparator);
+        notifyDataSetChanged();
     }
 
     @Override

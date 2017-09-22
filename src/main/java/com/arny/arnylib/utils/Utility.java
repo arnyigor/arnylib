@@ -501,4 +501,19 @@ public class Utility {
         }
     }
 
+    public static <V,T>  ArrayList<T> getValuesFromMap(HashMap<V, T> hashMap) {
+        ArrayList<T> list = new ArrayList<>();
+        for (Map.Entry<V, T> entry : hashMap.entrySet()) {
+            list.add(entry.getValue());
+        }
+        return list;
+    }
+
+    public static <V,T>  ArrayList<V> getKeysFromMap(HashMap<V, T> map) {
+        ArrayList<V> list = new ArrayList<>();
+        for (Map.Entry<V, T> entry : map.entrySet()) {
+            list.add(entry.getKey());
+        }
+        return list;
+    }
 }
