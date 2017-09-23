@@ -14,14 +14,7 @@ public class ToastMaker {
 	}
 
 	public static void toastError(final Context context, final String message) {
-        new Handler(Looper.getMainLooper()).post(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        Toasty.error(context, message, Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
+        new Handler(Looper.getMainLooper()).post(() -> Toasty.error(context, message, Toast.LENGTH_SHORT).show());
 
 	}
 
@@ -30,14 +23,7 @@ public class ToastMaker {
 	}
 
 	public static void toastSuccess(final Context context, final String message) {
-        new Handler(Looper.getMainLooper()).post(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        Toasty.success(context, message, Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
+        new Handler(Looper.getMainLooper()).post(() -> Toasty.success(context, message, Toast.LENGTH_SHORT).show());
 	}
 
 }
