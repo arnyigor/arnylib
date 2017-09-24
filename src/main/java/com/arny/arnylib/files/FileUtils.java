@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.util.Base64;
 import android.util.Log;
@@ -1467,5 +1468,21 @@ public class FileUtils {
 			uri =  Uri.fromFile(file);
 		}
 		return uri;
+	}
+
+	@NonNull
+	public static Boolean writeToFile(String content, String path, String filename, boolean append) {
+		File file = new File(path);
+		file.mkdirs();
+		File writeFile = new File(file, filename);
+		try {
+			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(writeFile, append));
+			bufferedWriter.write(content);
+			bufferedWriter.close();
+			return true;
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			return false;
+		}
 	}
 }
