@@ -142,29 +142,7 @@ public class DBProvider {
         return null;
     }
 
-    public static String getColumns(Object cls){
-        Field[] clsFields = cls.getClass().getDeclaredFields();
-        StringBuilder builder = new StringBuilder();
-        builder.append("\n");
-        for (Field field : clsFields) {
-            field.setAccessible(true);
-            try {
-                String msg =   field.getName() + " = " + field.get(cls);
-                boolean isVersionID = field.getName().equalsIgnoreCase("serialVersionUID");
-                boolean isChange = field.getName().equalsIgnoreCase("$change");
-                if (!isChange && !isVersionID) {
-                    builder.append(msg);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            field.setAccessible(false);
-            builder.append(", ");
-        }
-        return builder.toString();
-    }
-
-	public static  <T> void saveObject(Context context, String table, T o) {
+    public static  <T> void saveObject(Context context, String table, T o) {
 		ContentValues values = new MicroOrm().toContentValues(o);
 		insertOrUpdateDB(context,table, values);
 	}

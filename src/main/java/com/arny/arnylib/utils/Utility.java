@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -515,5 +516,31 @@ public class Utility {
             list.add(entry.getKey());
         }
         return list;
+    }
+
+    public static String getColumns(Object cls){
+        Field[] clsFields = cls.getClass().getDeclaredFields();
+        StringBuilder builder = new StringBuilder();
+        int cnt = 0;
+        for (Field field : clsFields) {
+            field.setAccessible(true);
+            try {
+                String msg =  field.getName() + " = " + field.get(cls);
+                boolean isVersionID = field.getName().equalsIgnoreCase("serialVersionUID");
+                boolean isChange = field.getName().equalsIgnoreCase("$change");
+                if (!isChange && !isVersionID) {
+                    if (cnt == 0) {
+                        builder.append("\n");
+                        cnt = -1;
+                    }
+                    builder.append(msg);
+                    builder.append(", ");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            field.setAccessible(false);
+        }
+        return builder.toString();
     }
 }

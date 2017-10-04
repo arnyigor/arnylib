@@ -349,12 +349,19 @@ public class OGArrayAdapter<T> extends BaseAdapter implements Filterable {
         return position;
     }
 
+
+    public LayoutInflater getInflater(){
+        return mInflater;
+    }
+
     /**
      * {@inheritDoc}
      */
     public View getView(int position, View convertView, ViewGroup parent) {
         return createViewFromResource(position, convertView, parent, mResource);
     }
+
+
 
     private View createViewFromResource(int position, View convertView, ViewGroup parent, int resource) {
         View view;
@@ -468,8 +475,6 @@ public class OGArrayAdapter<T> extends BaseAdapter implements Filterable {
      * Performs filtering on the provided object and returns true, if the object should be in the filtered collection,
      * or false if it shouldn't.
      *
-     * @param myObject The object to be inspected
-     * @param constraint Constraint, that the object has to fulfil
      * @return true, if the object should be in the filteredResult, false otherwise
      */
     protected String getObjectName(T obj ){
