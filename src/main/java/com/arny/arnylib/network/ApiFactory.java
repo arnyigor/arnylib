@@ -26,8 +26,8 @@ public class ApiFactory {
         logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
         Gson gson = new GsonBuilder().setLenient().create();
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.connectTimeout(10, TimeUnit.SECONDS);
-        httpClient.readTimeout(10, TimeUnit.SECONDS);
+        httpClient.connectTimeout(120, TimeUnit.SECONDS);
+        httpClient.readTimeout(120, TimeUnit.SECONDS);
         httpClient.followRedirects(true);
         httpClient.addInterceptor(logging);
         return new Retrofit.Builder()
