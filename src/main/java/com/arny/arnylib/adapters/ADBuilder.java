@@ -5,7 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 public abstract class ADBuilder extends AlertDialog.Builder {
-	protected AlertDialog mAlertDialog;
+	private AlertDialog mAlertDialog;
 	protected View view;
 
 	public ADBuilder(Context context, int themeResId) {
@@ -13,7 +13,11 @@ public abstract class ADBuilder extends AlertDialog.Builder {
 		view = LayoutInflater.from(getContext()).inflate(themeResId, null);
 	}
 
-	public ADBuilder(Context context) {
+    protected AlertDialog getDialog() {
+        return mAlertDialog;
+    }
+
+    public ADBuilder(Context context) {
 		super(context);
 	}
 
