@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 public abstract class ADBuilder extends AlertDialog.Builder {
 	private AlertDialog mAlertDialog;
-	protected View view;
+    private View view;
 
 	public ADBuilder(Context context, int themeResId) {
 		super(context, themeResId);
@@ -30,10 +30,12 @@ public abstract class ADBuilder extends AlertDialog.Builder {
 		this.setTitle(getTitle());
 		initUI(view);
 		mAlertDialog = super.show();
-		return mAlertDialog;
+        updateDialogView();
+        return mAlertDialog;
 	}
 
 	protected abstract void initUI(View view);
 	protected abstract String getTitle();
 	protected abstract View getView();
+	protected abstract void updateDialogView();
 }

@@ -47,6 +47,7 @@ import io.reactivex.Observable;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 public class DroidUtils {
 
 	/**
@@ -515,5 +516,29 @@ public class DroidUtils {
             e.onNext(t);
             e.onComplete();
         });
+    }
+
+    public static List<String> getAssetsFileLines(Context context, String fileName) {
+        BufferedReader reader = null;
+        List<String> list = new ArrayList<>();
+        try {
+            InputStream open = context.getAssets().open(fileName);
+            reader = new BufferedReader(new InputStreamReader(open, "UTF-8"));
+            String mLine;
+            while ((mLine = reader.readLine()) != null) {
+                list.add(mLine);
+            }
+        } catch (IOException e) {
+            //log the exception
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    //log the exception
+                }
+            }
+        }
+        return list;
     }
 }
