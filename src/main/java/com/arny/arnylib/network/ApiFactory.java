@@ -12,10 +12,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import java.util.concurrent.TimeUnit;
 public class ApiFactory {
     private static ApiFactory instance = new ApiFactory();
+	private long timeout;
+	private HttpLoggingInterceptor.Level level;
 
-    public static ApiFactory getInstance() {
+	public static ApiFactory getInstance() {
         return instance;
-
     }
 
     private ApiFactory() {
@@ -23,11 +24,11 @@ public class ApiFactory {
 
     private Retrofit getRetrofit(String baseUrl) {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+	    logging.setLevel(level);
         Gson gson = new GsonBuilder().setLenient().create();
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.connectTimeout(120, TimeUnit.SECONDS);
-        httpClient.readTimeout(120, TimeUnit.SECONDS);
+	    httpClient.connectTimeout(timeout, TimeUnit.SECONDS);
+        httpClient.readTimeout(timeout, TimeUnit.SECONDS);
         httpClient.followRedirects(true);
         httpClient.addInterceptor(logging);
         return new Retrofit.Builder()
@@ -38,9 +39,16 @@ public class ApiFactory {
                 .build();
     }
 
+	public <S> S createService(Class<S> serviceClass, String baseUrl,long timeout,HttpLoggingInterceptor.Level level) {
+		this.timeout = timeout;
+		this.level = level;
+		return getRetrofit(baseUrl).create(serviceClass);
+	}
+
     public <S> S createService(Class<S> serviceClass, String baseUrl) {
+	    level = HttpLoggingInterceptor.Level.HEADERS;
+	    timeout = 120;
         return getRetrofit(baseUrl).create(serviceClass);
     }
-
 
 }
