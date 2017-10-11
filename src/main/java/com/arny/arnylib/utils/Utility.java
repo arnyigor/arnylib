@@ -518,7 +518,7 @@ public class Utility {
         return list;
     }
 
-    public static String getColumns(Object cls){
+    public static String getFields(Object cls){
         Field[] clsFields = cls.getClass().getDeclaredFields();
         StringBuilder builder = new StringBuilder();
         int cnt = 0;
