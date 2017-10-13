@@ -6,6 +6,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +20,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -521,20 +525,63 @@ public class Utility {
     public static String getFields(Object cls){
         Field[] clsFields = cls.getClass().getDeclaredFields();
         StringBuilder builder = new StringBuilder();
-        int cnt = 0;
         for (Field field : clsFields) {
             field.setAccessible(true);
             try {
-                String msg =  field.getName() + " = " + field.get(cls);
+                String msg = "\n" +field.getName() + ":" + field.get(cls) + "; ";
                 boolean isVersionID = field.getName().equalsIgnoreCase("serialVersionUID");
                 boolean isChange = field.getName().equalsIgnoreCase("$change");
                 if (!isChange && !isVersionID) {
-                    if (cnt == 0) {
-                        builder.append("\n");
-                        cnt = -1;
+                    builder.append(msg);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            field.setAccessible(false);
+        }
+        return builder.toString();
+    }
+
+    public static String getFields(Object cls,int firstnum){
+        Field[] clsFields = cls.getClass().getDeclaredFields();
+        StringBuilder builder = new StringBuilder();
+        int qty = 1;
+        for (Field field : clsFields) {
+            field.setAccessible(true);
+            try {
+                String msg = "\n" +field.getName() + ":" + field.get(cls) + "; ";
+                boolean isVersionID = field.getName().equalsIgnoreCase("serialVersionUID");
+                boolean isChange = field.getName().equalsIgnoreCase("$change");
+                if (!isChange && !isVersionID) {
+                    if (qty > firstnum) {
+                        break;
                     }
                     builder.append(msg);
-                    builder.append(", ");
+                    qty++;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            field.setAccessible(false);
+        }
+        return builder.toString();
+    }
+
+    public static String getFields(Object cls,String[] include){
+        Field[] clsFields = cls.getClass().getDeclaredFields();
+        StringBuilder builder = new StringBuilder();
+        for (Field field : clsFields) {
+            field.setAccessible(true);
+            try {
+                String msg = "\n" +field.getName() + ":" + field.get(cls) + "; ";
+                boolean isVersionID = field.getName().equalsIgnoreCase("serialVersionUID");
+                boolean isChange = field.getName().equalsIgnoreCase("$change");
+                if (!isChange && !isVersionID) {
+                    for (String s : include) {
+                        if (s.equalsIgnoreCase(field.getName())) {
+                            builder.append(msg);
+                        }
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();

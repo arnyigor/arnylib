@@ -10,7 +10,6 @@ import io.reactivex.ObservableSource;
 import io.reactivex.functions.Function;
 import org.chalup.microorm.MicroOrm;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -142,9 +141,9 @@ public class DBProvider {
         return null;
     }
 
-    public static  <T> void saveObject(Context context, String table, T o) {
+    public static  <T> long saveObject(Context context, String table, T o) {
 		ContentValues values = new MicroOrm().toContentValues(o);
-		insertOrUpdateDB(context,table, values);
+		return insertOrUpdateDB(context,table, values);
 	}
 
     public static <T> long saveObjectRow(Context context, String table, T o) {

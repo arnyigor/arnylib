@@ -84,6 +84,35 @@ public class FileUtils {
 		refreshGalleryOnDeleteFile(context, path);
 	}
 
+    public static ArrayList<File> getFolderFiles(final File folder) {
+        ArrayList<File> files = new ArrayList<>();
+        if (folder.listFiles() != null && folder.listFiles().length>0) {
+            for (final File file : folder.listFiles()) {
+                if (file.isDirectory()) {
+                    getFolderFiles(file);
+                } else {
+                    files.add(file);
+                }
+            }
+        }
+        return files;
+    }
+
+    public static ArrayList<File> getDir(final File folder) {
+        ArrayList<File> files = new ArrayList<>();
+        if (folder.listFiles() != null && folder.listFiles().length>0) {
+            for (final File file : folder.listFiles()) {
+                if (file.isDirectory()) {
+                    files.add(file);
+                    getFolderFiles(file);
+                } else {
+                    files.add(file);
+                }
+            }
+        }
+        return files;
+    }
+
 	private static void refreshGalleryOnDeleteFile(Context context, String path) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			Intent mediaScanIntent = new Intent( Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
