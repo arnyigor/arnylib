@@ -761,16 +761,28 @@ public class FileUtils {
 		}
 	}
 
-	public static boolean deleteFile(String path) {
-		try {
-			File file = new File(path);
-			if (file.exists()) {
-				return file.delete();
+	public static long getFolderSize(File folder) {
+		long length = 0;
+		folder.mkdirs();
+		File[] files = folder.listFiles();
+		for (File file : files) {
+			if (file.isFile()) {
+				length += file.length();
+			} else {
+				length += getFolderSize(file);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		return false;
+		return length;
+	}
+
+	public static boolean deleteFile(File element) {
+		element.mkdirs();
+		if (element.isDirectory()) {
+			for (File sub : element.listFiles()) {
+				deleteFile(sub);
+			}
+		}
+		return element.delete();
 	}
 
 	public static int getMediaType(String file) {

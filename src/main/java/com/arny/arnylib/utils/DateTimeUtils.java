@@ -1,9 +1,8 @@
 package com.arny.arnylib.utils;
 
-import android.support.annotation.NonNull;
-import android.util.Log;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
@@ -268,7 +267,13 @@ public class DateTimeUtils {
         return d + " " + fDate + " " + y;
     }
 
-    public static DateTime getDateTime(String date, String format) {
+	/**
+	 * joda time
+	 * @param date
+	 * @param format
+	 * @return
+	 */
+	public static DateTime getDateTime(String date, String format) {
         DateTime dateTime = DateTime.now();
         try {
             dateTime = DateTimeFormat.forPattern(format).parseDateTime(date);
@@ -277,4 +282,11 @@ public class DateTimeUtils {
         }
         return dateTime;
     }
+
+	public static String getDateTime(DateTime dateTime, String format) {
+		DateTimeFormatter fmt = DateTimeFormat.forPattern(format);
+		return fmt.print(dateTime);
+	}
+
+
 }

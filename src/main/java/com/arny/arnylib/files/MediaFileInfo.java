@@ -1,7 +1,13 @@
 package com.arny.arnylib.files;
 
+import com.arny.arnylib.utils.Utility;
+import org.chalup.microorm.annotations.Column;
 public class MediaFileInfo {
-	private String fileName,filePath,fileType;
+	@Column("name")
+	private String fileName;
+	@Column("path")
+	private String filePath;
+	private String fileType;
 	private int ID;
 
 	public String getFileName() {
@@ -38,6 +44,6 @@ public class MediaFileInfo {
 
 	@Override
 	public String toString() {
-		return "_ID = " + getID() + " fileName = " + getFileName() + " fileType = "  + getFileType() + " filePath = "+  getFilePath();
+		return Utility.getFields(this);
 	}
 }

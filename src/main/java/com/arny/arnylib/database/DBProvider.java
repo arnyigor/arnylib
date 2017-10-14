@@ -116,7 +116,7 @@ public class DBProvider {
 	}
 
 
-    public static <T> ArrayList<T> getCursorObjectList(Cursor cursor, Class<?> clazz) {
+    public static <T> ArrayList<T> getCursorObjectList(Cursor cursor, Class<? extends T> clazz) {
         ArrayList<T> queue = new ArrayList<>();
         if (cursor != null && cursor.getCount() > 0) {
             if (cursor.moveToFirst()) {

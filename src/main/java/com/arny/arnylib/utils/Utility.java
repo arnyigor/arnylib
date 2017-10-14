@@ -2,13 +2,16 @@ package com.arny.arnylib.utils;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -522,23 +525,23 @@ public class Utility {
         return list;
     }
 
-    public static String getFields(Object cls){
-        Field[] clsFields = cls.getClass().getDeclaredFields();
-        StringBuilder builder = new StringBuilder();
-        for (Field field : clsFields) {
-            field.setAccessible(true);
-            try {
-                String msg = "\n" +field.getName() + ":" + field.get(cls) + "; ";
-                boolean isVersionID = field.getName().equalsIgnoreCase("serialVersionUID");
-                boolean isChange = field.getName().equalsIgnoreCase("$change");
-                if (!isChange && !isVersionID) {
-                    builder.append(msg);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            field.setAccessible(false);
-        }
+    public static String getFields(Object o){
+        Field[] clsFields = o.getClass().getDeclaredFields();
+	    StringBuilder builder = new StringBuilder();
+	    for (Field field : clsFields) {
+		    field.setAccessible(true);
+		    try {
+			    String msg = "\n" +field.getName() + ":" + field.get(o) + "; ";
+			    boolean isVersionID = field.getName().equalsIgnoreCase("serialVersionUID");
+			    boolean isChange = field.getName().equalsIgnoreCase("$change");
+			    if (!isChange && !isVersionID) {
+				    builder.append(msg);
+			    }
+		    } catch (Exception e) {
+			    e.printStackTrace();
+		    }
+		    field.setAccessible(false);
+	    }
         return builder.toString();
     }
 
@@ -590,4 +593,15 @@ public class Utility {
         }
         return builder.toString();
     }
+
+	public static <T> Observable<T> makeObservable(@NonNull T o) {
+		return Observable.create(e -> {
+			e.onNext(o);
+			e.onComplete();
+		});
+	}
+
+	public static <T> Observable<T> mainThreadObservable(Observable<T> observable) {
+		return observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+	}
 }
