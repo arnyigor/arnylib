@@ -26,7 +26,6 @@ public class DBProvider {
 
 	public static int insertReplaceDB(Context context, String table, String where, String[] args, ContentValues cv){
 		Cursor cursor = selectDB(table, null, where,args,null,context);
-//		String dumb = DroidUtils.dumpCursor(cursor);
 		if (cursor != null && cursor.moveToFirst()) {
 			return updateDB(table, cv, where,args, context);
 		}else{
