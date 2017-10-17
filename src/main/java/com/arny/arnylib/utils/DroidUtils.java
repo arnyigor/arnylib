@@ -518,6 +518,30 @@ public class DroidUtils {
         });
     }
 
+    public static String getAssetsFile(Context context, String fileName) {
+        BufferedReader reader = null;
+        StringBuilder builder = new StringBuilder();
+        try {
+            InputStream open = context.getAssets().open(fileName);
+            reader = new BufferedReader(new InputStreamReader(open, "UTF-8"));
+            String mLine;
+            while ((mLine = reader.readLine()) != null) {
+                builder.append(mLine);
+            }
+        } catch (IOException e) {
+            //log the exception
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    //log the exception
+                }
+            }
+        }
+        return builder.toString();
+    }
+
     public static List<String> getAssetsFileLines(Context context, String fileName) {
         BufferedReader reader = null;
         List<String> list = new ArrayList<>();
