@@ -594,13 +594,6 @@ public class Utility {
         return builder.toString();
     }
 
-	public static <T> Observable<T> makeObservable(@NonNull T o) {
-		return Observable.create(e -> {
-			e.onNext(o);
-			e.onComplete();
-		});
-	}
-
 	public static <T> Observable<T> mainThreadObservable(Observable<T> observable) {
 		return observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
 	}
