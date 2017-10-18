@@ -6,6 +6,9 @@ import java.util.Random;
 
 public class MathUtils {
 
+    public static double getPercent(double iter,double total){
+        return round((iter / total) * 100,2);
+    }
 
     public static String simpleDoubleFormat(double d) {
         if (d == 0) {

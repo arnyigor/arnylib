@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import com.arny.arnylib.utils.DateTimeUtils;
 import com.arny.arnylib.utils.Utility;
 
 import java.util.ArrayList;
@@ -156,7 +157,7 @@ class DBHelper extends SQLiteOpenHelper {
                         String patternapp = "^([app|lib]{1,}\\_\\d{8}[_]{0,}.*)\\.sql";
                         String fnam = Utility.match(fn, patternapp,1);
                         values.put("filename", fnam);
-                        values.put("applytime", Utility.getDateTime(System.currentTimeMillis(),"yyyyMMdd"));
+                        values.put("applytime", DateTimeUtils.getDateTime(System.currentTimeMillis(),"yyyyMMdd"));
                         db.insert("migrations", null, values);
                         db.setTransactionSuccessful();
                     }catch (Exception e){

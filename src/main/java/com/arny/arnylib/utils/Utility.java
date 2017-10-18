@@ -36,16 +36,6 @@ public class Utility {
         return text.trim().replace(" ", "");
     }
 
-    public static synchronized boolean isMyServiceRunning(Class<?> serviceClass, Context context) {
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
@@ -217,47 +207,6 @@ public class Utility {
             }
         }
         return arr;
-    }
-
-    public static String dateFormatChooser(String myTimestamp) {
-        HashMap<String, String> pregs = new HashMap<>();
-        pregs.put("^[0-9]{1,2}\\.[0-9]{2}\\.[0-9]{4}$", "dd.MM.yyyy");
-        pregs.put("^[0-9]{1,2}\\.[0-9]{2}\\.[0-9]{2}$", "dd.MM.yy");
-        pregs.put("^[0-9]{1,2}\\-\\.*\\-[0-9]{2}$", "dd-MMM-yy");
-        pregs.put("^[0-9]{1,2}\\-.*\\-[0-9]{4}$", "dd-MMM-yyyy");
-        pregs.put("^[0-9]{1,2}\\s\\.*\\s[0-9]{2}$", "dd MMM yy");
-        pregs.put("^[0-9]{1,2}\\s\\.*\\s[0-9]{4}$", "dd MMM yyyy");
-        pregs.put("^[0-9]{1,2}\\s[0-9]{2}\\s[0-9]{2}$", "dd MM yy");
-        pregs.put("^[0-9]{1,2}\\s[0-9]{2}\\s[0-9]{4}$", "dd MM yyyy");
-        String format = "dd MMM yyyy";
-        for (HashMap.Entry<String, String> entry : pregs.entrySet()) {
-            if (Pattern.matches(entry.getKey(), myTimestamp)) {
-                format = entry.getValue();
-                break;
-            }
-        }
-        return format;
-    }
-
-    public static String getDateTime(long milliseconds, String format) {
-        milliseconds = (milliseconds == 0) ? Calendar.getInstance().getTimeInMillis() : milliseconds;
-        format = (format == null) ? "dd MMM yyyy HH:mm:ss.sss" : format;
-        return (new SimpleDateFormat(format, Locale.getDefault())).format(new Date(milliseconds));
-    }
-
-    public static String getDateTime(long milliseconds) {
-        milliseconds = (milliseconds == 0) ? Calendar.getInstance().getTimeInMillis() : milliseconds;
-        return (new SimpleDateFormat("dd MMM yyyy HH:mm:ss.sss", Locale.getDefault())).format(new Date(milliseconds));
-    }
-
-    public static String getDateTime() {
-        return (new SimpleDateFormat("dd MMM yyyy HH:mm:ss.sss", Locale.getDefault())).format(new Date(System.currentTimeMillis()));
-    }
-
-    public static boolean isTimeOlderMins(int min,long time) {
-        long now = System.currentTimeMillis();
-        long diff =  now-time ;
-        return  (diff /(1000 *  60 )) > min;
     }
 
     public static String getDateTime(String format) {

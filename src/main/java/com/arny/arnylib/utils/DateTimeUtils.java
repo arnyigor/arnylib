@@ -46,6 +46,14 @@ public class DateTimeUtils {
         return format;
     }
 
+    public static long getEsTime(long startTime, long curTime, int iter, int tot) {
+        if (iter == 0) {
+            return 0;
+        }
+        long a = (curTime - startTime) / iter;
+        return (a * tot) - (a * iter);
+    }
+
     public static String getDateTime(long milliseconds, String format) {
         milliseconds = (milliseconds == 0) ? Calendar.getInstance().getTimeInMillis() : milliseconds;
         format = (format == null) ? "dd MMM yyyy HH:mm:ss.sss" : format;

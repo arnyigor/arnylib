@@ -3,6 +3,7 @@ package com.arny.arnylib.loaders;
 import android.content.Context;
 import android.os.SystemClock;
 import android.util.Log;
+import com.arny.arnylib.utils.DateTimeUtils;
 import com.arny.arnylib.utils.Utility;
 public class MyLoader extends AbstractLoader<String>  {
 	private String data;
@@ -18,7 +19,7 @@ public class MyLoader extends AbstractLoader<String>  {
 			Log.i(MyLoader.class.getSimpleName(), "hudeOperation: i = " + i);
 			SystemClock.sleep(1000);
 		}
-		return "data = " + data + " time = " + Utility.getDateTime();
+		return "data = " + data + " time = " + DateTimeUtils.getDateTime();
 	}
 
 }

@@ -36,11 +36,11 @@ public abstract class AbstractIntentService extends IntentService {
 
     protected abstract void runOperation(OperationProvider provider,OnOperationResult result);
 
-    protected static OperationProvider getOperation() {
+    public static OperationProvider getOperation() {
         return operation;
     }
 
-    protected void setOperation(OperationProvider operation) {
+    public static void setOperation(OperationProvider operation) {
         AbstractIntentService.operation = operation;
     }
 
@@ -159,7 +159,7 @@ public abstract class AbstractIntentService extends IntentService {
 
     private void executeOperation(final OperationProvider operation) {
         setOperation(operation);
-        runOperation(getOperation(), new OnOperationResult() {
+        runOperation(operation, new OnOperationResult() {
             @Override
             public void resultSuccess(OperationProvider provider) {
                 sendOperationResult(provider);
