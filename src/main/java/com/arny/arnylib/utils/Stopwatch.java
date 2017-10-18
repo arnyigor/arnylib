@@ -51,7 +51,7 @@ public class Stopwatch {
 	public double getElapsedTimeSecs(int scale) {
 		double elapsed = 0;
 		if (running) {
-			elapsed = ((double) (System.nanoTime() - startTime) / 1000000000);//%60?// TODO: 15.10.2017
+			elapsed = ((double) (System.nanoTime() - startTime) / 1000000000);
 		}
 		return new BigDecimal(elapsed).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
 	}
