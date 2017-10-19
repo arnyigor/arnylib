@@ -184,7 +184,7 @@ public class OGArrayAdapter<T> extends BaseAdapter implements Filterable {
     public void addAll(Collection<? extends T> collection) {
         synchronized (mLock) {
             if (mOriginalValues != null) {
-                mOriginalValues.addAll(collection);
+                mOriginalValues.addAll(collection);// TODO: 19.10.2017 add not equals
             } else {
                 mObjects.addAll(collection);
             }

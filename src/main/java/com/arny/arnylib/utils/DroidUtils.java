@@ -18,14 +18,17 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Vibrator;
 import android.support.annotation.AnimRes;
+import android.support.annotation.NonNull;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -47,6 +50,7 @@ import com.arny.arnylib.network.Connectivity;
 import io.reactivex.Observable;
 
 import java.io.*;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 public class DroidUtils {
@@ -306,6 +310,26 @@ public class DroidUtils {
 	public static String dumpCursor(Cursor cursor){
 		return DatabaseUtils.dumpCursorToString(cursor);
 	}
+
+    public static File dumpDB(Context context,@NonNull String dbName) {
+        try {
+            File sd = Environment.getExternalStorageDirectory();
+            File data = Environment.getDataDirectory();
+            FileChannel source, destination;
+            String currentDBPath = "data/" + context.getPackageName() + "/databases/" + dbName;
+            File currentDB = new File(data, currentDBPath);
+            File backupDB = new File(sd, dbName + ".db");
+            source = new FileInputStream(currentDB).getChannel();
+            destination = new FileOutputStream(backupDB).getChannel();
+            destination.transferFrom(source, 0, source.size());
+            source.close();
+            destination.close();
+            return backupDB;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static void listDialog(Context context, String[] items, final ListDialogListener listDialogListener) {
         listDialog(context, items, context.getResources().getString(R.string.list_dialog_title), listDialogListener);

@@ -63,6 +63,7 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
 
     public void addAll(List<? extends T> items) {
         final int size = this.items.size();
+
         this.items.addAll(items);
         notifyItemRangeInserted(size + getHeadersCount(), items.size());
     }

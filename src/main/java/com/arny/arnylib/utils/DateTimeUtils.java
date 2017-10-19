@@ -46,12 +46,27 @@ public class DateTimeUtils {
         return format;
     }
 
-    public static long getEsTime(long startTime, long curTime, int iter, int tot) {
+    private static long getEsTime(long startTime, long curTime, int iter, int tot) {
         if (iter == 0) {
             return 0;
         }
         long a = (curTime - startTime) / iter;
         return (a * tot) - (a * iter);
+    }
+
+    /**
+     * Времени осталось
+     * @param startTime начальное время milliseconds
+     * @param curTime текущее время milliseconds
+     * @param iter текущая итерация
+     * @param tot всего итераций
+     * @return "min:sec"
+     */
+    public static String getEstimateTime(long startTime, long curTime, int iter, int tot) {
+        long esTime = getEsTime(startTime, curTime, iter, tot);
+        int min = (int) (((esTime / 1000) / 60 ) % 60);
+        int sec = (int) ((esTime / 1000) % 60);
+        return pad(min) + ":" + pad(sec) ;
     }
 
     public static String getDateTime(long milliseconds, String format) {
@@ -180,6 +195,18 @@ public class DateTimeUtils {
             e.printStackTrace();
         }
         return mins + (hours * 60);
+    }
+
+    public static String getHHmmFromMins(int minutes) {
+        int hours = 0;
+        int mins = 0;
+        try {
+            hours = minutes/60;
+            mins =  minutes%60;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return hours + ":" + pad(mins);
     }
 
     /**
