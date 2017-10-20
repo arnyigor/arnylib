@@ -1,6 +1,7 @@
 package com.arny.arnylib.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Filter;
 
 import java.util.ArrayList;
@@ -16,9 +17,6 @@ public abstract class FilterBindableAdapter<T, VH extends RecyclerView.ViewHolde
 
     @Override
     public void addAll(List<? extends T> data) {
-        if (objects.containsAll(data)) {
-            return;
-        }
         objects.clear();
         objects.addAll(data);
         getItems().clear();
