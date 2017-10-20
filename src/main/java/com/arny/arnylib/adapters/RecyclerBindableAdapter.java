@@ -8,6 +8,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,8 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
     private ArrayList<View> headers = new ArrayList<>();
     private ArrayList<View> footers = new ArrayList<>();
     private ArrayList<T> items = new ArrayList<>();
-
+    private SparseBooleanArray selectedItems = new SparseBooleanArray();
+    ;
     private RecyclerView.LayoutManager manager;
     private LayoutInflater inflater;
 	private GridLayoutManager.SpanSizeLookup spanSizeLookup = new GridLayoutManager.SpanSizeLookup() {
@@ -165,7 +167,7 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
             prepareHeaderFooter((HeaderFooterViewHolder) vh, v);
         } else {
             //it's one of our items, display as required
-            onBindItemViewHolder((VH) vh, position - headers.size(), getItemType(position));
+            onBindItemViewHolder((VH) vh, position - headers.size(), getItemType(position), isSelected(position));
         }
     }
 
@@ -311,11 +313,68 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
         return footers.get(location);
     }
 
+    /**
+     * Indicates if the item at position position is selected
+     *
+     * @param position Position of the item to check
+     * @return true if the item is selected, false otherwise
+     */
+    public boolean isSelected(int position) {
+        return getSelectedItems().contains(position);
+    }
+
+    /**
+     * Toggle the selection status of the item at a given position
+     *
+     * @param position Position of the item to toggle the selection status for
+     */
+    public void toggleSelection(int position) {
+        if (selectedItems.get(position, false)) {
+            selectedItems.delete(position);
+        } else {
+            selectedItems.put(position, true);
+        }
+        notifyItemChanged(position);
+    }
+
+    /**
+     * Clear the selection status for all items
+     */
+    public void clearSelection() {
+        List<Integer> selection = getSelectedItems();
+        selectedItems.clear();
+        for (Integer i : selection) {
+            notifyItemChanged(i);
+        }
+    }
+
+    /**
+     * Count the selected items
+     *
+     * @return Selected items count
+     */
+    public int getSelectedItemCount() {
+        return selectedItems.size();
+    }
+
+    /**
+     * Indicates the list of selected items
+     *
+     * @return List of selected items ids
+     */
+    public List<Integer> getSelectedItems() {
+        List<Integer> items = new ArrayList<>(selectedItems.size());
+        for (int i = 0; i < selectedItems.size(); ++i) {
+            items.add(selectedItems.keyAt(i));
+        }
+        return items;
+    }
+
     protected int getItemType(int position) {
         return 0;
     }
 
-    abstract protected void onBindItemViewHolder(VH viewHolder, int position, int type);
+    abstract protected void onBindItemViewHolder(VH viewHolder, int position, int type, boolean selected);
 
     protected abstract VH viewHolder(View view, int type);
 
