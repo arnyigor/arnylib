@@ -303,11 +303,11 @@ public class DateTimeUtils {
     }
 
 	/**
-	 * joda time
-	 * @param date
+     * получение даты DateTime
+     * @param date
 	 * @param format
-	 * @return
-	 */
+     * @return DateTime
+     */
 	public static DateTime getDateTime(String date, String format) {
         DateTime dateTime = DateTime.now();
         try {
@@ -318,10 +318,27 @@ public class DateTimeUtils {
         return dateTime;
     }
 
-	public static String getDateTime(DateTime dateTime, String format) {
-		DateTimeFormatter fmt = DateTimeFormat.forPattern(format);
-		return fmt.print(dateTime);
-	}
+    /**
+     * получение даты String
+     *
+     * @param dateTime
+     * @param format
+     * @return String
+     */
+    public static String getDateTime(DateTime dateTime, String format) {
+        DateTimeFormatter fmt = DateTimeFormat.forPattern(format);
+        return fmt.print(dateTime);
+    }
 
-
+    /**
+     * Конвертирование из одного формата в другой
+     *
+     * @param formatFrom
+     * @param from
+     * @param formatTo
+     * @return
+     */
+    public static String getDateTime(String formatFrom, String from, String formatTo) {
+        return getDateTime(getDateTime(from, formatFrom), formatTo);
+    }
 }

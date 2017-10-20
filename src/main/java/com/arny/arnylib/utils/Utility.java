@@ -546,4 +546,27 @@ public class Utility {
 	public static <T> Observable<T> mainThreadObservable(Observable<T> observable) {
 		return observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
 	}
+
+    @NonNull
+    public static <T> ArrayList<T> getListCopy(List<T> list) {
+        ArrayList<T> arrayList = new ArrayList<>();
+        arrayList.addAll(list);
+        ArrayList<T> listCopy = new ArrayList<>(arrayList.size());
+        listCopy.addAll((ArrayList<T>) arrayList.clone());
+        Collections.copy(listCopy, list);
+        return listCopy;
+    }
+
+    public static String listToString(List<String> strings) {
+        StringBuilder res = new StringBuilder();
+        boolean first = true;
+        for (String s : strings) {
+            if (!first) {
+                res.append(",");
+                first = false;
+            }
+            res.append(s);
+        }
+        return res.toString();
+    }
 }

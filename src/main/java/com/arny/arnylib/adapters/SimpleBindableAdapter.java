@@ -28,7 +28,7 @@ public final class SimpleBindableAdapter<T, VH extends BindableViewHolder> exten
 	}
 
 	@Override
-	protected void onBindItemViewHolder(BindableViewHolder viewHolder, int position, int type) {
+	protected void onBindItemViewHolder(BindableViewHolder viewHolder, int position, int type,boolean isSelected) {
 		//вставляем данные во ViewHolder, ради этого метода мы и создавали BindableViewHolder
 		viewHolder.bindView(context,position, getItem(position), actionListener);
 	}

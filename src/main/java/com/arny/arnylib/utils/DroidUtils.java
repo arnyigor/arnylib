@@ -393,10 +393,10 @@ public class DroidUtils {
 				for (String key : bundle.keySet()) {
 					Object value = bundle.get(key);
 					if (value != null) {
-						stringBuilder.append(String.format("key:%s  val:%s  classname:(%s)", key, value.toString(), value.getClass().getName()));
+						stringBuilder.append(String.format("\nkey:%s  val:%s  classname:(%s)", key, value.toString(), value.getClass().getName()));
 					}
 				}
-				return stringBuilder.toString();
+                return stringBuilder.toString();
 			}
 		}
 		return null;
