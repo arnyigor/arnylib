@@ -569,4 +569,17 @@ public class Utility {
         }
         return res.toString();
     }
+
+	public static <T> String objectsListToString(List<T> tList) {
+		StringBuilder res = new StringBuilder();
+		boolean first = true;
+		for (T s : tList) {
+			if (!first) {
+				res.append(",");
+				first = false;
+			}
+			res.append(s.toString());
+		}
+		return res.toString();
+	}
 }
