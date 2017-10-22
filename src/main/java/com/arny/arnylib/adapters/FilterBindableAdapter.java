@@ -28,12 +28,6 @@ public abstract class FilterBindableAdapter<T, VH extends RecyclerView.ViewHolde
         }
     }
 
-    public void addShowed(List<? extends T> data) {
-        objects.clear();
-        objects.addAll(data);
-        notifyItemRangeInserted(getHeadersCount(), data.size());
-    }
-
     @Override
     public void removeChild(int position) {
         T item = getItems().remove(position);

@@ -89,6 +89,15 @@ public class OGArrayAdapter<T> extends BaseAdapter implements Filterable {
 
     private LayoutInflater mInflater;
 
+	/**
+	 * Constructor
+	 *
+	 * @param context The current context.
+	 */
+	public OGArrayAdapter(Context context) {
+		init(context, 0, 0, new ArrayList<T>());
+	}
+
     /**
      * Constructor
      *
