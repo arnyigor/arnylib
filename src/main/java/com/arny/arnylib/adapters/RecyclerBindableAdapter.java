@@ -109,7 +109,7 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
         return items.indexOf(object);
     }
 
-    public List<T> getItems() {
+    public ArrayList<T> getItems() {
         return items;
     }
 
