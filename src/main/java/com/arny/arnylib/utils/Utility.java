@@ -314,26 +314,6 @@ public class Utility {
     }
 
     /**
-     * Чтение файлов assets,в папке
-     * @param folder
-     * @return
-     */
-    public static ArrayList<String> listAssetFiles(Context context, String folder) {
-        ArrayList<String> fileNames = new ArrayList<>();
-        if (context ==null){
-            return null;
-        }
-        try {
-            String[] files = context.getAssets().list(folder);
-            Collections.addAll(fileNames, files);
-            return fileNames;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
      * add '0' to number before 10
      * @param number
      * @return
@@ -582,4 +562,16 @@ public class Utility {
 		}
 		return res.toString();
 	}
+
+    @NonNull
+    public static <T> ArrayList<T> getExclideList(ArrayList<T> list, List<T> items, Comparator<T> comparator) {
+        ArrayList<T> res = new ArrayList<>();
+        for (T t : list) {
+            int pos = Collections.binarySearch(items, t, comparator);
+            if (pos < 0) {
+                res.add(t);
+            }
+        }
+        return res;
+    }
 }

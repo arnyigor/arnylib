@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import com.arny.arnylib.files.FileUtils;
 import com.arny.arnylib.utils.DateTimeUtils;
 import com.arny.arnylib.utils.Utility;
 
@@ -57,7 +58,7 @@ class DBHelper extends SQLiteOpenHelper {
      * @param context
      */
     private void dbMigrations(SQLiteDatabase db, Context context) {
-        ArrayList<String> filenames = Utility.listAssetFiles(context,"migrations");
+        ArrayList<String> filenames = FileUtils.listAssetFiles(context,"migrations");
         filenames = sortFilenames(filenames);
         if (!isTableExists(db, "migrations")){
             setTableMigrations(db);

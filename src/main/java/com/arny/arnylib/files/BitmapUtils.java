@@ -16,9 +16,7 @@ import com.arny.arnylib.utils.DroidUtils;
 import com.arny.arnylib.utils.Logcat;
 import com.arny.arnylib.utils.Utility;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 public class BitmapUtils {
 	public static Bitmap getBitmap(Uri mediaURI, Context context) throws IOException {
 		return MediaStore.Images.Media.getBitmap(context.getContentResolver(), mediaURI);
@@ -60,7 +58,43 @@ public class BitmapUtils {
 		return BitmapFactory.decodeResource(context.getResources(), idRes);
 	}
 
-	public static Bitmap getResizedBitmap(String path, int maxWith) throws IOException {
+    public static Drawable loadDrawableFromAssets(Context context, String path) {
+        InputStream stream = null;
+        try {
+            stream = context.getAssets().open(path);
+            return Drawable.createFromStream(stream, null);
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
+        } finally {
+            try {
+                if (stream != null) {
+                    stream.close();
+                }
+            } catch (Exception ignored) {
+            }
+        }
+        return null;
+    }
+
+    public static Bitmap loadBitmapFromAssets(Context context, String path) {
+        InputStream stream = null;
+        try {
+            stream = context.getAssets().open(path);
+            return BitmapFactory.decodeStream(stream);
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
+        } finally {
+            try {
+                if (stream != null) {
+                    stream.close();
+                }
+            } catch (Exception ignored) {
+            }
+        }
+        return null;
+    }
+
+    public static Bitmap getResizedBitmap(String path, int maxWith) throws IOException {
 		Bitmap image = BitmapFactory.decodeFile(path);//loading the large bitmap is fine.
 		int w = image.getWidth();//get width
 		int h = image.getHeight();//get height

@@ -339,6 +339,9 @@ public class OGArrayAdapter<T> extends BaseAdapter implements Filterable {
     public T getItem(int position) {
         return mObjects.get(position);
     }
+    public List<T> getItems(){
+        return mObjects;
+    }
 
     /**
      * Returns the position of the specified item in the array.
