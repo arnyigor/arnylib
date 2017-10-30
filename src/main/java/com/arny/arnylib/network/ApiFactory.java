@@ -3,7 +3,9 @@ package com.arny.arnylib.network;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import okhttp3.Cache;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -38,6 +40,11 @@ public class ApiFactory {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
     }
+
+    public static RequestBody createStringRequestBody(String params){
+        return RequestBody.create(MediaType.parse("text/json"), params);
+    }
+
 
 	public <S> S createService(Class<S> serviceClass, String baseUrl,long timeout,HttpLoggingInterceptor.Level level) {
 		this.timeout = timeout;
