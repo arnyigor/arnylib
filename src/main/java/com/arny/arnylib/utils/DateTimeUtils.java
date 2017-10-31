@@ -55,9 +55,9 @@ public class DateTimeUtils {
     }
 
     /**
-     * Времени осталось
-     * @param startTime начальное время milliseconds
-     * @param curTime текущее время milliseconds
+     * Примерное время выполнения
+     * @param startTime время старта выполнения итераций  milliseconds
+     * @param curTime текущее время итерации milliseconds
      * @param iter текущая итерация
      * @param tot всего итераций
      * @return "min:sec"
@@ -67,6 +67,21 @@ public class DateTimeUtils {
         int min = (int) (((esTime / 1000) / 60 ) % 60);
         int sec = (int) ((esTime / 1000) % 60);
         return pad(min) + ":" + pad(sec) ;
+    }
+
+    /**
+     * Истекает время
+     *
+     * @param endTime конечное время milliseconds
+     * @param curTime текущее время milliseconds
+     * @return "min:sec"
+     */
+    public static String getEstimateTime(long endTime, long curTime) {
+        long dTime = endTime - curTime;
+        dTime = dTime <= 0 ? 0 : dTime;
+        int min = (int) (((dTime / 1000) / 60) % 60);
+        int sec = (int) ((dTime / 1000) % 60);
+        return pad(min) + ":" + pad(sec);
     }
 
     public static String getDateTime(long milliseconds, String format) {
@@ -333,12 +348,12 @@ public class DateTimeUtils {
     /**
      * Конвертирование из одного формата в другой
      *
-     * @param formatFrom
-     * @param from
+     * @param dateTimeFrom
+     * @param formatfrom
      * @param formatTo
      * @return
      */
-    public static String getDateTime(String formatFrom, String from, String formatTo) {
-        return getDateTime(getDateTime(from, formatFrom), formatTo);
+    public static String getDateTime(String dateTimeFrom, String formatfrom, String formatTo) {
+        return getDateTime(getDateTime(dateTimeFrom, formatfrom), formatTo);
     }
 }
