@@ -22,7 +22,6 @@ import android.support.v4.content.FileProvider;
 import android.util.Base64;
 import android.util.Log;
 import com.arny.arnylib.database.DBProvider;
-import com.arny.arnylib.security.CryptoFiles;
 import com.arny.arnylib.utils.DroidUtils;
 import com.arny.arnylib.utils.Logcat;
 import com.arny.arnylib.utils.MediaFile;
@@ -1008,7 +1007,7 @@ public class FileUtils {
         File file = new File(getFilePath(fileName));
         Logcat.d(FileUtils.class.getSimpleName(), "writeFile to " + fileName);
         boolean folderFilesExist = file.exists() || file.mkdirs();
-        Logcat.d(CryptoFiles.class.getSimpleName(), "encrypt: folderFilesExist = " + folderFilesExist);
+        Logcat.d(FileUtils.class.getSimpleName(), "encrypt: folderFilesExist = " + folderFilesExist);
         if (!folderFilesExist) {
             return false;
         }

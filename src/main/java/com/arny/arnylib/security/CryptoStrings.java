@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
-public class SimpleCrypto {
+public class CryptoStrings {
     private static final String HEX = "0123456789ABCDEF";
 
     public static String encrypt(String seed, String cleartext) throws Exception {

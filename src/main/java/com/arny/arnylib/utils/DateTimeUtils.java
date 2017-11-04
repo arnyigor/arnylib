@@ -356,4 +356,8 @@ public class DateTimeUtils {
     public static String getDateTime(String dateTimeFrom, String formatfrom, String formatTo) {
         return getDateTime(getDateTime(dateTimeFrom, formatfrom), formatTo);
     }
+
+	public static double getTimeDiff(long starttime) {
+		return (double) (System.currentTimeMillis() - starttime) / 1000;
+	}
 }
