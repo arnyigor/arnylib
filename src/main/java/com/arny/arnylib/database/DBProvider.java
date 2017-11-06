@@ -5,14 +5,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.functions.Function;
+import android.support.annotation.NonNull;
+import com.arny.arnylib.utils.Utility;
+import com.arny.java.utils.KtlUtilsKt;
 import org.chalup.microorm.MicroOrm;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 public class DBProvider {
 
@@ -145,32 +146,104 @@ public class DBProvider {
 		return insertOrUpdateDB(context,table, values);
 	}
 
-    public static <T> long saveObjectRow(Context context, String table, T o) {
-        ContentValues values = new MicroOrm().toContentValues(o);
-        return insertOrUpdateDB(context,table, values);
-    }
-
-	public static <T> Callable<T> getCallable(final String table, final Class<T> clazz, final Context context) {
-		return new Callable<T>() {
-			@Override
-			public T call() {
-				Cursor curs = connectDB(context).query(table, null, null, null, null, null, null);
-				return getCursorObject(curs, clazz);
+	public static String convertToSQLTable(Object o, String[] fldsToSave) {
+		Collection<Field> fields = new ArrayList<>();
+		if (fldsToSave.length > 0) {
+			for (Field field : Utility.getFields(o.getClass())) {
+				for (String s : fldsToSave) {
+					if (s.equalsIgnoreCase(field.getName())) {
+						fields.add(field);
+					}
+				}
 			}
-		};
+		} else {
+			fields = Utility.getFields(o.getClass());
+		}
+		StringBuilder builder = new StringBuilder();
+		builder.append("CREATE TABLE IF NOT EXISTS `");
+		builder.append(getSqlTable(o.getClass()));
+		builder.append("` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT, ");
+		for (Field field : fields) {
+			field.setAccessible(true);
+			try {
+				String fldType = field.getType().getSimpleName();
+				String msg = " `" + field.getName() + "` " + KtlUtilsKt.getSQLType(fldType) + ",";
+				builder.append(msg);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			field.setAccessible(false);
+		}
+		builder.append(")");
+		String res = builder.toString();
+		res = res.replaceAll("\\,\\)$", ");");
+		return res;
 	}
 
-	public static <T> Observable<T> makeObservable(final String table, final Class<Object> clazz, final Context context) {
-		return Observable.defer(new Callable<ObservableSource<? extends T>>() {
-			@Override
-			public ObservableSource<? extends T> call() throws Exception {
-				return Observable.fromCallable(getCallable(table, clazz, context)).map(new Function<Object, T>() {
-					@Override
-					public T apply(Object o) throws Exception {
-						return (T)o;
+	public static <T> String fillSQLTable(List<T> objects, String[] fldsToSave) {
+		Object o = objects.get(0);
+		Collection<Field> fields = new ArrayList<>();
+		if (fldsToSave.length > 0) {
+			for (Field field : Utility.getFields(o.getClass())) {
+				for (String s : fldsToSave) {
+					if (s.equalsIgnoreCase(field.getName())) {
+						fields.add(field);
 					}
-				});
+				}
 			}
-		});
+		} else {
+			fields = Utility.getFields(o.getClass());
+		}
+		StringBuilder preBuilder = new StringBuilder();
+		preBuilder.append("INSERT INTO `");
+		preBuilder.append(o.getClass().getSimpleName());
+		preBuilder.append("` (");
+		for (Field field : fields) {
+			field.setAccessible(true);
+			try {
+				String msg = field.getName();
+				preBuilder.append(msg);
+				preBuilder.append(",");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			field.setAccessible(false);
+		}
+		preBuilder.append(")");
+		preBuilder.deleteCharAt(preBuilder.length() - 2);
+		preBuilder.append(" VALUES(");
+		String preFields = preBuilder.toString();
+		StringBuilder res = new StringBuilder();
+		for (Object object : objects) {
+			res.append(preFields);
+			for (Field field : fields) {
+				field.setAccessible(true);
+				try {
+					String cls = field.getType().getSimpleName();
+					Object val = field.get(object);
+					if (cls.equalsIgnoreCase("String")) {
+						res.append("'");
+						String valRes = val == null ? "" : String.valueOf(val);
+						res.append(valRes);
+						res.append("'");
+					} else {
+						String valRes = val == null ? "0" : String.valueOf(val);
+						res.append(valRes);
+					}
+					res.append(",");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				field.setAccessible(false);
+			}
+			res.deleteCharAt(res.length() - 1);
+			res.append(");\n");
+		}
+		return res.toString();
+	}
+
+	@NonNull
+	public static String getSqlTable(Class<?> aClass) {
+		return aClass.getSimpleName().toLowerCase();
 	}
 }

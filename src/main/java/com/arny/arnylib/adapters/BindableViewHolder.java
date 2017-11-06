@@ -14,12 +14,7 @@ public abstract class BindableViewHolder<T> extends RecyclerView.ViewHolder {
     public void bindView(Context context,final int position, final T item, final ActionListener actionListener) {
 	    this.context = context;
 	    if (actionListener != null) {
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    actionListener.OnItemClickListener(position, item);
-                }
-            });
+            itemView.setOnClickListener(v -> actionListener.OnItemClickListener(position, item));
         }
     }
 
