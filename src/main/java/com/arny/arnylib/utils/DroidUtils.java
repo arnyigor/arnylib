@@ -182,22 +182,14 @@ public class DroidUtils {
         builder.setView(layout);
         etResult.findFocus();
         etResult.setInputType(inputType);
-        builder.setPositiveButton(btnOkText, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String fullText = etResult.getText().toString().trim();
-                inputDialogListener.onConfirm(fullText);
-                if (fullText.length() > 0) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.setNegativeButton(btnCancelText, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        builder.setPositiveButton(btnOkText, (dialog, which) -> {
+            String fullText = etResult.getText().toString().trim();
+            inputDialogListener.onConfirm(fullText);
+            if (fullText.length() > 0) {
                 dialog.dismiss();
             }
         });
+        builder.setNegativeButton(btnCancelText, (dialog, which) -> dialog.dismiss());
         AlertDialog dialog = builder.create();
         dialog.setCancelable(false);
         dialog.show();
@@ -211,24 +203,16 @@ public class DroidUtils {
         builder.setView(etResult);
         etResult.findFocus();
         etResult.setInputType(inputType);
-        builder.setPositiveButton(btnOkText, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                String s = etResult.getText().toString();
-                if (Utility.empty(s)) {
-                    inputDialogListener.onError("empty");
-                }else{
-                    inputDialogListener.onConfirm(s.trim());
-                }
+        builder.setPositiveButton(btnOkText, (dialog, which) -> {
+            dialog.dismiss();
+            String s = etResult.getText().toString();
+            if (Utility.empty(s)) {
+                inputDialogListener.onError("empty");
+            }else{
+                inputDialogListener.onConfirm(s.trim());
             }
         });
-        builder.setNegativeButton(btnCancelText, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        builder.setNegativeButton(btnCancelText, (dialog, which) -> dialog.dismiss());
         AlertDialog dialog = builder.create();
         dialog.setCancelable(false);
         dialog.show();
@@ -238,20 +222,14 @@ public class DroidUtils {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(title);
 		builder.setMessage(content);
-		builder.setPositiveButton(btnOkText, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-				dialogListener.onConfirm();
-			}
-		});
-		builder.setNegativeButton(btnCancelText, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialogListener.onCancel();
-				dialog.dismiss();
-			}
-		});
+		builder.setPositiveButton(btnOkText, (dialog, which) -> {
+            dialog.dismiss();
+            dialogListener.onConfirm();
+        });
+		builder.setNegativeButton(btnCancelText, (dialog, which) -> {
+            dialogListener.onCancel();
+            dialog.dismiss();
+        });
 		AlertDialog dialog = builder.create();
 		dialog.setCancelable(false);
 		dialog.show();
@@ -259,18 +237,10 @@ public class DroidUtils {
 
 	public static void alertConfirmDialog(Context context, String title, final AlertDialogListener alertDialogListener) {
 		new AlertDialog.Builder(context).setTitle(title + "?")
-				.setNegativeButton(context.getResources().getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				}).setPositiveButton(context.getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-				alertDialogListener.onConfirm();
-			}
-		}).show();
+				.setNegativeButton(context.getResources().getString(android.R.string.cancel), (dialog, which) -> dialog.dismiss()).setPositiveButton(context.getResources().getString(android.R.string.ok), (dialog, which) -> {
+                    dialog.dismiss();
+                    alertDialogListener.onConfirm();
+                }).show();
 	}
 
     public static void alertDialog(Context context, String title, String btnOkText, final AlertDialogListener dialogListener) {
