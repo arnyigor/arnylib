@@ -545,15 +545,12 @@ public class Utility {
 
 	public static <T> String objectsListToString(List<T> tList) {
 		StringBuilder res = new StringBuilder();
-		boolean first = true;
 		for (T s : tList) {
-			if (!first) {
-				res.append(",");
-				first = false;
-			}
 			res.append(s.toString());
-		}
-		return res.toString();
+            res.append(",");
+        }
+        res.delete(res.length() - 1, res.length());
+        return res.toString();
 	}
 
 	@NonNull
