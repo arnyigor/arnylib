@@ -7,11 +7,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.PorterDuff;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
@@ -29,16 +31,12 @@ import android.text.Html;
 import android.text.Spanned;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import com.arny.arnylib.R;
 import com.arny.arnylib.interfaces.AlertDialogListener;
@@ -47,10 +45,14 @@ import com.arny.arnylib.interfaces.InputDialogListener;
 import com.arny.arnylib.interfaces.ListDialogListener;
 import com.arny.arnylib.models.SMS;
 import com.arny.arnylib.network.Connectivity;
+import com.arny.arnylib.security.CryptoStrings;
 import io.reactivex.Observable;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 public class DroidUtils {
@@ -569,5 +571,32 @@ public class DroidUtils {
             }
         }
         return false;
+    }
+
+    public static String checkSign(Context context) {
+        StringBuilder builder = new StringBuilder();
+        PackageManager packageManager = context.getPackageManager();
+        List<PackageInfo> packageList = packageManager.getInstalledPackages(PackageManager.GET_SIGNATURES);
+        for (PackageInfo p : packageList) {
+            final String strName = p.applicationInfo.loadLabel(packageManager).toString();
+            final String strVendor = p.packageName;
+            if (strVendor.equalsIgnoreCase(context.getPackageName())) {
+                builder.append(strName).append(";").append(strVendor).append(";");
+                final Signature[] arrSignatures = p.signatures;
+                for (final Signature sig : arrSignatures) {
+                    final byte[] rawCert = sig.toByteArray();
+                    InputStream certStream = new ByteArrayInputStream(rawCert);
+                    try {
+                        CertificateFactory certFactory = CertificateFactory.getInstance("X509");
+                        X509Certificate x509Cert = (X509Certificate) certFactory.generateCertificate(certStream);
+                        builder.append("Subject:").append(x509Cert.getSubjectDN()).append(";");
+                        builder.append("Number:").append(x509Cert.getSerialNumber()).append(";");
+                    } catch (CertificateException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return CryptoStrings.getHexString(builder.toString(), "SHA-1");
     }
 }
