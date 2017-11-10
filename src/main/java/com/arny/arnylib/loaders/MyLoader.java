@@ -16,7 +16,7 @@ public class MyLoader extends AbstractLoader<String>  {
 	@Override
 	public String loadInBackground() {
 		for (int i = 0; i < 10; i++) {
-			Log.i(MyLoader.class.getSimpleName(), "hudeOperation: i = " + i);
+			Log.d(MyLoader.class.getSimpleName(), "hudeOperation: i = " + i);
 			SystemClock.sleep(1000);
 		}
 		return "data = " + data + " time = " + DateTimeUtils.getDateTime();

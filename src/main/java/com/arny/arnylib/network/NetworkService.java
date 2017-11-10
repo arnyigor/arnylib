@@ -197,7 +197,7 @@ public class NetworkService extends IntentService {
 			this.apiMethod = apiMethod;
 			this.context = context;
 			this.headers = headers;
-			Log.i(HttpAsyncObjectRequest.class.getSimpleName(), "HttpAsyncStringRequest: url = " + url + "; params:" + params+ "; apiMethod:" + apiMethod+"; headers:" + headers);
+			Log.d(HttpAsyncObjectRequest.class.getSimpleName(), "HttpAsyncStringRequest: url = " + url + "; params:" + params+ "; apiMethod:" + apiMethod+"; headers:" + headers);
 		}
 
 		@Override
@@ -206,7 +206,7 @@ public class NetworkService extends IntentService {
 			StringRequest request = new StringRequest(apiMethod, url, new Response.Listener<String>() {
 				@Override
 				public void onResponse(String response) {
-					Log.i("api", " << Api onResponse: " + response);
+					Log.d("api", " << Api onResponse: " + response);
 					result.onSuccess(response);
 				}
 			}, new Response.ErrorListener() {
@@ -247,7 +247,7 @@ public class NetworkService extends IntentService {
 			this.apiMethod = apiMethod;
 			this.context = context;
 			this.headers = headers;
-			Log.i(HttpAsyncObjectRequest.class.getSimpleName(), "HttpAsyncObjectRequest: url = " + url + "; params:" + params+ "; apiMethod:" + apiMethod+"; headers:" + headers);
+			Log.d(HttpAsyncObjectRequest.class.getSimpleName(), "HttpAsyncObjectRequest: url = " + url + "; params:" + params+ "; apiMethod:" + apiMethod+"; headers:" + headers);
 		}
 
 		@Override
@@ -256,7 +256,7 @@ public class NetworkService extends IntentService {
 			JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(apiMethod, url, params, new Response.Listener<JSONObject>() {
 				@Override
 				public void onResponse(JSONObject response) {
-					Log.i("api", " << Api onResponse: " + response);
+					Log.d("api", " << Api onResponse: " + response);
 					result.onSuccess(response);
 				}
 			}, new Response.ErrorListener() {
@@ -296,7 +296,7 @@ public class NetworkService extends IntentService {
             this.apiMethod = apiMethod;
             this.context = context;
             this.headers = headers;
-            Log.i(HttpAsyncObjectRequest.class.getSimpleName(), "HttpAsyncStringRequest: url = " + url + "; params:" + params+ "; apiMethod:" + apiMethod+"; headers:" + headers);
+            Log.d(HttpAsyncObjectRequest.class.getSimpleName(), "HttpAsyncStringRequest: url = " + url + "; params:" + params+ "; apiMethod:" + apiMethod+"; headers:" + headers);
         }
 
         @Override

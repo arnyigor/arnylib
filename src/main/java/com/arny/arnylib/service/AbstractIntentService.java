@@ -109,7 +109,7 @@ public abstract class AbstractIntentService extends IntentService {
             Bundle extras = intent.getExtras();
             if (extras != null) {
                 OperationProvider provider = (OperationProvider)extras.getSerializable(EXTRA_KEY_OPERATION);
-	            Log.i(Task.class.getSimpleName(), "run: provider = " + provider);
+	            Log.d(Task.class.getSimpleName(), "run: provider = " + provider);
 	            executeOperation(provider);
             }
         }
@@ -173,7 +173,7 @@ public abstract class AbstractIntentService extends IntentService {
     }
 
     private void sendOperationResult(OperationProvider provider) {
-	    Log.i(AbstractIntentService.class.getSimpleName(), "sendOperationResult: provider = " + provider);
+	    Log.d(AbstractIntentService.class.getSimpleName(), "sendOperationResult: provider = " + provider);
 	    Intent intent = initProadcastIntent();
 	    intent.putExtra(EXTRA_KEY_OPERATION , provider);
 	    LocalBroadcastManager.getInstance(this).sendBroadcast(intent);

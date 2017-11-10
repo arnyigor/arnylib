@@ -13,7 +13,7 @@ public class ApiUtils {
 
     public static <T> T getResponse(Object response, Class cls) {
         String name = response.getClass().getSimpleName();
-        Log.i(ApiUtils.class.getSimpleName(), "getResponse: class: " + name + " response = " + response);
+        Log.d(ApiUtils.class.getSimpleName(), "getResponse: class: " + name + " response = " + response);
         return (T) new Gson().fromJson(String.valueOf(response), cls);
     }
 
@@ -41,7 +41,7 @@ public class ApiUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.i(NetworkService.class.getSimpleName(), "getJsonObjectToHashMap: mapParams = " + mapParams);
+        Log.d(NetworkService.class.getSimpleName(), "getJsonObjectToHashMap: mapParams = " + mapParams);
         return mapParams;
     }
 

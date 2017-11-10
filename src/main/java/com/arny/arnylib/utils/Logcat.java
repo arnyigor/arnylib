@@ -25,7 +25,7 @@ public class Logcat {
 
 	public static void i(String tag, String message) {
 		if (SB_ALLOW_LOG) {
-			Log.i(tag, message);
+			Log.d(tag, message);
 		}
 	}
 
