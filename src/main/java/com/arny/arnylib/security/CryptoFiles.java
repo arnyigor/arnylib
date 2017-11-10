@@ -328,20 +328,4 @@ public class CryptoFiles {
         return baos.toByteArray();
     }
 
-    public static String getMD5String(String text) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("MD5");
-            digest.update(text.getBytes());
-            byte messageDigest[] = digest.digest();
-
-            StringBuilder hexString = new StringBuilder();
-            for (byte aMessageDigest : messageDigest)
-                hexString.append(Integer.toHexString(0xFF & aMessageDigest));
-
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
 }
