@@ -418,6 +418,10 @@ public class OGArrayAdapter<T> extends BaseAdapter implements Filterable {
         this.mDropDownResource = resource;
     }
 
+    public int getDropDownViewResource(){
+        return this.mDropDownResource;
+    }
+
     /**
      * {@inheritDoc}
      */
