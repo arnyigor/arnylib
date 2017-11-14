@@ -121,9 +121,9 @@ public class DroidUtils {
 			e.printStackTrace();
 		}
 	}
-
+	@SuppressLint("RestrictedApi")
     public static void simpleInputDialog(Context context, String title,String content, String btnOkText, String btnCancelText, int inputType, final InputDialogListener inputDialogListener) {
-        AlertDialog.Builder builder = new AlertDialog.Builder((new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog)));
+         AlertDialog.Builder builder = new AlertDialog.Builder((new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog)));
         builder.setTitle(title);
         LinearLayout.LayoutParams params =
                 new LinearLayout.LayoutParams(
@@ -161,7 +161,7 @@ public class DroidUtils {
         dialog.setCancelable(false);
         dialog.show();
     }
-
+	@SuppressLint("RestrictedApi")
     public static void simpleInputDialog(Context context, String title,String content,String preEdit, String btnOkText, String btnCancelText, int inputType, final InputDialogListener inputDialogListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder((new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog)));
         builder.setTitle(title);
@@ -244,7 +244,7 @@ public class DroidUtils {
                     alertDialogListener.onConfirm();
                 }).show();
 	}
-
+	@SuppressLint("RestrictedApi")
     public static void alertDialog(Context context, String title, String btnOkText, final AlertDialogListener dialogListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder((new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog)));
         builder.setTitle(title);
@@ -260,7 +260,7 @@ public class DroidUtils {
         dialog.show();
     }
 
-
+	@SuppressLint("RestrictedApi")
 	public static void alertDialog(Context context, String title, String content, String btnOkText, final AlertDialogListener dialogListener) {
 		AlertDialog.Builder builder = new AlertDialog.Builder((new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog)));
 		builder.setTitle(title);
@@ -306,16 +306,11 @@ public class DroidUtils {
     public static void listDialog(Context context, String[] items, final ListDialogListener listDialogListener) {
         listDialog(context, items, context.getResources().getString(R.string.list_dialog_title), listDialogListener);
     }
-
+	@SuppressLint("RestrictedApi")
     public static void listDialog(Context context, String[] items, String title, final ListDialogListener listDialogListener) {
 		AlertDialog.Builder builder = new AlertDialog.Builder((new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog)));
 		builder.setTitle(title);
-		builder.setItems(items, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int item) {
-				listDialogListener.onClick(item);
-			}
-		});
+		builder.setItems(items, (dialog, item) -> listDialogListener.onClick(item));
 		AlertDialog dialog = builder.create();
 		dialog.show();
 	}
@@ -574,29 +569,27 @@ public class DroidUtils {
     }
 
     public static String checkSign(Context context) {
-        StringBuilder builder = new StringBuilder();
-        PackageManager packageManager = context.getPackageManager();
-        List<PackageInfo> packageList = packageManager.getInstalledPackages(PackageManager.GET_SIGNATURES);
-        for (PackageInfo p : packageList) {
-            final String strName = p.applicationInfo.loadLabel(packageManager).toString();
-            final String strVendor = p.packageName;
-            if (strVendor.equalsIgnoreCase(context.getPackageName())) {
-                builder.append(strName).append(";").append(strVendor).append(";");
-                final Signature[] arrSignatures = p.signatures;
-                for (final Signature sig : arrSignatures) {
-                    final byte[] rawCert = sig.toByteArray();
-                    InputStream certStream = new ByteArrayInputStream(rawCert);
-                    try {
-                        CertificateFactory certFactory = CertificateFactory.getInstance("X509");
-                        X509Certificate x509Cert = (X509Certificate) certFactory.generateCertificate(certStream);
-                        builder.append("Subject:").append(x509Cert.getSubjectDN()).append(";");
-                        builder.append("Number:").append(x509Cert.getSerialNumber()).append(";");
-                    } catch (CertificateException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
+	    PackageManager packageManager = context.getPackageManager();
+	    StringBuilder builder = new StringBuilder();
+	    try {
+		    PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+		    builder.append(pInfo.applicationInfo.loadLabel(packageManager).toString()).append(";").append(pInfo.packageName).append(";");
+		    final Signature[] arrSignatures = pInfo.signatures;
+		    for (final Signature sig : arrSignatures) {
+			    final byte[] rawCert = sig.toByteArray();
+			    InputStream certStream = new ByteArrayInputStream(rawCert);
+			    try {
+				    CertificateFactory certFactory = CertificateFactory.getInstance("X509");
+				    X509Certificate x509Cert = (X509Certificate) certFactory.generateCertificate(certStream);
+				    builder.append("Subject:").append(x509Cert.getSubjectDN()).append(";");
+				    builder.append("Number:").append(x509Cert.getSerialNumber()).append(";");
+			    } catch (CertificateException e) {
+				    e.printStackTrace();
+			    }
+		    }
+	    } catch (Exception e) {
+		    e.printStackTrace();
+	    }
         return CryptoStrings.getHexString(builder.toString(), "SHA-1");
     }
 }
