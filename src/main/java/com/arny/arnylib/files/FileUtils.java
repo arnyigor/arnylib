@@ -1321,7 +1321,7 @@ public class FileUtils {
 					}
 					outputStream.write(fileReader, 0, read);
 					fileSizeDownloaded += read;
-					Log.d(FileUtils.class.getSimpleName(), "writeResponseBodyToDisk:  file download: " + fileSizeDownloaded + " of " + fileSize);
+					Log.d(FileUtils.class.getSimpleName(), "writeResponseBodyToDisk:  file download: " + fileSizeDownloaded + " of " + body.bytes().length);
 				}
 				outputStream.flush();
 				return true;
