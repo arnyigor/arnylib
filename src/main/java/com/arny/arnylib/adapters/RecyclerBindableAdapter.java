@@ -31,7 +31,6 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
     private ArrayList<View> footers = new ArrayList<>();
     private ArrayList<T> items = new ArrayList<>();
     private SparseBooleanArray selectedItems = new SparseBooleanArray();
-    ;
     private RecyclerView.LayoutManager manager;
     private LayoutInflater inflater;
 	private GridLayoutManager.SpanSizeLookup spanSizeLookup = new GridLayoutManager.SpanSizeLookup() {
@@ -125,7 +124,7 @@ public abstract class RecyclerBindableAdapter<T, VH extends RecyclerView.ViewHol
     public VH onCreateViewHolder(ViewGroup viewGroup, int type) {
         //if our position is one of our items (this comes from getItemViewType(int position) below)
         if (type != TYPE_HEADER && type != TYPE_FOOTER) {
-            return (VH) onCreateItemViewHolder(viewGroup, type);
+            return onCreateItemViewHolder(viewGroup, type);
             //else we have a header/footer
         } else {
             //create a new framelayout, or inflate from a resource

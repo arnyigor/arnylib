@@ -11,5 +11,5 @@ fun getSQLType(fieldType: String): String {
         fieldType.equals("byte",true)->"TEXT"
         else->"TEXT"
     }
-    return res;
+    return res
 }

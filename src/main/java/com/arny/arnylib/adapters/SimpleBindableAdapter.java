@@ -37,7 +37,7 @@ public final class SimpleBindableAdapter<T, VH extends BindableViewHolder> exten
 	protected VH viewHolder(View view, int type) {
 		//через Java Reflection создаем новый экземпляр ViewHolder
 		try {
-			return (VH) vhClass.getConstructor(View.class).newInstance(view);
+			return vhClass.getConstructor(View.class).newInstance(view);
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 			return null;

@@ -35,7 +35,7 @@ public abstract class RotationWeakAsyncTask extends AsyncTask<Void, Void, Void> 
         currentTask = task;
         currentTask.requestID = requestID;
         setOnFinishedListener(l);
-        currentTask.execute(new Void[0]);
+        currentTask.execute();
         showProgressIfNeed();
         return true;
     }
@@ -84,7 +84,7 @@ public abstract class RotationWeakAsyncTask extends AsyncTask<Void, Void, Void> 
 
     private static void showProgressIfNeed() {
         if (currentTask != null && currentTask.getStatus() != Status.FINISHED && context != null) {
-            Context c = (Context) context.get();
+            Context c = context.get();
             if (c != null) {
                 if (pd != null && pd.isShowing()) {
                     destroyProgress();
@@ -107,7 +107,7 @@ public abstract class RotationWeakAsyncTask extends AsyncTask<Void, Void, Void> 
     }
 
     protected void onPostExecute(Void arg) {
-        if (context != null && ((Context) context.get()) != null) {
+        if (context != null && context.get() != null) {
             showResult();
             destroyProgress();
             currentTask = null;
@@ -119,8 +119,8 @@ public abstract class RotationWeakAsyncTask extends AsyncTask<Void, Void, Void> 
 
     private void showResult() {
         if (context != null) {
-            Context c = (Context) context.get();
-	        String r = (String) stringResult.get();
+            Context c = context.get();
+	        String r = stringResult.get();
             if (c != null && r!=null) {
                 Toast.makeText(c, r, Toast.LENGTH_LONG).show();
             }

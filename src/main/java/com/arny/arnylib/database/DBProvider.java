@@ -6,12 +6,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.util.Log;
+import com.arny.arnylib.BuildConfig;
 import com.arny.arnylib.utils.Utility;
 import com.arny.java.utils.KtlUtilsKt;
 import org.chalup.microorm.MicroOrm;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -20,14 +23,27 @@ public class DBProvider {
     private static DBHelper dbHelper = null;
 
     public static long insertDB(String table, ContentValues contentValues, Context context) {
-        long rowID = connectDB(context).insert(table, null, contentValues);
+        if (BuildConfig.DEBUG) {
+            Log.i(DBProvider.class.getSimpleName(), "insertDB: table:" + table + " contentValues:" + contentValues  );
+        }
+        long rowID = 0;
+        try {
+            rowID = connectDB(context).insert(table, null, contentValues);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         disconnectDB(context);
         return rowID;
     }
 
 	public static int insertReplaceDB(Context context, String table, String where, String[] args, ContentValues cv){
-		Cursor cursor = selectDB(table, null, where,args,null,context);
-		if (cursor != null && cursor.moveToFirst()) {
+        Cursor cursor = null;
+        try {
+            cursor = selectDB(table, null, where,args,null,context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (cursor != null && cursor.moveToFirst()) {
 			return updateDB(table, cv, where,args, context);
 		}else{
 			return (int) insertDB(table, cv, context);
@@ -35,43 +51,110 @@ public class DBProvider {
 	}
 
 	public static long insertOrUpdateDB(Context context, String table, ContentValues contentValues) {
-		long rowID = connectDB(context).insertWithOnConflict(table, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
-		disconnectDB(context);
+        if (BuildConfig.DEBUG) {
+            Log.i(DBProvider.class.getSimpleName(), "insertOrUpdateDB: table:" + table + " contentValues:" + contentValues  );
+        }
+        long rowID = 0;
+        try {
+            rowID = connectDB(context).insertWithOnConflict(table, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        disconnectDB(context);
 		return rowID;
 	}
 
     public static Cursor selectDB(String table, String[] columns, String where, String orderBy, Context context) {
-        return connectDB(context).query(table, columns, where, null, null, null, orderBy);
+        if (BuildConfig.DEBUG) {
+            Log.i(DBProvider.class.getSimpleName(), "selectDB: table:" + table + " columns:" + Arrays.toString(columns) + " where:"+  where + " orderBy:"+  orderBy);
+        }
+        Cursor query = null;
+        try {
+            query = connectDB(context).query(table, columns, where, null, null, null, orderBy);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return query;
     }
 
     public static Cursor selectDB(String table, String[] columns, String where, String[] whereArgs, String orderBy, Context context) {
-        return connectDB(context).query(table, columns, where, whereArgs, null, null, orderBy);
+        if (BuildConfig.DEBUG) {
+            Log.i(DBProvider.class.getSimpleName(), "selectDB: table:" + table + " columns:" + Arrays.toString(columns) + " where:"+  where  + " whereArgs:"+ Arrays.toString(whereArgs) + " orderBy:"+  orderBy);
+        }
+        Cursor query = null;
+        try {
+            query = connectDB(context).query(table, columns, where, whereArgs, null, null, orderBy);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return query;
     }
 
     public static Cursor queryDB(String sqlQuery, String[] selectionArgs, Context context) {
-        return connectDB(context).rawQuery(sqlQuery, selectionArgs);
+        if (BuildConfig.DEBUG) {
+            Log.i(DBProvider.class.getSimpleName(), "queryDB: query:" + sqlQuery + " selectionArgs:" + Arrays.toString(selectionArgs));
+        }
+        Cursor cursor = null;
+        try {
+            cursor = connectDB(context).rawQuery(sqlQuery, selectionArgs);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cursor;
     }
 
     public static int deleteDB(String table, String where, Context context) {
-        int rowCount = connectDB(context).delete(table, where, null);
+        if (BuildConfig.DEBUG) {
+            Log.i(DBProvider.class.getSimpleName(), "deleteDB: table:" + table + " where:" + where);
+        }
+        int rowCount = 0;
+        try {
+            rowCount = connectDB(context).delete(table, where, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         disconnectDB(context);
         return rowCount;
     }
 
     public static int deleteDB(String table, String where, String[] whereArgs, Context context) {
-        int rowCount = connectDB(context).delete(table, where, whereArgs);
+        if (BuildConfig.DEBUG) {
+            Log.i(DBProvider.class.getSimpleName(), "deleteDB: table:" + table + " whereArgs:" + Arrays.toString(whereArgs));
+        }
+        int rowCount = 0;
+        try {
+            rowCount = connectDB(context).delete(table, where, whereArgs);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         disconnectDB(context);
         return rowCount;
     }
 
     public static int updateDB(String table, ContentValues contentValues, String where, Context context) {
-        int rowCount = connectDB(context).update(table, contentValues, where, null);
+        if (BuildConfig.DEBUG) {
+            Log.i(DBProvider.class.getSimpleName(), "updateDB: table:" + table + " contentValues:" + contentValues + " where:" + where);
+        }
+        int rowCount = 0;
+        try {
+            rowCount = connectDB(context).update(table, contentValues, where, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         disconnectDB(context);
         return rowCount;
     }
 
     public static int updateDB(String table, ContentValues contentValues, String where, String[] whereArgs, Context context) {
-        int rowCount = connectDB(context).update(table, contentValues, where, whereArgs);
+        if (BuildConfig.DEBUG) {
+            Log.i(DBProvider.class.getSimpleName(), "updateDB: table:" + table + " contentValues:" + contentValues + " where:" + where + " whereArgs:" + Arrays.toString(whereArgs));
+        }
+        int rowCount = 0;
+        try {
+            rowCount = connectDB(context).update(table, contentValues, where, whereArgs);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         disconnectDB(context);
         return rowCount;
     }
@@ -121,7 +204,7 @@ public class DBProvider {
         if (cursor != null && cursor.getCount() > 0) {
             if (cursor.moveToFirst()) {
                 do {
-                    queue.add((T)new MicroOrm().fromCursor(cursor, clazz));
+                    queue.add(new MicroOrm().fromCursor(cursor, clazz));
                 } while (cursor.moveToNext());
                 cursor.close();
             }

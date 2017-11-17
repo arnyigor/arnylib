@@ -1554,8 +1554,7 @@ public class FileUtils {
 		String duration = "";
 		try {
 			duration = getMediaMeta(filePath, MediaMetadataRetriever.METADATA_KEY_DURATION);
-			;
-			if (duration.length() <= 0) {
+            if (duration.length() <= 0) {
 				return "";
 			}
 			long millisec = Long.parseLong(duration);

@@ -84,16 +84,16 @@ public class DateTimeUtils {
         return pad(min) + ":" + pad(sec);
     }
 
-    public static String getDateTime(long milliseconds, String format) {
-        milliseconds = (milliseconds == 0) ? Calendar.getInstance().getTimeInMillis() : milliseconds;
-        format = (format == null) ? "dd MMM yyyy HH:mm:ss.sss" : format;
-        return (new SimpleDateFormat(format, Locale.getDefault())).format(new Date(milliseconds));
-    }
+//    public static String getDateTime(long milliseconds, String format) {
+//        milliseconds = (milliseconds == 0) ? Calendar.getInstance().getTimeInMillis() : milliseconds;
+//        format = (format == null) ? "dd MMM yyyy HH:mm:ss.sss" : format;
+//        return (new SimpleDateFormat(format, Locale.getDefault())).format(new Date(milliseconds));
+//    }
 
-    public static String getDateTime(long milliseconds) {
-        milliseconds = (milliseconds == 0) ? Calendar.getInstance().getTimeInMillis() : milliseconds;
-        return (new SimpleDateFormat("dd MMM yyyy HH:mm:ss.sss", Locale.getDefault())).format(new Date(milliseconds));
-    }
+//    public static String getDateTime(long milliseconds) {
+//        milliseconds = (milliseconds == 0) ? Calendar.getInstance().getTimeInMillis() : milliseconds;
+//        return (new SimpleDateFormat("dd MMM yyyy HH:mm:ss.sss", Locale.getDefault())).format(new Date(milliseconds));
+//    }
 
     public static String getDateTime() {
         return (new SimpleDateFormat("dd MMM yyyy HH:mm:ss.sss", Locale.getDefault())).format(new Date(System.currentTimeMillis()));
@@ -343,6 +343,16 @@ public class DateTimeUtils {
     public static String getDateTime(DateTime dateTime, String format) {
         DateTimeFormatter fmt = DateTimeFormat.forPattern(format);
         return fmt.print(dateTime);
+    }
+
+    public static String getDateTime(long milliseconds, String format) {
+        DateTime dateTime = new DateTime().withMillis(milliseconds);
+        return getDateTime(dateTime, format);
+    }
+
+    public static String getDateTime(long milliseconds) {
+        DateTime dateTime = new DateTime().withMillis(milliseconds);
+        return getDateTime(dateTime, "dd MMM yyyy HH:mm:ss.sss");
     }
 
     /**

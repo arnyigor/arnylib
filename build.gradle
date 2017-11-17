@@ -62,6 +62,8 @@ dependencies {
     compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
     compile 'joda-time:joda-time:2.9.9'
     compile 'com.code-troopers.betterpickers:library:3.1.0'
+    compile 'com.afollestad.material-dialogs:core:0.9.5.0'
+    compile 'com.afollestad.material-dialogs:commons:0.9.5.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 repositories {
