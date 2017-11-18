@@ -859,17 +859,24 @@ public class FileUtils {
 	}
 
 	public static File loadFile(String path) {
+		File file = null;
 		InputStream inputStream = null;
 		OutputStream outputStream = null;
-		File file = null;
 		try {
-			// read this file into InputStream
-			inputStream = new FileInputStream(path);
-			// write the inputStream to a FileOutputStream
 			file = new File(path);
+			inputStream = new FileInputStream(path);
 			outputStream = new FileOutputStream(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		writeStream(inputStream, outputStream);
+		return file;
+	}
+
+	private static void writeStream(InputStream inputStream, OutputStream outputStream) {
+		try {
 			int read;
-			byte[] bytes = new byte[1024];
+			byte[] bytes = new byte[2048];
 			while ((read = inputStream.read(bytes)) != -1) {
 				outputStream.write(bytes, 0, read);
 			}
@@ -892,7 +899,6 @@ public class FileUtils {
 				}
 			}
 		}
-		return file;
 	}
 
 	private static byte[] createChecksum(String filename) throws Exception {
@@ -1300,44 +1306,17 @@ public class FileUtils {
 		return new BitmapDrawable(context.getResources(), canvasBitmap).getBitmap();
 	}
 
-	public static boolean saveResponseBodyToDisk(ResponseBody body, File toFile) {
+	public static File saveResponseBodyToDisk(ResponseBody body, File file) {
+		InputStream inputStream = null;
+		OutputStream outputStream = null;
 		try {
-			InputStream inputStream = null;
-			OutputStream outputStream = null;
-			try {
-				byte[] fileReader = new byte[4096];
-
-				long fileSize = body.contentLength();
-				long fileSizeDownloaded = 0;
-
-				inputStream = body.byteStream();
-				outputStream = new FileOutputStream(toFile);
-
-				while (true) {
-					int read = inputStream.read(fileReader);
-
-					if (read == -1) {
-						break;
-					}
-					outputStream.write(fileReader, 0, read);
-					fileSizeDownloaded += read;
-					Log.d(FileUtils.class.getSimpleName(), "writeResponseBodyToDisk:  file download: " + fileSizeDownloaded + " of " + body.bytes().length);
-				}
-				outputStream.flush();
-				return true;
-			} catch (IOException e) {
-				return false;
-			} finally {
-				if (inputStream != null) {
-					inputStream.close();
-				}
-				if (outputStream != null) {
-					outputStream.close();
-				}
-			}
-		} catch (IOException e) {
-			return false;
+			inputStream = body.byteStream();
+			outputStream = new FileOutputStream(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
+		writeStream(inputStream, outputStream);
+		return file;
 	}
 
 	// Copy an InputStream to a File.
@@ -1554,7 +1533,7 @@ public class FileUtils {
 		String duration = "";
 		try {
 			duration = getMediaMeta(filePath, MediaMetadataRetriever.METADATA_KEY_DURATION);
-            if (duration.length() <= 0) {
+			if (duration.length() <= 0) {
 				return "";
 			}
 			long millisec = Long.parseLong(duration);
@@ -1628,39 +1607,17 @@ public class FileUtils {
 	}
 
 	public static File loadFileFromAssets(Context context, String path) {
+		File file = null;
 		InputStream inputStream = null;
 		OutputStream outputStream = null;
-		File file = null;
 		try {
-			// read this file into InputStream
-			inputStream = context.getAssets().open(path);
-			// write the inputStream to a FileOutputStream
 			file = new File(Environment.DIRECTORY_PICTURES + "/" + path);
+			inputStream = context.getAssets().open(path);
 			outputStream = new FileOutputStream(file);
-			int read;
-			byte[] bytes = new byte[1024];
-			while ((read = inputStream.read(bytes)) != -1) {
-				outputStream.write(bytes, 0, read);
-			}
-			System.out.println("Done!");
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			if (inputStream != null) {
-				try {
-					inputStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (outputStream != null) {
-				try {
-					outputStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
+		writeStream(inputStream, outputStream);
 		return file;
 	}
 }
