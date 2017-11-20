@@ -324,13 +324,7 @@ public class DateTimeUtils {
      * @return DateTime
      */
 	public static DateTime getDateTime(String date, String format) {
-        DateTime dateTime = DateTime.now();
-        try {
-            dateTime = DateTimeFormat.forPattern(format).parseDateTime(date);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return dateTime;
+        return DateTimeFormat.forPattern(format).parseDateTime(date);
     }
 
     /**
