@@ -35,7 +35,8 @@ public class DateTimeUtils {
         pregs.put("^\\d{1,2}\\-\\D+\\-\\d{4}$", "dd-MMM-yyyy");
         pregs.put("^\\d{1,2}\\s+\\D+\\s\\d{2}$", "dd MMM yy");
         pregs.put("^\\d{1,2}\\s+\\D+\\s+\\d{4}$", "dd MMM yyyy");
-        pregs.put("^\\d{1,2}\\s+\\d{2}+\\s\\d{2}$", "dd MM yy");
+        pregs.put("^\\d{1,2}\\s+\\d{2}\\s\\d{2}$", "dd MM yy");
+        pregs.put("^\\d{1,2}\\d{2}\\d{4}$", "ddMMyyyy");
         String format = "dd MMM yyyy";
         for (HashMap.Entry<String, String> entry : pregs.entrySet()) {
             boolean matches = Pattern.matches(entry.getKey(), myTimestamp);
