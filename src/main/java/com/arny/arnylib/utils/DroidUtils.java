@@ -46,6 +46,8 @@ import com.arny.arnylib.interfaces.ListDialogListener;
 import com.arny.arnylib.models.SMS;
 import com.arny.arnylib.network.Connectivity;
 import com.arny.arnylib.security.CryptoStrings;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 import io.reactivex.Observable;
 
 import java.io.*;
@@ -54,6 +56,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 public class DroidUtils {
 
@@ -95,6 +98,18 @@ public class DroidUtils {
 		}
 		return smsList;
 	}
+
+    public static String getAppVersion(Context context) {
+        String name = "";
+        try {
+            PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            Date installTime = new Date(pInfo.lastUpdateTime);
+            name = "v" + pInfo.versionName + " @ " + DateTimeUtils.getDateTime(installTime, "dd MMM yyyy HH:mm");
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return name;
+    }
 
 	public static void hideProgress(ProgressDialog pDialog) {
 		try {
@@ -591,5 +606,12 @@ public class DroidUtils {
 		    e.printStackTrace();
 	    }
         return CryptoStrings.getHexString(builder.toString(), "SHA-1");
+    }
+
+    public static IconicsDrawable getGMDIcon(Context context, GoogleMaterial.Icon gmd_icon, int color, int size) {
+        return new IconicsDrawable(context)
+                .icon(gmd_icon)
+                .color(color)
+                .sizeDp(size);
     }
 }

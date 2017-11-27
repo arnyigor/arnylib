@@ -12,6 +12,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Base64;
+import com.arny.arnylib.utils.DateTimeUtils;
 import com.arny.arnylib.utils.DroidUtils;
 import com.arny.arnylib.utils.Logcat;
 import com.arny.arnylib.utils.Utility;
@@ -451,7 +452,7 @@ public class BitmapUtils {
 	public static Uri getImageUri(Context inContext, Bitmap inImage) {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-		String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "IMG_" + Utility.getDateTime("yyyyMMdd_HHmmss"), null);
+		String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "IMG_" + DateTimeUtils.getDateTime("yyyyMMdd_HHmmss"), null);
 		return Uri.parse(path);
 	}
 }

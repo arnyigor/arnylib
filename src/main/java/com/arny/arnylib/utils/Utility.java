@@ -193,12 +193,6 @@ public class Utility {
 		return null;
 	}
 
-	public static String strLogTime(int logtime) {
-		int h = logtime / 60;
-		int m = logtime % 60;
-		return pad(h) + TIME_SEPARATOR_TWICE_DOT + pad(m);
-	}
-
 	public static int[] bubbleSort(int[] arr) {
 		for (int i = arr.length - 1; i >= 0; i--) {
 			for (int j = 0; j < i; j++) {
@@ -210,40 +204,6 @@ public class Utility {
 			}
 		}
 		return arr;
-	}
-
-	public static String getDateTime(String format) {
-		return (new SimpleDateFormat(format, Locale.getDefault())).format(new Date(System.currentTimeMillis()));
-	}
-
-	public static long convertTimeStringToLong(String myTimestamp, String format) {
-		SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.getDefault());
-		Date date;
-		try {
-			date = formatter.parse(myTimestamp);
-		} catch (ParseException e) {
-			e.printStackTrace();
-			return -1;
-		}
-		return date.getTime();
-	}
-
-	/**
-	 * @param date
-	 * @param format
-	 * @return String datetime
-	 */
-	public static String getDateTime(Date date, String format) {
-		try {
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(date);
-			long milliseconds = calendar.getTimeInMillis();
-			format = (format == null || format.trim().equals("")) ? "dd MMM yyyy HH:mm:ss.sss" : format;
-			return (new SimpleDateFormat(format, Locale.getDefault())).format(new Date(milliseconds));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
 	}
 
 	public static int randInt(int min, int max) {
@@ -267,24 +227,6 @@ public class Utility {
 				return false;
 			}
 		}
-	}
-
-	public static long getDifDays(String date) {
-		String calendarFormat = "dd MMM yyyy";
-		String current = Utility.getDateTime(calendarFormat);
-		Date taskDate = new Date(Utility.convertTimeStringToLong(date, calendarFormat));
-		Date curr = new Date(Utility.convertTimeStringToLong(current, calendarFormat));
-		long diff = taskDate.getTime() - curr.getTime();
-		return diff / (1000 * 60 * 60 * 24);
-	}
-
-	public static long getDifDays(String date1, String date2) {
-		String calendarFormat = "dd MMM yyyy";
-		String current = Utility.getDateTime(calendarFormat);
-		Date taskDate = new Date(Utility.convertTimeStringToLong(date1, calendarFormat));
-		Date curr = new Date(Utility.convertTimeStringToLong(date2, calendarFormat));
-		long diff = taskDate.getTime() - curr.getTime();
-		return diff / (1000 * 60 * 60 * 24);
 	}
 
 	public static Boolean isRequestSuccess(JSONObject result) {
