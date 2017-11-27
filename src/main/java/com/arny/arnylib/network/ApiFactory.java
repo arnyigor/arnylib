@@ -2,7 +2,6 @@ package com.arny.arnylib.network;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import okhttp3.Cache;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
@@ -41,8 +40,8 @@ public class ApiFactory {
                 .build();
     }
 
-    public static RequestBody createStringRequestBody(String params){
-        return RequestBody.create(MediaType.parse("text/json"), params);
+    public static RequestBody createStringRequestBody(String params, String format){
+        return RequestBody.create(MediaType.parse(format), params);
     }
 
 
