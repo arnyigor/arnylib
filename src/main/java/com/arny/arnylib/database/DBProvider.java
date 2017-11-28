@@ -24,7 +24,7 @@ public class DBProvider {
 
     public static long insertDB(String table, ContentValues contentValues, Context context) {
         if (BuildConfig.DEBUG) {
-            Log.i(DBProvider.class.getSimpleName(), "insertDB: table:" + table + " contentValues:" + contentValues  );
+            Log.d(DBProvider.class.getSimpleName(), "insertDB: table:" + table + " contentValues:" + contentValues  );
         }
         long rowID = 0;
         try {
@@ -52,7 +52,7 @@ public class DBProvider {
 
 	public static long insertOrUpdateDB(Context context, String table, ContentValues contentValues) {
         if (BuildConfig.DEBUG) {
-            Log.i(DBProvider.class.getSimpleName(), "insertOrUpdateDB: table:" + table + " contentValues:" + contentValues  );
+            Log.d(DBProvider.class.getSimpleName(), "insertOrUpdateDB: table:" + table + " contentValues:" + contentValues  );
         }
         long rowID = 0;
         try {
@@ -66,7 +66,7 @@ public class DBProvider {
 
     public static Cursor selectDB(String table, String[] columns, String where, String orderBy, Context context) {
         if (BuildConfig.DEBUG) {
-            Log.i(DBProvider.class.getSimpleName(), "selectDB: table:" + table + " columns:" + Arrays.toString(columns) + " where:"+  where + " orderBy:"+  orderBy);
+            Log.d(DBProvider.class.getSimpleName(), "selectDB: table:" + table + " columns:" + Arrays.toString(columns) + " where:"+  where + " orderBy:"+  orderBy);
         }
         Cursor query = null;
         try {
@@ -79,7 +79,7 @@ public class DBProvider {
 
     public static Cursor selectDB(String table, String[] columns, String where, String[] whereArgs, String orderBy, Context context) {
         if (BuildConfig.DEBUG) {
-            Log.i(DBProvider.class.getSimpleName(), "selectDB: table:" + table + " columns:" + Arrays.toString(columns) + " where:"+  where  + " whereArgs:"+ Arrays.toString(whereArgs) + " orderBy:"+  orderBy);
+            Log.d(DBProvider.class.getSimpleName(), "selectDB: table:" + table + " columns:" + Arrays.toString(columns) + " where:"+  where  + " whereArgs:"+ Arrays.toString(whereArgs) + " orderBy:"+  orderBy);
         }
         Cursor query = null;
         try {
@@ -92,7 +92,7 @@ public class DBProvider {
 
     public static Cursor queryDB(String sqlQuery, String[] selectionArgs, Context context) {
         if (BuildConfig.DEBUG) {
-            Log.i(DBProvider.class.getSimpleName(), "queryDB: query:" + sqlQuery + " selectionArgs:" + Arrays.toString(selectionArgs));
+            Log.d(DBProvider.class.getSimpleName(), "queryDB: query:" + sqlQuery + " selectionArgs:" + Arrays.toString(selectionArgs));
         }
         Cursor cursor = null;
         try {
@@ -105,7 +105,7 @@ public class DBProvider {
 
     public static int deleteDB(String table, String where, Context context) {
         if (BuildConfig.DEBUG) {
-            Log.i(DBProvider.class.getSimpleName(), "deleteDB: table:" + table + " where:" + where);
+            Log.d(DBProvider.class.getSimpleName(), "deleteDB: table:" + table + " where:" + where);
         }
         int rowCount = 0;
         try {
@@ -119,7 +119,7 @@ public class DBProvider {
 
     public static int deleteDB(String table, String where, String[] whereArgs, Context context) {
         if (BuildConfig.DEBUG) {
-            Log.i(DBProvider.class.getSimpleName(), "deleteDB: table:" + table + " whereArgs:" + Arrays.toString(whereArgs));
+            Log.d(DBProvider.class.getSimpleName(), "deleteDB: table:" + table + " whereArgs:" + Arrays.toString(whereArgs));
         }
         int rowCount = 0;
         try {
@@ -133,7 +133,7 @@ public class DBProvider {
 
     public static int updateDB(String table, ContentValues contentValues, String where, Context context) {
         if (BuildConfig.DEBUG) {
-            Log.i(DBProvider.class.getSimpleName(), "updateDB: table:" + table + " contentValues:" + contentValues + " where:" + where);
+            Log.d(DBProvider.class.getSimpleName(), "updateDB: table:" + table + " contentValues:" + contentValues + " where:" + where);
         }
         int rowCount = 0;
         try {
@@ -147,7 +147,7 @@ public class DBProvider {
 
     public static int updateDB(String table, ContentValues contentValues, String where, String[] whereArgs, Context context) {
         if (BuildConfig.DEBUG) {
-            Log.i(DBProvider.class.getSimpleName(), "updateDB: table:" + table + " contentValues:" + contentValues + " where:" + where + " whereArgs:" + Arrays.toString(whereArgs));
+            Log.d(DBProvider.class.getSimpleName(), "updateDB: table:" + table + " contentValues:" + contentValues + " where:" + where + " whereArgs:" + Arrays.toString(whereArgs));
         }
         int rowCount = 0;
         try {
