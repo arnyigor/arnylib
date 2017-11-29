@@ -1,5 +1,6 @@
 package com.arny.arnylib.files;
 
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,10 +13,8 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Base64;
-import com.arny.arnylib.utils.DateTimeUtils;
-import com.arny.arnylib.utils.DroidUtils;
-import com.arny.arnylib.utils.Logcat;
-import com.arny.arnylib.utils.Utility;
+import com.arny.arnylib.R;
+import com.arny.arnylib.utils.*;
 
 import java.io.*;
 public class BitmapUtils {
@@ -455,4 +454,5 @@ public class BitmapUtils {
 		String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "IMG_" + DateTimeUtils.getDateTime("yyyyMMdd_HHmmss"), null);
 		return Uri.parse(path);
 	}
+
 }
