@@ -39,7 +39,7 @@ dependencies {
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.github.GrenderG:Toasty:1.1.4'
-    compile 'com.github.bumptech.glide:glide:4.1.1'
+    compile 'com.github.bumptech.glide:glide:4.3.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
     compile 'org.chalup.microorm:microorm:0.8.0'
     compile "com.mikepenz:iconics-core:2.9.1@aar"
@@ -62,12 +62,14 @@ dependencies {
     compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-    compile 'com.squareup.okhttp3:okhttp:3.8.0'
+    compile 'com.squareup.okhttp3:okhttp:3.9.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
     compile 'joda-time:joda-time:2.9.9'
     compile 'com.code-troopers.betterpickers:library:3.1.0'
     compile 'com.afollestad.material-dialogs:core:0.9.5.0'
     compile 'com.afollestad.material-dialogs:commons:0.9.5.0'
+    compile 'com.github.piasy:BigImageViewer:1.4.4'
+    compile 'com.github.piasy:GlideImageLoader:1.4.4'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 repositories {

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">arnylib</string>
     <string name="list_dialog_title">Выберите действие</string>
+    <string name="storage_permission_denied">Необходимо разрешение на запись файлов</string>
 </resources>
