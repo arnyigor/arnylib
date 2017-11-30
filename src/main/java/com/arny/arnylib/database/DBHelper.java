@@ -15,13 +15,15 @@ class DBHelper extends SQLiteOpenHelper {
     static int dbVersion;
     static String dbName;
     private Context context;
-    private static DBHelper mInstance;
-
-    public static DBHelper getInstance(Context ctx) {
-        // Use the application context, which will ensure that you
-        // don't accidentally leak an Activity's context.
-        if (mInstance == null) {
-            mInstance = new DBHelper(ctx.getApplicationContext());
+    private static DBHelper mInstance = null;
+    private static final Object LOCK = new Object();
+    public static synchronized DBHelper getInstance(Context ctx) {
+        if(mInstance == null) {
+            synchronized (LOCK) {
+                if (mInstance == null) {
+                    mInstance = new DBHelper(ctx.getApplicationContext());
+                }
+            }
         }
         return mInstance;
     }

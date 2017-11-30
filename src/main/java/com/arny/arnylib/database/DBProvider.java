@@ -10,6 +10,7 @@ import android.util.Log;
 import com.arny.arnylib.BuildConfig;
 import com.arny.arnylib.utils.Utility;
 import com.arny.java.utils.KtlUtilsKt;
+import io.reactivex.Observable;
 import org.chalup.microorm.MicroOrm;
 
 import java.lang.reflect.Field;
@@ -19,8 +20,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class DBProvider {
-
-    private static DBHelper dbHelper = null;
 
     public static long insertDB(String table, ContentValues contentValues, Context context) {
         if (BuildConfig.DEBUG) {
@@ -119,7 +118,7 @@ public class DBProvider {
 
     public static int deleteDB(String table, String where, String[] whereArgs, Context context) {
         if (BuildConfig.DEBUG) {
-            Log.d(DBProvider.class.getSimpleName(), "deleteDB: table:" + table + " whereArgs:" + Arrays.toString(whereArgs));
+            Log.d(DBProvider.class.getSimpleName(), "deleteDB: table:" + table + " where:" + where + "=whereArgs:" + Arrays.toString(whereArgs));
         }
         int rowCount = 0;
         try {
@@ -173,14 +172,13 @@ public class DBProvider {
         }
     }
 
-    private static synchronized SQLiteDatabase connectDB(Context context) {
+    private static SQLiteDatabase connectDB(Context context) {
         return DBHelper.getInstance(context).getWritableDatabase();
     }
 
 	public static int getCursorInt(Cursor cursor, String columnname) {
 		return cursor.getInt(cursor.getColumnIndex(columnname));
 	}
-
 
 	public static long getCursorLong(Cursor cursor, String columnname) {
 		return cursor.getLong(cursor.getColumnIndex(columnname));
@@ -198,7 +196,6 @@ public class DBProvider {
 		return Double.parseDouble(getCursorString(cursor, columnname));
 	}
 
-
     public static <T> ArrayList<T> getCursorObjectList(Cursor cursor, Class<? extends T> clazz) {
         ArrayList<T> queue = new ArrayList<>();
         if (cursor != null && cursor.getCount() > 0) {
@@ -212,8 +209,35 @@ public class DBProvider {
         return queue;
     }
 
+    public static <T> Observable<ArrayList<T>> getCursorObjectsListRx(Cursor cursor, Class<? extends T> clazz) {
+        return Observable.create(e -> {
+            e.onNext(getCursorObjectList(cursor, clazz));
+            e.onComplete();
+        });
+    }
+
+    public static <T> Observable<ArrayList<T>> getObjectsListRx(Context context, String table, String[] columns, String where, String[] whereArgs, String orderBy, Class<? extends T> clazz) {
+        return Observable.create(e -> {
+            e.onNext(getCursorObjectList(selectDB(table,columns,where,whereArgs,orderBy,context), clazz));
+            e.onComplete();
+        });
+    }
+
+    public static <T> Observable<T> getCursorObjectRx(Cursor cursor, Class<?> clazz) {
+        return Observable.create(e -> {
+            e.onNext(getCursorObject(cursor, clazz));
+            e.onComplete();
+        });
+    }
+
+    public static <T> Observable<T> getObjectRx(Context context, String table, String[] columns, String where, String[] whereArgs, String orderBy, Class<?> clazz) {
+        return Observable.create(e -> {
+            e.onNext(getCursorObject(selectDB(table,columns,where,whereArgs,orderBy,context), clazz));
+            e.onComplete();
+        });
+    }
+
     public static <T> T getCursorObject(Cursor cursor, Class<?> clazz) {
-        List<T> queue = new ArrayList<>();
         if (cursor != null && cursor.getCount() > 0) {
             if (cursor.moveToFirst()) {
                 T obj = (T) new MicroOrm().fromCursor(cursor, clazz);
@@ -224,10 +248,17 @@ public class DBProvider {
         return null;
     }
 
-    public static  <T> long saveObject(Context context, String table, T o) {
-		ContentValues values = new MicroOrm().toContentValues(o);
+    public static <T> long saveObject(Context context, String table, T o) {
+        ContentValues values = new MicroOrm().toContentValues(o);
 		return insertOrUpdateDB(context,table, values);
 	}
+
+    public static <T> Observable<Long> saveObjectRx(Context context, String table, T o) {
+        return Observable.create(e -> {
+            e.onNext(insertOrUpdateDB(context, table, new MicroOrm().toContentValues(o)));
+            e.onComplete();
+        });
+    }
 
 	public static String convertToSQLTable(Object o, String[] fldsToSave) {
 		Collection<Field> fields = new ArrayList<>();
