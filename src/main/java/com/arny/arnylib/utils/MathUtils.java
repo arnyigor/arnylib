@@ -1,7 +1,10 @@
 package com.arny.arnylib.utils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class MathUtils {
@@ -142,6 +145,27 @@ public class MathUtils {
         M = Math.abs(M);
         S = Math.abs(S);
         return sign * (D + (M / 60) + (S / 3600));
+    }
+
+    public static double getAverage(ArrayList<Double> nums) {
+        if ( nums.isEmpty()) {
+            return 0;
+        }
+        double sum = 0;
+        for (Double mark : nums) {
+            sum += mark;
+        }
+        return sum / nums.size();
+    }
+
+    @NotNull
+    public static ArrayList<Double> fillAverage(double num, int size, ArrayList<Double> nums) {
+        if (nums.size() < size) {
+            nums.add(num);
+        }else{
+            nums.remove(0);
+        }
+        return nums;
     }
 
 	public enum AngleFormat {

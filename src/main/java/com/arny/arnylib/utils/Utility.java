@@ -7,6 +7,7 @@ import com.arny.java.utils.KtlUtilsKt;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
@@ -461,6 +462,10 @@ public class Utility {
 	public static <T> Observable<T> mainThreadObservable(Observable<T> observable) {
 		return observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
 	}
+
+    public static <T> Flowable<T> mainThreadObservable(Flowable<T> flowable) {
+        return flowable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    }
 
 	@NonNull
 	public static <T> ArrayList<T> getListCopy(List<T> list) {
