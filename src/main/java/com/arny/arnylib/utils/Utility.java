@@ -207,17 +207,8 @@ public class Utility {
 		return arr;
 	}
 
-	public static int randInt(int min, int max) {
-		Random rnd = new Random();
-		int range = max - min + 1;
-		return rnd.nextInt(range) + min;
-	}
 
-	public static double round(double val, int scale) {
-		return new BigDecimal(val).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
-	}
-
-	public static boolean empty(Object obj) {
+    public static boolean empty(Object obj) {
 		if (obj == null) {
 			return true;
 		} else {
@@ -256,20 +247,6 @@ public class Utility {
 	public static boolean isEmailValid(String email) {
 		String result = match(email, EMAIL_PATTERN, 0);
 		return !empty(result);
-	}
-
-	/**
-	 * add '0' to number before 10
-	 *
-	 * @param number
-	 * @return
-	 */
-	public static String pad(int number) {
-		if (number >= 10) {
-			return String.valueOf(number);
-		} else {
-			return "0" + String.valueOf(number);
-		}
 	}
 
 	public static String readAssetFile(Context context, String folder, String fileName) {

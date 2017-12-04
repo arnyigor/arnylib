@@ -57,21 +57,21 @@ public class MathUtils {
         return new BigDecimal(val).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
-	public static double summ(double num1, double num2, int scale) {
-		return new BigDecimal(num1).add(new BigDecimal(num2)).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
-	}
+    public static double summ(double num1, double num2, int scale) {
+        return new BigDecimal(num1).add(new BigDecimal(num2)).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
 
-	public static double subtract(double num1, double num2, int scale) {
-		return new BigDecimal(num1).subtract(new BigDecimal(num2)).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
-	}
+    public static double minus(double num1, double num2, int scale) {
+        return new BigDecimal(num1).subtract(new BigDecimal(num2)).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
 
-	public static double multiply(double num1, double num2, int scale) {
-		return new BigDecimal(num1).multiply(new BigDecimal(num2)).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
-	}
+    public static double multiply(double num1, double num2, int scale) {
+        return new BigDecimal(num1).multiply(new BigDecimal(num2)).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
 
-	public static double divide(double num1, double num2, int scale) {
-		return new BigDecimal(num1).divide(new BigDecimal(num2),BigDecimal.ROUND_HALF_UP).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
-	}
+    public static double divide(double num1, double num2, int scale) {
+        return new BigDecimal(num1).divide(new BigDecimal(num2),BigDecimal.ROUND_HALF_UP).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
 
     public static long randLong(long min, long max) {
         Random rnd = new Random();
@@ -124,6 +124,10 @@ public class MathUtils {
         return Math.toDegrees(Math.atan(rad));
     }
 
+    public static double Atan2(double rad1,double rad2) {
+        return Math.toDegrees(Math.atan2(rad1,rad2));
+    }
+
     public static double Sqrt(double num) {
         return Math.sqrt(num);
     }
@@ -145,6 +149,20 @@ public class MathUtils {
         M = Math.abs(M);
         S = Math.abs(S);
         return sign * (D + (M / 60) + (S / 3600));
+    }
+
+    /**
+     * add '0' to number before 10
+     *
+     * @param number
+     * @return
+     */
+    public static String pad(int number) {
+        if (number >= 10) {
+            return String.valueOf(number);
+        } else {
+            return "0" + String.valueOf(number);
+        }
     }
 
     public static double getAverage(ArrayList<Double> nums) {

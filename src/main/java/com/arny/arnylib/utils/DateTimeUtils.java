@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 public class DateTimeUtils {
@@ -85,16 +86,34 @@ public class DateTimeUtils {
         return pad(min) + ":" + pad(sec);
     }
 
-//    public static String getDateTime(long milliseconds, String format) {
-//        milliseconds = (milliseconds == 0) ? Calendar.getInstance().getTimeInMillis() : milliseconds;
-//        format = (format == null) ? "dd MMM yyyy HH:mm:ss.sss" : format;
-//        return (new SimpleDateFormat(format, Locale.getDefault())).format(new Date(milliseconds));
-//    }
+    /**
+     * Конвертируем секунды в часы:минуты:секунды // TODO: 04.12.2017 нужно расширить
+     * @param secs
+     * @return
+     */
+    public static String convertTime(long secs) {
+        secs = secs * 1000;
+//        long days = TimeUnit.MILLISECONDS.toDays(secs);
+//        secs -= TimeUnit.DAYS.toMillis(days);
+        long hours = TimeUnit.MILLISECONDS.toHours(secs);
+        secs -= TimeUnit.HOURS.toMillis(hours);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(secs);
+        secs -= TimeUnit.MINUTES.toMillis(minutes);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(secs);
+        return String.format("%s:%s:%s",  pad((int) hours), pad((int) minutes), pad((int) seconds));
+    }
 
-//    public static String getDateTime(long milliseconds) {
-//        milliseconds = (milliseconds == 0) ? Calendar.getInstance().getTimeInMillis() : milliseconds;
-//        return (new SimpleDateFormat("dd MMM yyyy HH:mm:ss.sss", Locale.getDefault())).format(new Date(milliseconds));
-//    }
+    /**
+     * Конвертируем часы,минуты, секунды в секунды
+     * @param hours
+     * @param mins
+     * @param secs
+     * @return
+     */
+    public static long convertTime(int hours,int mins,int secs) {
+        return hours * 3600 + mins * 60 + secs;
+    }
+
 
     public static String getDateTime() {
         return (new SimpleDateFormat("dd MMM yyyy HH:mm:ss.sss", Locale.getDefault())).format(new Date(System.currentTimeMillis()));
