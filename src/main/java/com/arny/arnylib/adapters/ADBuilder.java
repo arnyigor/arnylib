@@ -13,6 +13,10 @@ public abstract class ADBuilder extends AlertDialog.Builder {
 		view = LayoutInflater.from(getContext()).inflate(themeResId, null);
 	}
 
+	protected View getDialogView(){
+		return view;
+	}
+
     protected AlertDialog getDialog() {
         return mAlertDialog;
     }
