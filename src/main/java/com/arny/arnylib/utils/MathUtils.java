@@ -96,8 +96,16 @@ public class MathUtils {
 
     public static int randInt(int min, int max) {
         Random rnd = new Random();
-        int range = max - min + 1;
-        return rnd.nextInt(range) + min;
+        if (min > max) {
+            throw new IllegalArgumentException("min>max");
+        }
+        if (min == max) {
+            return min;
+        }
+        int n = rnd.nextInt();
+        n = n == Integer.MIN_VALUE ? 0 : n < 0 ? -n : n;
+        n = n % (max - min);
+        return min + n;
     }
 
     public static double Cos(double angle) {

@@ -1,7 +1,10 @@
-package com.arny.arnylib.utils;
+package com.arny.arnylib.utils.generators;
 
+
+import com.arny.arnylib.utils.MathUtils;
 
 import java.util.Random;
+import java.util.UUID;
 
 public class Generator {
     /*api*/
@@ -79,5 +82,42 @@ public class Generator {
 
     public static String getString(int max) {
         return RandomStringUtils.randomAlphabetic(max);
+    }
+
+    public static String getString(int max,boolean withnums) {
+        if (withnums) {
+            return RandomStringUtils.randomAlphanumeric(max);
+        }
+        return RandomStringUtils.randomAlphabetic(max);
+    }
+
+    public static String getString(int max, String chars) {
+        return RandomStringUtils.random(max, chars);
+    }
+
+    public static String getMaleName() {
+        int length = WordsDB.getMales().length;
+        int i = MathUtils.randInt(0, length);
+        return WordsDB.getMales()[i];
+    }
+
+    public static String getFeMaleName() {
+        int length = WordsDB.getFeMales().length;
+        int i = MathUtils.randInt(0, length);
+        return WordsDB.getFeMales()[i];
+    }
+
+    public static String getWord() {
+        int length = WordsDB.getWords().length;
+        int i = MathUtils.randInt(0, length);
+        return WordsDB.getWords()[i];
+    }
+
+    public static String getStringAscii(int max) {
+        return RandomStringUtils.randomAscii(max);
+    }
+
+    public static String getUUID() {
+        return UUID.randomUUID().toString();
     }
 }

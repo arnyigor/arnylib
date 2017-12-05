@@ -1,4 +1,4 @@
-package com.arny.arnylib.utils;
+package com.arny.arnylib.utils.generators;
 
 import java.util.Random;
 
@@ -48,7 +48,7 @@ class RandomStringUtils {
      * @param count the length of random string to create
      * @return the random string
      */
-    public static String randomAscii(int count) {
+    static String randomAscii(int count) {
         return random(count, 32, 127, false, false);
     }
 
@@ -61,7 +61,7 @@ class RandomStringUtils {
      * @param count the length of random string to create
      * @return the random string
      */
-    public static String randomAlphabetic(int count) {
+    static String randomAlphabetic(int count) {
         return random(count, true, false);
     }
 
@@ -74,7 +74,7 @@ class RandomStringUtils {
      * @param count the length of random string to create
      * @return the random string
      */
-    public static String randomAlphanumeric(int count) {
+    static String randomAlphanumeric(int count) {
         return random(count, true, true);
     }
 
@@ -87,7 +87,7 @@ class RandomStringUtils {
      * @param count the length of random string to create
      * @return the random string
      */
-    public static String randomNumeric(int count) {
+    static String randomNumeric(int count) {
         return random(count, false, true);
     }
 
@@ -105,7 +105,7 @@ class RandomStringUtils {
      *                characters
      * @return the random string
      */
-    public static String random(int count, boolean letters, boolean numbers) {
+    static String random(int count, boolean letters, boolean numbers) {
         return random(count, 0, 0, letters, numbers);
     }
 
@@ -125,8 +125,7 @@ class RandomStringUtils {
      *                characters
      * @return the random string
      */
-    public static String random(int count, int start, int end, boolean letters,
-                                boolean numbers) {
+    static String random(int count, int start, int end, boolean letters, boolean numbers) {
         return random(count, start, end, letters, numbers, null, RANDOM);
     }
 
@@ -150,8 +149,7 @@ class RandomStringUtils {
      * @throws ArrayIndexOutOfBoundsException if there are not <code>(end - start) + 1</code> characters in
      *                                        the set array.
      */
-    public static String random(int count, int start, int end, boolean letters,
-                                boolean numbers, char[] chars) {
+    static String random(int count, int start, int end, boolean letters, boolean numbers, char[] chars) {
         return random(count, start, end, letters, numbers, chars, RANDOM);
     }
 
@@ -187,8 +185,8 @@ class RandomStringUtils {
      * @throws IllegalArgumentException       if <code>count</code> &lt; 0.
      * @since 2.0
      */
-    public static String random(int count, int start, int end, boolean letters,
-                                boolean numbers, char[] chars, Random random) {
+    private static String random(int count, int start, int end, boolean letters,
+                                 boolean numbers, char[] chars, Random random) {
         if (count == 0) {
             return "";
         } else if (count < 0) {
@@ -263,7 +261,7 @@ class RandomStringUtils {
      * @return the random string
      * @throws IllegalArgumentException if <code>count</code> &lt; 0.
      */
-    public static String random(int count, String chars) {
+    static String random(int count, String chars) {
         if (chars == null) {
             return random(count, 0, 0, false, false, null, RANDOM);
         }
@@ -282,11 +280,14 @@ class RandomStringUtils {
      * @return the random string
      * @throws IllegalArgumentException if <code>count</code> &lt; 0.
      */
-    public static String random(int count, char[] chars) {
+    static String random(int count, char[] chars) {
         if (chars == null) {
             return random(count, 0, 0, false, false, null, RANDOM);
         }
         return random(count, 0, chars.length, false, false, chars, RANDOM);
     }
+
+
+
 
 }
