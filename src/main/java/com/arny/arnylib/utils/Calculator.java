@@ -9,7 +9,7 @@ import java.util.Stack;
  */
 
 public class Calculator {
-    public static enum Operator {
+    public enum Operator {
         PLUS('+', 1),
         MINUS('-', 1),
         MULTIPLY('*', 2),
@@ -21,7 +21,7 @@ public class Calculator {
         private char opChar;
         private int priority;
 
-        private Operator(char c, int p) {
+        Operator(char c, int p) {
             opChar = c;
             priority = p;
         }
@@ -36,9 +36,9 @@ public class Calculator {
         }
     }
 
-    public static enum Key {
+    public enum Key {
         CLEAR,
-        EQUALS;
+        EQUALS
     }
 
     private static final int PRECISION = 100000000;
@@ -174,8 +174,7 @@ public class Calculator {
             }
         }
 
-        if (bra.isEmpty()) return true;
-        else return false;
+        return bra.isEmpty();
     }
 
     private double calc(double a, double b, Operator op) {

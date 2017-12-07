@@ -17,7 +17,8 @@ public class CalculatorDialog extends ADBuilder {
 	private static final int MAX_BUTTONS = 21; // total of 20 buttons according to the layout.
 	private Button[] mButtons; // auto fill in buttons
 	private String value;
-	private enum InputButton {
+    private TextView mainDisplay;
+    private enum InputButton {
 		EXP(1, "e"),
 		BRACKETL(2, "("),
 		BRACKETR(3, ")"),
@@ -79,7 +80,28 @@ public class CalculatorDialog extends ADBuilder {
 
 	@Override
 	protected void initUI(View view) {
-		mTvDisplay = view.findViewById(R.id.main_display);
+        mTvDisplay = view.findViewById(R.id.main_display);
+        mButtons[0] = view.findViewById(R.id.buttonClear);
+        mButtons[1] = view.findViewById(R.id.buttonExp);
+        mButtons[2] = view.findViewById(R.id.buttonBraL);
+        mButtons[3] = view.findViewById(R.id.buttonBraR);
+        mButtons[4] = view.findViewById(R.id.button7);
+        mButtons[5] = view.findViewById(R.id.button8);
+        mButtons[6] = view.findViewById(R.id.button9);
+        mButtons[7] = view.findViewById(R.id.buttonDiv);
+        mButtons[8] = view.findViewById(R.id.button4);
+        mButtons[9] = view.findViewById(R.id.button5);
+        mButtons[10] = view.findViewById(R.id.button6);
+        mButtons[11] = view.findViewById(R.id.buttonMult);
+        mButtons[12] = view.findViewById(R.id.button1);
+        mButtons[13] = view.findViewById(R.id.button2);
+        mButtons[14] =  view.findViewById(R.id.button3);
+        mButtons[15] = view.findViewById(R.id.buttonMinus);
+        mButtons[16] = view.findViewById(R.id.button0);
+        mButtons[17] = view.findViewById(R.id.buttonDot);
+        mButtons[18] = view.findViewById(R.id.buttonPlus);
+        mButtons[19] = view.findViewById(R.id.buttonEq);
+        mButtons[20] = view.findViewById(R.id.buttonOk);
 	}
 
 	@Override
@@ -112,9 +134,7 @@ public class CalculatorDialog extends ADBuilder {
 	}
 
 	private void setButtonIds() {
-		for (int i = 0; i < MAX_BUTTONS; i++) {
-			mButtons[i] = getDialogView().findViewById(R.id.buttonClear + i);
-		}
+
 	}
 
 	private void setDisplayString(String s) {
@@ -171,6 +191,7 @@ public class CalculatorDialog extends ADBuilder {
 				if (resultListener != null) {
 					resultListener.onResult(mTvDisplay.getText().toString());
 				}
+				getDialog().dismiss();
 				return;
 			default:
 				break;
