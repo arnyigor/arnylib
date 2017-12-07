@@ -1,6 +1,7 @@
 package com.arny.arnylib.database;
 
-
+import android.arch.persistence.db.SupportSQLiteDatabase;
+import android.arch.persistence.room.migration.Migration;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -8,16 +9,19 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import com.arny.arnylib.BuildConfig;
+import com.arny.arnylib.files.FileUtils;
+import com.arny.arnylib.utils.DroidUtils;
 import com.arny.arnylib.utils.Utility;
 import com.arny.java.utils.KtlUtilsKt;
 import io.reactivex.Observable;
 import org.chalup.microorm.MicroOrm;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.RandomAccessFile;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.nio.ByteBuffer;
+import java.util.*;
 
 public class DBProvider {
 
@@ -360,4 +364,124 @@ public class DBProvider {
 	public static String getSqlTable(Class<?> aClass) {
 		return aClass.getSimpleName().toLowerCase();
 	}
+
+    /**
+     * Сортировка файлов миграций Room
+     *
+     * @param filenames
+     * @return
+     */
+    @NotNull
+    public static ArrayList<String> getSortedRoomMigrations(ArrayList<String> filenames) {
+        ArrayList<String> list = new ArrayList<>();
+        for (String filename : filenames) {
+            String match = getRoomMigrationMatch(filename);
+            if (!Utility.empty(match)) {
+                int start = 0;
+                int end = 0;
+                try {
+                    start = getRoomMigrationVersion(filename, 0);
+                    end = getRoomMigrationVersion(filename, 1);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+                if ((start != 0 && end != 0) && (start < end)) {
+                    list.add(filename);
+                }
+            }
+        }
+        Collections.sort(list, (o1, o2) -> {
+            int start1 = 0;
+            int end1 = 0;
+            int start2 = 0;
+            int end2 = 0;
+            try {
+                String match1 = getRoomMigrationMatch(o1);
+                String match2 = getRoomMigrationMatch(o2);
+                if (!Utility.empty(match1) && !Utility.empty(match2)) {
+                    start1 = getRoomMigrationVersion(o1, 0);
+                    end1 = getRoomMigrationVersion(o1, 1);
+                    start2 = getRoomMigrationVersion(o2, 0);
+                    end2 = getRoomMigrationVersion(o2, 1);
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+            if (start1 == start2 && end1 == end2) {
+                return 0;
+            }
+            int compareStart = Integer.compare(start1, start2);
+            if (compareStart != 0) {
+                return compareStart;
+            }
+            int compareEnd = Integer.compare(end1, end2);
+            if (compareEnd != 0) {
+                return compareEnd;
+            }
+            return 0;
+        });
+        return list;
+    }
+
+    /**
+     * Версия миграции
+     *
+     * @param filename имя файла
+     * @param position 0 - start|1 - finish
+     * @return номер версии
+     */
+    public static int getRoomMigrationVersion(String filename, int position) {
+        return Integer.parseInt(getRoomMigrationMatch(filename).split("_")[position]);
+    }
+
+    /**
+     * Нахождение версий миграций библиотеки Room
+     *
+     * @param filename
+     * @return
+     */
+    public static String getRoomMigrationMatch(String filename) {
+        return Utility.match(filename, "^room_{1}(\\d+_{1}\\d+)_{1}.*\\.sql", 1);
+    }
+
+    public static Migration[] getRoomMigrations(Context context) {
+        ArrayList<String> migrationsFiles = getSortedRoomMigrations(FileUtils.listAssetFiles(context, "migrations"));
+        ArrayList<Migration> migrationArrayList = new ArrayList<>();
+        for (String migrationsFile : migrationsFiles) {
+            String sql = Utility.readAssetFile(context, "migrations", migrationsFile);
+            int start = getRoomMigrationVersion(migrationsFile, 0);
+            int end = getRoomMigrationVersion(migrationsFile, 1);
+            migrationArrayList.add(addRoomMigration(start, end, sql));
+        }
+        Migration[] migrations = new Migration[migrationArrayList.size()];
+        for (int i = 0; i < migrationArrayList.size(); i++) {
+            migrations[i] = migrationArrayList.get(i);
+        }
+        return migrations;
+    }
+
+    @NonNull
+    public static Migration addRoomMigration(int startVersion, int endVersion, String sql) {
+        return new Migration(startVersion, endVersion) {
+            @Override
+            public void migrate(@NonNull SupportSQLiteDatabase database) {
+                database.beginTransaction();
+                String[] splittedSqls = sql.split("\\;");
+                for (String splittedSql : splittedSqls) {
+                    String sql = splittedSql.trim();
+                    database.execSQL(sql);
+                }
+                database.endTransaction();
+            }
+        };
+    }
+
+    public static int getDbVersionFromFile(Context context, String filename) throws Exception {
+        File file = DroidUtils.dumpDB(context, filename);
+        RandomAccessFile fp = new RandomAccessFile(file, "r");
+        fp.seek(60);
+        byte[] buff = new byte[4];
+        fp.read(buff, 0, 4);
+        return ByteBuffer.wrap(buff).getInt();
+    }
 }

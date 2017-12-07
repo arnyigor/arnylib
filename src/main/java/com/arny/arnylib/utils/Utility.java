@@ -207,7 +207,6 @@ public class Utility {
 		return arr;
 	}
 
-
     public static boolean empty(Object obj) {
 		if (obj == null) {
 			return true;
@@ -215,7 +214,9 @@ public class Utility {
 			if (obj instanceof String) {
 				String s = (String) obj;
 				return s.trim().equals("null") || s.trim().isEmpty();
-			} else {
+			}else if (obj instanceof List) {
+                return ((List) obj).isEmpty();
+            } else {
 				return false;
 			}
 		}

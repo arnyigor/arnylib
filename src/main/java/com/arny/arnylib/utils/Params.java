@@ -29,27 +29,27 @@ public class Params {
 		this.params = new JSONObject();
 	}
 
-	public JSONObject getNodeObject() {
+	private JSONObject getNodeObject() {
 		return nodeObject;
 	}
 
-	public void setNodeObject(JSONObject nodeObject) {
+	private void setNodeObject(JSONObject nodeObject) {
 		this.nodeObject = nodeObject;
 	}
 
-	public String getNodeString() {
+	private String getNodeString() {
 		return nodeString;
 	}
 
-	public void setNodeString(String nodeString) {
+	private void setNodeString(String nodeString) {
 		this.nodeString = nodeString;
 	}
 
-	public JSONArray getNodeArray() {
+	private JSONArray getNodeArray() {
 		return nodeArray;
 	}
 
-	public void setNodeArray(JSONArray nodeArray) {
+	private void setNodeArray(JSONArray nodeArray) {
 		this.nodeArray = nodeArray;
 	}
 
@@ -293,8 +293,11 @@ public class Params {
 		return params;
 	}
 
-	public String getStringParams() {
-		return String.valueOf(params);
+	private String getStringParams() {
+        if (params == null) {
+            return null;
+        }
+        return String.valueOf(params);
 	}
 
 	public void setParams(JSONObject params) {
