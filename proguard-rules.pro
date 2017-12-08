@@ -4,7 +4,6 @@
 -dontpreverify
 -verbose
 -dontwarn javax.annotation.**
--keep class com.google.**
 -dontwarn com.google.**
 -dontwarn java.nio.file.*
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement

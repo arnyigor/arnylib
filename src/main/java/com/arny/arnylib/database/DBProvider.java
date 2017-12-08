@@ -26,9 +26,7 @@ import java.util.*;
 public class DBProvider {
 
     public static long insertDB(String table, ContentValues contentValues, Context context) {
-        if (BuildConfig.DEBUG) {
-            Log.d(DBProvider.class.getSimpleName(), "insertDB: table:" + table + " contentValues:" + contentValues  );
-        }
+        Log.d(DBProvider.class.getSimpleName(), "insertDB: table:" + table + " contentValues:" + contentValues  );
         long rowID = 0;
         try {
             rowID = connectDB(context).insert(table, null, contentValues);
