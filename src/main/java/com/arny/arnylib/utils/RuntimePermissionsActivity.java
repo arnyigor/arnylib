@@ -31,15 +31,6 @@ public abstract class RuntimePermissionsActivity extends AppCompatActivity {
 			onPermissionsGranted(requestCode);
 		} else {
 			startActivityPermissions();
-
-//			Snackbar.make(findViewById(android.R.id.content), mErrorString.get(requestCode),
-//					Snackbar.LENGTH_INDEFINITE).setAction("ENABLE",
-//					new View.OnClickListener() {
-//						@Override
-//						public void onClick(View v) {
-//							startActivityPermissions();
-//						}
-//					}).show();
 		}
 	}
 
@@ -65,18 +56,7 @@ public abstract class RuntimePermissionsActivity extends AppCompatActivity {
 		}
 		if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
 			if (shouldShowRequestPermissionRationale) {
-
 				ActivityCompat.requestPermissions(RuntimePermissionsActivity.this, requestedPermissions, requestCode);
-
-
-//				Snackbar.make(findViewById(android.R.id.content), stringId,
-//						Snackbar.LENGTH_INDEFINITE).setAction("GRANT",
-//						new View.OnClickListener() {
-//							@Override
-//							public void onClick(View v) {
-//								ActivityCompat.requestPermissions(RuntimePermissionsActivity.this, requestedPermissions, requestCode);
-//							}
-//						}).show();
 			} else {
 				ActivityCompat.requestPermissions(this, requestedPermissions, requestCode);
 			}
