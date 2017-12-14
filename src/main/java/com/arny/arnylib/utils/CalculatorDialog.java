@@ -10,7 +10,8 @@ import com.arny.arnylib.adapters.ADBuilder;
 import com.arny.arnylib.utils.Calculator;
 public class CalculatorDialog extends ADBuilder {
 	private final CalculatorResultListener resultListener;
-	private Calculator mCalculator;
+    private String title = "Калькулятор";
+    private Calculator mCalculator;
 	private boolean mFreshState = true;
 	private TextView mTvDisplay;
 	private StringBuffer mDisplay;
@@ -74,6 +75,14 @@ public class CalculatorDialog extends ADBuilder {
 		this.resultListener = resultListener;
 	}
 
+    public CalculatorDialog(Context context, String title, String value, CalculatorResultListener resultListener) {
+        super(context);
+        mButtons = new Button[MAX_BUTTONS];
+        this.title = title;
+        this.value = value;
+        this.resultListener = resultListener;
+    }
+
 	public CalculatorDialog(Context context, CalculatorResultListener resultListener) {
 		this(context, "", resultListener);
 	}
@@ -106,7 +115,7 @@ public class CalculatorDialog extends ADBuilder {
 
 	@Override
 	protected String getTitle() {
-		return "Калькулятор";
+		return title;
 	}
 
 	@Override
