@@ -15,7 +15,7 @@ public class CalculatorDialog extends ADBuilder {
 	private boolean mFreshState = true;
 	private TextView mTvDisplay;
 	private StringBuffer mDisplay;
-	private static final int MAX_BUTTONS = 21; // total of 20 buttons according to the layout.
+	private static final int MAX_BUTTONS = 22; // total of 21 buttons according to the layout.
 	private Button[] mButtons; // auto fill in buttons
 	private String value;
     private TextView mainDisplay;
@@ -54,8 +54,9 @@ public class CalculatorDialog extends ADBuilder {
 	private enum ActionKey {
 		CLEAR(0),
 		EQUALS(19),
-		OK(20);
-		private int idx;
+        OK(20),
+        DEL(21);
+        private int idx;
 		ActionKey(int i) {
 			idx = i;
 		}
@@ -111,6 +112,7 @@ public class CalculatorDialog extends ADBuilder {
         mButtons[18] = view.findViewById(R.id.buttonPlus);
         mButtons[19] = view.findViewById(R.id.buttonEq);
         mButtons[20] = view.findViewById(R.id.buttonOk);
+        mButtons[21] = view.findViewById(R.id.buttonDel);
 	}
 
 	@Override
@@ -187,6 +189,12 @@ public class CalculatorDialog extends ADBuilder {
 				mCalculator.handleKeyPress(Calculator.Key.CLEAR);
 				mFreshState = true;
 				break;
+            case DEL:
+                String input = mDisplay.toString();
+                input = input.substring(input.length(), input.length() - 1);
+                mCalculator.setInput(input);
+                setDisplayString(mCalculator.getOutput());
+                break;
 			case EQUALS:
 				mCalculator.setInput(mDisplay.toString());
 				mCalculator.handleKeyPress(Calculator.Key.EQUALS);
