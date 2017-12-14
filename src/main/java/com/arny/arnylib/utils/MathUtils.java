@@ -208,6 +208,11 @@ public class MathUtils {
 		return nums;
 	}
 
+	public static boolean isValidNumber(String input) {
+		String match = Utility.match(input, "-?\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d+)?", 0);
+		return input.equals(match);
+	}
+
 	public enum AngleFormat {
 		Dd,
 		DMM,
