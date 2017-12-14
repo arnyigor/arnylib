@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-public class ExampleUnitTest {
+public class LibUnitTest {
 	@Test
 	public void emails_isCorrect() throws Exception {
         List<String> list = Arrays.asList("","4844","@","a@m.r","a@.ru");
@@ -41,4 +41,6 @@ public class ExampleUnitTest {
         Params params1 = new Params("param1=1");
         assertThat(params1).isNotNull();
     }
+
+
 }
