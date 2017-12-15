@@ -30,7 +30,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
@@ -383,6 +382,20 @@ public class DroidUtils {
 		}
 		return null;
 	}
+
+    public static String dumpBundle(Bundle bundle) {
+        if (bundle != null) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (String key : bundle.keySet()) {
+                Object value = bundle.get(key);
+                if (value != null) {
+                    stringBuilder.append(String.format("\nkey:%s  val:%s  classname:(%s)", key, value.toString(), value.getClass().getName()));
+                }
+            }
+            return stringBuilder.toString();
+        }
+        return null;
+    }
 
 	public static Spanned fromHtml(String html){
 		Spanned result;
