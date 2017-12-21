@@ -42,6 +42,12 @@
 -keep public class * extends android.app.Fragment
 -keep public class com.android.vending.licensing.ILicensingService
 
+#Custom keep
+-keep class com.arny.arnylib.adapters.** { *; }
+-keep class com.arny.arnylib.database.** { *; }
+-keep public class com.arny.arnylib.utils.ToastMaker
+-keep public class com.arny.arnylib.utils.DroidUtils
+
 # For native methods, see http://proguard.sourceforge.net/manual/examples.html#native
 -keepclasseswithmembernames class * {
  native <methods>;
@@ -89,3 +95,9 @@
 # platform version. We know about them, and they are safe.
 -dontwarn android.support.**
 -dontwarn com.google.ads.**
+-dontwarn javax.annotation.**
+-dontwarn com.google.**
+-dontwarn java.nio.file.*
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn okio.**
+-dontwarn org.joda.**
