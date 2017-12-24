@@ -490,4 +490,7 @@ public class Utility {
 		return res;
 	}
 
+	public static String getThread() {
+		return Thread.currentThread().getName();
+	}
 }
