@@ -1,18 +1,13 @@
 package com.arny.arnylib.utils;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.arny.java.utils.KtlUtilsKt;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.reactivex.Flowable;
+import io.reactivex.*;
 import io.reactivex.Observable;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,11 +16,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -441,8 +434,24 @@ public class Utility {
 		return observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
 	}
 
+    public static <T> Single<T> mainThreadObservable(Single<T> observable) {
+        return mainThreadObservable(Schedulers.io(), observable);
+    }
+
+    public static <T> Single<T> mainThreadObservable(Scheduler scheduler, Single<T> observable) {
+        return observable.subscribeOn(scheduler).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public static <T> Observable<T> mainThreadObservable(Scheduler scheduler, Observable<T> observable) {
+        return observable.subscribeOn(scheduler).observeOn(AndroidSchedulers.mainThread());
+    }
+
     public static <T> Flowable<T> mainThreadObservable(Flowable<T> flowable) {
         return flowable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public static <T> Flowable<T> mainThreadObservable(Scheduler scheduler, Flowable<T> flowable) {
+        return flowable.subscribeOn(scheduler).observeOn(AndroidSchedulers.mainThread());
     }
 
 	@NonNull
@@ -493,4 +502,5 @@ public class Utility {
 	public static String getThread() {
 		return Thread.currentThread().getName();
 	}
+
 }
