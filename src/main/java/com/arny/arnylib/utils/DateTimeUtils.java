@@ -1,5 +1,6 @@
 package com.arny.arnylib.utils;
 
+import android.util.Log;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -45,7 +46,8 @@ public class DateTimeUtils {
                 return entry.getValue();
             }
         }
-        return format;
+	    Log.d(DateTimeUtils.class.getSimpleName(), "dateFormatChooser myTimestamp:"+myTimestamp+": format:" + format);
+	    return format;
     }
 
     private static long getEsTime(long startTime, long curTime, int iter, int tot) {

@@ -431,7 +431,11 @@ public class Utility {
 	}
 
 	public static <T> Observable<T> mainThreadObservable(Observable<T> observable) {
-		return observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+		return mainThreadObservable(observable, Schedulers.io());
+	}
+
+	public static <T> Observable<T> mainThreadObservable(Observable<T> observable, Scheduler scheduler) {
+		return observable.subscribeOn(scheduler).observeOn(AndroidSchedulers.mainThread());
 	}
 
     public static <T> Single<T> mainThreadObservable(Single<T> observable) {
