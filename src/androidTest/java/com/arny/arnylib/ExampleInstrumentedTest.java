@@ -4,9 +4,11 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.arny.arnylib.security.CryptoStrings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 /**
@@ -22,4 +24,16 @@ public class ExampleInstrumentedTest {
 		Context appContext = InstrumentationRegistry.getTargetContext();
 		assertEquals("com.arny.vkmvp", appContext.getPackageName());
 	}
+
+    @Test
+    public void base64() throws Exception {
+        String input = "123456789";
+        String encode = CryptoStrings.encryptBase64(input);
+        System.out.println(encode);
+        assertThat(encode).isNotNull();
+        String decode = CryptoStrings.decryptBase64(encode);
+        System.out.println(decode);
+        assertThat(decode).isNotNull();
+    }
+
 }

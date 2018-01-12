@@ -92,6 +92,8 @@ dependencies {
     compile 'com.afollestad.material-dialogs:commons:0.9.5.0'
     compile 'com.github.piasy:BigImageViewer:1.4.4'
     compile 'com.github.piasy:GlideImageLoader:1.4.4'
+    compile  'org.bouncycastle:bcprov-jdk15on:1.59'
+    compile 'commons-codec:commons-codec:1.10'
 }
 repositories {
     mavenCentral()
