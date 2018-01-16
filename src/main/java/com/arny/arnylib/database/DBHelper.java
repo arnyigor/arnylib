@@ -15,20 +15,24 @@ class DBHelper extends SQLiteOpenHelper {
     static int dbVersion;
     static String dbName;
     private Context context;
-    private static DBHelper mInstance = null;
+	private static volatile DBHelper mInstance;
     private static final Object LOCK = new Object();
-    public static synchronized DBHelper getInstance(Context ctx) {
-        if(mInstance == null) {
-            synchronized (LOCK) {
-                if (mInstance == null) {
-                    mInstance = new DBHelper(ctx.getApplicationContext());
-                }
-            }
-        }
-        return mInstance;
-    }
 
-    private DBHelper(Context context) {
+	public static DBHelper getInstance(Context ctx) {
+		DBHelper localInstance = mInstance;
+		if (localInstance == null) {
+			synchronized (LOCK) {
+				localInstance = mInstance;
+				if (localInstance == null) {
+					mInstance = localInstance = new DBHelper(ctx.getApplicationContext());
+				}
+			}
+		}
+		return localInstance;
+	}
+
+
+	private DBHelper(Context context) {
         super(context, dbName, null, dbVersion);
         this.context = context;
     }
