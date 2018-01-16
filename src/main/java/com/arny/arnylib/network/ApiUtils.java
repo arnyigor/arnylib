@@ -1,12 +1,17 @@
 package com.arny.arnylib.network;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 public class ApiUtils {
@@ -58,5 +63,34 @@ public class ApiUtils {
         }
         Log.e("api", " << Api onErrorResponse message = " + message);
         return message;
+    }
+
+    public static boolean isHostAvailable(String host, int port, int timeoutMs) {
+        try {
+            Socket sock = new Socket();
+            SocketAddress sockaddr = new InetSocketAddress(host, port);
+            sock.connect(sockaddr, timeoutMs); // This will block no more than timeoutMs
+            sock.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static void sendSocketData(String host, int port, String data){
+        try {
+            // The line below illustrates the default port 6101 for mobile printers 9100 is the default port number
+            // for desktop and tabletop printers
+            Socket clientSocket=new Socket(host, port);
+            DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream() );
+            //The data being sent in the lines below illustrate CPCL  one can change the data for the corresponding
+            //language being used (ZPL, EPL)
+            dos.writeBytes(data);
+//            dos.writeUTF("If procrastination was a sport, I would compete in it later.");
+            clientSocket.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
