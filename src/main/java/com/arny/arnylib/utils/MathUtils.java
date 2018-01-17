@@ -109,18 +109,18 @@ public class MathUtils {
 	}
 
 	public static int randInt(int min, int max) {
-		Random rnd = new Random();
-		if (min > max) {
-			throw new IllegalArgumentException("min>max");
-		}
-		if (min == max) {
-			return min;
-		}
-		int n = rnd.nextInt();
-		n = n == Integer.MIN_VALUE ? 0 : n < 0 ? -n : n;
-		n = n % (max - min);
-		return min + n;
-	}
+        if (min >= max) {
+            throw new IllegalArgumentException("max must be greater than min");
+        }
+
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
+    }
+
+    public static boolean randBoolean() {
+        Random r = new Random();
+        return r.nextBoolean();
+    }
 
 	public static double Cos(double angle) {
 		return Math.cos(Math.toRadians(angle));
