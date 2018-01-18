@@ -1,18 +1,14 @@
 package com.arny.arnylib;
 
-import android.util.Log;
 import com.arny.arnylib.utils.Params;
 import com.arny.arnylib.utils.Stopwatch;
+import com.arny.arnylib.utils.TestingUtils;
 import com.arny.arnylib.utils.Utility;
 import io.reactivex.Observable;
-import io.reactivex.android.plugins.RxAndroidPlugins;
+import io.reactivex.functions.Function;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
-import org.junit.Before;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
@@ -21,7 +17,6 @@ import org.junit.runners.model.Statement;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import static junit.framework.Assert.assertTrue;
@@ -34,16 +29,19 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class LibUnitTest {
 
-	private Stopwatch stopwatch;
-	private static class ImmediateSchedulersRule implements TestRule {
-		@Override
-		public Statement apply(final Statement base, Description description) {
-			return new Statement() {
-				@Override
-				public void evaluate() throws Throwable {
-					RxJavaPlugins.setIoSchedulerHandler(scheduler -> Schedulers.trampoline());
-					RxJavaPlugins.setComputationSchedulerHandler(scheduler -> Schedulers.trampoline());
-					RxJavaPlugins.setNewThreadSchedulerHandler(scheduler -> Schedulers.trampoline());
+    private boolean err = true;
+    private Stopwatch stopwatch;
+    private int retryCount;
+    private int currentRetries;
+    private static class ImmediateSchedulersRule implements TestRule {
+        @Override
+        public Statement apply(final Statement base, Description description) {
+            return new Statement() {
+                @Override
+                public void evaluate() throws Throwable {
+                    RxJavaPlugins.setIoSchedulerHandler(scheduler -> Schedulers.trampoline());
+                    RxJavaPlugins.setComputationSchedulerHandler(scheduler -> Schedulers.trampoline());
+                    RxJavaPlugins.setNewThreadSchedulerHandler(scheduler -> Schedulers.trampoline());
 
 					try {
 						base.evaluate();
@@ -59,42 +57,49 @@ public class LibUnitTest {
 	public final ImmediateSchedulersRule schedulers = new ImmediateSchedulersRule();
 
 	@Test
-	public void testUsingImmediateSchedulersRule() {
-		// given:
-		stopwatch = new Stopwatch();
-		stopwatch.start();
-		TestObserver<String> observer = new TestObserver<>();
-		System.out.println("rx: start:" + Utility.getThread() + " time:" + stopwatch.getElapsedTimeSecs(3));
-		Observable.fromCallable(() -> {
-			System.out.println("rx: fromCallable:" + Utility.getThread() + " time:" + stopwatch.getElapsedTimeSecs(3));
-			return londTimeFunctionString();
-		}).subscribeOn(Schedulers.computation()).subscribe(observer);
-		// then:
-		observer.assertComplete();
-		observer.assertNoErrors();
-		System.out.println("rx: end:" + Utility.getThread() + " time:" + stopwatch.getElapsedTimeSecs(3));
-		stopwatch.stop();
-	}
+    public void testRxRetry() {
+        stopwatch = new Stopwatch();
+        stopwatch.start();
+        retryCount = 0;
+        currentRetries = 5;//текущее количество попыток
+        int maxRetries = 10;//максимальное количество попыток
+        int connectionTime = 230;// время долгой операции
+        int minChangeTime = 250;//минимальное время для изменения количества попыток
+        int retryDiff = 2;//изменение количества попыток
+        TestObserver<Boolean> observer = new TestObserver<>();
+        System.out.println("rx start time:" + stopwatch.getElapsedTimeSecs(3));
+        Observable.fromCallable(() -> TestingUtils.londTimeConnection(connectionTime, err))
+                .retryWhen(throwableObservable -> throwableObservable
+                        .flatMap((Function<Throwable, Observable<?>>) throwable -> {
+                            //Меняем условия возникновения ошибки,ошибка уходит на последней попытке,в зависимости от количества
+                            boolean errCond = retryCount == ((connectionTime > minChangeTime) ? (currentRetries - 2) : maxRetries - 2);
+                            if (errCond) {
+                                err = false;
+                            }
 
-	private String londTimeFunctionString() throws Exception {
-		Stopwatch stopwatch = new Stopwatch();
-		stopwatch.start();
-		System.out.println( "londTimeFunctionString: started:");
-		try {
-			for (int i = 0; i < 5; i++) {
-				Thread.sleep(1000);
-				System.out.println( "londTimeFunctionString update in thread " + Utility.getThread() + ": time:" + stopwatch.getElapsedTimeSecs(3) + " sec");
-				if (i == 3) {
-					throw new Exception("Ops");
-				}
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		System.out.println( "londTimeFunctionString: finished:" + stopwatch.getElapsedTimeSecs(3) + " sec");
-		stopwatch.stop();
-		return "long_time_function_result";
-	}
+                            long elapsedTimeMili = stopwatch.getElapsedTimeMili();
+                            System.out.println("retryWhen err:" + err + " maxRetries:" + maxRetries + " retryCount:" + retryCount + " currentRetries:" + currentRetries + " time:" + elapsedTimeMili);
+                            stopwatch.restart();
+                            //замерили время операции,если меньше минимального - меняем количество
+                            if (elapsedTimeMili <= minChangeTime) {
+                                currentRetries += retryDiff;
+                            }
+                            //ограничиваем максимальным количеством
+                            if (currentRetries >= maxRetries) {
+                                currentRetries = maxRetries;
+                            }
+                            //увеличиваем и проверяем с текущем количеством и пробуем снова
+                            if (++retryCount < currentRetries) {
+                                return Observable.timer(1, TimeUnit.MILLISECONDS);
+                            }
+                            return Observable.error(throwable);
+                        }))
+                .subscribeOn(Schedulers.computation()).subscribe(observer);
+        observer.assertComplete();
+        observer.assertNoErrors();
+        System.out.println("rx: end  time:" + stopwatch.getElapsedTimeSecs(3));
+        stopwatch.stop();
+    }
 
 	//    @Test
 	public void emails_isCorrect() throws Exception {
