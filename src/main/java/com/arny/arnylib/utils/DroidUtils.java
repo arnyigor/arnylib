@@ -175,14 +175,10 @@ public class DroidUtils {
         dialog.setCancelable(false);
         dialog.show();
     }
-	@SuppressLint("RestrictedApi")
     public static void simpleInputDialog(Context context, String title,String content,String preEdit, String btnOkText, String btnCancelText, int inputType, final InputDialogListener inputDialogListener) {
-        AlertDialog.Builder builder = new AlertDialog.Builder((new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog)));
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
-        LinearLayout.LayoutParams params =
-                new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         LinearLayout layout = new LinearLayout(context);
         layout.setOrientation(LinearLayout.VERTICAL);
         TextView tv = new TextView(context);
