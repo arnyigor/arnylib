@@ -79,6 +79,7 @@ dependencies {
     compile 'com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:2.0.0'
     implementation "android.arch.persistence.room:runtime:1.0.0"
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
+    implementation "android.arch.lifecycle:common-java8:1.0.0"
     implementation "android.arch.persistence.room:rxjava2:1.0.0"
     compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
@@ -93,6 +94,10 @@ dependencies {
     compile 'com.github.piasy:GlideImageLoader:1.4.4'
     compile  'org.bouncycastle:bcprov-jdk15on:1.59'
     compile 'commons-codec:commons-codec:1.10'
+    compile ('io.nlopez.smartlocation:library:3.3.3') {
+        transitive = false
+    }
+    compile 'io.nlopez.smartlocation:rx:3.3.3'
 }
 repositories {
     mavenCentral()
