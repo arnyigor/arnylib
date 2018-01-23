@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -23,6 +24,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.annotation.AnimRes;
 import android.support.annotation.NonNull;
 import android.support.v7.view.ContextThemeWrapper;
@@ -599,6 +601,14 @@ public class DroidUtils {
 		}
 		return false;
 	}
+
+    public static void clearAppData(Context context, String... dbNames) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.edit().clear().apply();
+        for (String name : dbNames) {
+            context.deleteDatabase(name);
+        }
+    }
 
 	public static String checkSign(Context context) {
 		PackageManager packageManager = context.getPackageManager();

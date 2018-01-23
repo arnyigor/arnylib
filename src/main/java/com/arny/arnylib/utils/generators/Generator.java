@@ -96,19 +96,19 @@ public class Generator {
     }
 
     public static String getMaleName() {
-        int length = WordsDB.getMales().length;
+        int length = WordsDB.getMales().length-1;
         int i = MathUtils.randInt(0, length);
         return WordsDB.getMales()[i];
     }
 
     public static String getFeMaleName() {
-        int length = WordsDB.getFeMales().length;
+        int length = WordsDB.getFeMales().length-1;
         int i = MathUtils.randInt(0, length);
         return WordsDB.getFeMales()[i];
     }
 
     public static String getWord() {
-        int length = WordsDB.getWords().length;
+        int length = WordsDB.getWords().length-1;
         int i = MathUtils.randInt(0, length);
         return WordsDB.getWords()[i];
     }

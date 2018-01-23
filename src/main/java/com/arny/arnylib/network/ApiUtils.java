@@ -5,6 +5,8 @@ import android.util.Log;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
@@ -12,14 +14,25 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 public class ApiUtils {
 
-    public static <T> T getResponse(Object response, Class cls) {
+    public static <T> T fromJson(Object response, Class cls) {
+        return fromJson(response, cls, new Gson());
+    }
+
+    public static <T> T fromJson(Object response, Class cls, Gson gson) {
         String name = response.getClass().getSimpleName();
-        Log.d(ApiUtils.class.getSimpleName(), "getResponse: class: " + name + " response = " + response);
-        return (T) new Gson().fromJson(String.valueOf(response), cls);
+        Log.i(ApiUtils.class.getSimpleName(), "fromJson: class: " + name + " response = " + response + " to:" +cls.getSimpleName());
+        return (T) gson.fromJson(String.valueOf(response), cls);
+    }
+
+    public static String toJson(Object object) {
+        return toJson(object, new Gson());
+    }
+
+    public static String toJson(Object object, Gson gson) {
+        return gson.toJson(object);
     }
 
     public static <T> ArrayList<T> convertArray(JsonArray jArr, Class<?> clazz) {
@@ -38,16 +51,55 @@ public class ApiUtils {
     public static HashMap<String, String> getJsonObjectToHashMap(JSONObject params) {
         HashMap<String, String> mapParams = new HashMap<>();
         try {
-            if (params.names() != null) {
-                for (int i = 0; i < params.names().length(); i++) {
-                    mapParams.put(params.names().getString(i), (String) params.get(params.names().getString(i)));
-                }
+            for (Map.Entry<String, Object> entry : jsonToMap(params).entrySet()) {
+                mapParams.put(entry.getKey(), String.valueOf(entry.getValue()));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.d(NetworkService.class.getSimpleName(), "getJsonObjectToHashMap: mapParams = " + mapParams);
+        Log.i(NetworkService.class.getSimpleName(), "getJsonObjectToHashMap: mapParams = " + mapParams);
         return mapParams;
+    }
+
+
+    public static Map<String, Object> jsonToMap(JSONObject json) throws JSONException {
+        Map<String, Object> retMap = new HashMap<>();
+        if(json != JSONObject.NULL) {
+            retMap = toMap(json);
+        }
+        return retMap;
+    }
+
+    public static Map<String, Object> toMap(JSONObject object) throws JSONException {
+        Map<String, Object> map = new HashMap<>();
+        Iterator<String> keysItr = object.keys();
+        while(keysItr.hasNext()) {
+            String key = keysItr.next();
+            Object value = object.get(key);
+            if(value instanceof JSONArray) {
+                value = toList((JSONArray) value);
+            }
+            else if(value instanceof JSONObject) {
+                value = toMap((JSONObject) value);
+            }
+            map.put(key, value);
+        }
+        return map;
+    }
+
+    public static List<Object> toList(JSONArray array) throws JSONException {
+        List<Object> list = new ArrayList<>();
+        for(int i = 0; i < array.length(); i++) {
+            Object value = array.get(i);
+            if(value instanceof JSONArray) {
+                value = toList((JSONArray) value);
+            }
+            else if(value instanceof JSONObject) {
+                value = toMap((JSONObject) value);
+            }
+            list.add(value);
+        }
+        return list;
     }
 
     public static String getVolleyError(VolleyError error) {
@@ -64,6 +116,7 @@ public class ApiUtils {
         Log.e("api", " << Api onErrorResponse message = " + message);
         return message;
     }
+
 
     public static boolean isHostAvailable(String host, int port, int timeoutMs) {
         try {
