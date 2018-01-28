@@ -492,7 +492,7 @@ public class Utility {
 	}
 
 	@NonNull
-	public static <T> ArrayList<T> getExclideList(ArrayList<T> list, List<T> items, Comparator<T> comparator) {
+	public static <T> ArrayList<T> getExcludeList(ArrayList<T> list, List<T> items, Comparator<T> comparator) {
 		ArrayList<T> res = new ArrayList<>();
 		for (T t : list) {
 			int pos = Collections.binarySearch(items, t, comparator);

@@ -32,22 +32,22 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    // Tests
-    testCompile "org.robolectric:robolectric:3.6.1"
-    testImplementation 'junit:junit:4.12'
-    testCompile 'org.assertj:assertj-core:3.6.2'
-    androidTestCompile 'com.squareup.assertj:assertj-android:1.2.0'
-    androidTestCompile 'com.squareup.assertj:assertj-android-support-v4:1.2.0'
-    testCompile 'org.mockito:mockito-core:2.13.0'
-    androidTestCompile 'org.mockito:mockito-android:2.7.22'
-    androidTestCompile 'com.android.support.test:runner:1.0.1'
-    androidTestCompile 'com.android.support.test:rules:1.0.1'
-    // Espresso support
-    androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.1', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    androidTestCompile 'com.android.support.test.espresso:espresso-intents:3.0.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-web:3.0.1'
+//    // Tests
+//    testCompile "org.robolectric:robolectric:3.6.1"
+//    testImplementation 'junit:junit:4.12'
+//    testCompile 'org.assertj:assertj-core:3.6.2'
+//    androidTestCompile 'com.squareup.assertj:assertj-android:1.2.0'
+//    androidTestCompile 'com.squareup.assertj:assertj-android-support-v4:1.2.0'
+//    testCompile 'org.mockito:mockito-core:2.13.0'
+//    androidTestCompile 'org.mockito:mockito-android:2.7.22'
+//    androidTestCompile 'com.android.support.test:runner:1.0.1'
+//    androidTestCompile 'com.android.support.test:rules:1.0.1'
+//    // Espresso support
+//    androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.1', {
+//        exclude group: 'com.android.support', module: 'support-annotations'
+//    })
+//    androidTestCompile 'com.android.support.test.espresso:espresso-intents:3.0.1'
+//    androidTestCompile 'com.android.support.test.espresso:espresso-web:3.0.1'
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile "com.android.support:preference-v7:$rootProject.supportLibraryVersion"
@@ -98,6 +98,9 @@ dependencies {
         transitive = false
     }
     compile 'io.nlopez.smartlocation:rx:3.3.3'
+
+    compile 'com.facebook.stetho:stetho:1.5.0'
+    compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
 }
 repositories {
     mavenCentral()
