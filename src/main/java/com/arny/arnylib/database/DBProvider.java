@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import com.arny.arnylib.BuildConfig;
 import com.arny.arnylib.files.FileUtils;
 import com.arny.arnylib.utils.DroidUtils;
 import com.arny.arnylib.utils.Utility;
@@ -378,6 +377,7 @@ public class DBProvider {
 
 	public static Migration[] getRoomMigrations(Context context) {
 		ArrayList<String> migrationsFiles = getSortedRoomMigrations(FileUtils.listAssetFiles(context, "migrations"));
+		Log.d(DBProvider.class.getSimpleName(), "getRoomMigrations: migrationsFiles:" + migrationsFiles);
 		ArrayList<Migration> migrationArrayList = new ArrayList<>();
 		for (String migrationsFile : migrationsFiles) {
 			String sql = Utility.readAssetFile(context, "migrations", migrationsFile);
@@ -392,8 +392,34 @@ public class DBProvider {
 		return migrations;
 	}
 
+	public static void runRoomMigrations(Context context, SupportSQLiteDatabase database) {
+		ArrayList<String> migrationsFiles = getSortedRoomMigrations(FileUtils.listAssetFiles(context, "migrations"));
+		database.beginTransaction();
+		try {
+			for (String migrationsFile : migrationsFiles) {
+				String sql = Utility.readAssetFile(context, "migrations", migrationsFile);
+				int migrationVersion = getRoomMigrationVersion(migrationsFile, 0);
+				int version = database.getVersion();
+				Log.d(DBProvider.class.getSimpleName(), "runRoomMigrations: migrationsFile:" + migrationsFile
+						+ " version:" + version + " end:" + migrationVersion);
+				if (version == migrationVersion) {
+					if (sql != null) {
+						String[] sqls = sql.split(";");
+						for (String s : sqls) {
+							database.execSQL(s);
+						}
+					}
+				}
+			}
+			database.setTransactionSuccessful();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		database.endTransaction();
+	}
+
 	@NonNull
-	public static Migration addRoomMigration(int startVersion, int endVersion, String sql) {
+	private static Migration addRoomMigration(int startVersion, int endVersion, String sql) {
 		return new Migration(startVersion, endVersion) {
 			@Override
 			public void migrate(@NonNull SupportSQLiteDatabase database) {
