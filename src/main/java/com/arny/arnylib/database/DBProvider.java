@@ -1,6 +1,7 @@
 package com.arny.arnylib.database;
 
 import android.arch.persistence.db.SupportSQLiteDatabase;
+import android.arch.persistence.room.migration.Migration;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -312,7 +313,7 @@ public class DBProvider {
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 				}
-                if ((start < end) && end != 0) {
+                if (start != end && end != 0 && start != 0) {
                     list.add(filename);
                 }
             }
@@ -370,6 +371,62 @@ public class DBProvider {
 	public static String getRoomMigrationMatch(String filename) {
 		return Utility.match(filename, "^room_{1}(\\d+_{1}\\d+)_{1}.*\\.sql", 1);
 	}
+
+    @NonNull
+    private static Migration addRoomMigration(Context context, int startVersion, int endVersion, String migrationsFile) {
+        return new Migration(startVersion, endVersion) {
+            @Override
+            public void migrate(@NonNull SupportSQLiteDatabase database) {
+                runRoomMigrations(context, database, migrationsFile);
+            }
+        };
+    }
+
+    public static Migration[] getRoomMigrations(Context context) {
+        ArrayList<String> migrationsFiles = getSortedRoomMigrations(FileUtils.listAssetFiles(context, "migrations"));
+        Log.d(DBProvider.class.getSimpleName(), "getRoomMigrations: migrationsFiles:" + migrationsFiles);
+        ArrayList<Migration> migrationArrayList = new ArrayList<>();
+        for (String migrationsFile : migrationsFiles) {
+//            String sql = Utility.readAssetFile(context, "migrations", migrationsFile);
+            int start = getRoomMigrationVersion(migrationsFile, 0);
+            int end = getRoomMigrationVersion(migrationsFile, 1);
+            migrationArrayList.add(addRoomMigration(context, start, end, migrationsFile));
+        }
+        Migration[] migrations = new Migration[migrationArrayList.size()];
+        for (int i = 0; i < migrationArrayList.size(); i++) {
+            migrations[i] = migrationArrayList.get(i);
+        }
+        return migrations;
+    }
+
+    private static void runRoomMigrations(Context context, SupportSQLiteDatabase database, String migrationsFile) {
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.start();
+        String sql = Utility.readAssetFile(context, "migrations", migrationsFile);
+        int migrationVersion = getRoomMigrationVersion(migrationsFile, 0);
+        int version = database.getVersion();
+        Log.i(DBProvider.class.getSimpleName(), "runRoomMigrations: migrationsFile:" + migrationsFile + " version:" + version + " end:" + migrationVersion);
+        boolean canMigrate = version == 0 || version == migrationVersion;
+        if (canMigrate) {
+            if (sql != null) {
+                String[] sqls = sql.split(";");
+                database.beginTransaction();
+                try {
+                    for (String s : sqls) {
+                        if (!Utility.empty(s)) {
+                            database.execSQL(s);
+                        }
+                    }
+                    database.setTransactionSuccessful();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                database.endTransaction();
+            }
+        }
+        Log.i(DBProvider.class.getSimpleName(), "runRoomMigrations: database ALL execSQL...OK time:" + stopwatch.getElapsedTimeSecs(3));
+        stopwatch.stop();
+    }
 
     public static void runRoomMigrations(Context context, SupportSQLiteDatabase database) {
         ArrayList<String> migrationsFiles = getSortedRoomMigrations(FileUtils.listAssetFiles(context, "migrations"));
