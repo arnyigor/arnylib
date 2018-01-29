@@ -11,7 +11,7 @@ import android.util.Log;
 import com.arny.arnylib.files.FileUtils;
 import com.arny.arnylib.utils.Stopwatch;
 import com.arny.arnylib.utils.Utility;
-import com.arny.java.utils.KtlUtilsKt;
+import com.arny.java.utils.UtilsKt;
 import io.reactivex.Observable;
 import org.chalup.microorm.MicroOrm;
 import org.jetbrains.annotations.NotNull;
@@ -213,7 +213,7 @@ public class DBProvider {
 			field.setAccessible(true);
 			try {
 				String fldType = field.getType().getSimpleName();
-				String msg = " `" + field.getName() + "` " + KtlUtilsKt.getSQLType(fldType) + ",";
+				String msg = " `" + field.getName() + "` " + UtilsKt.getSQLType(fldType) + ",";
 				builder.append(msg);
 			} catch (Exception e) {
 				e.printStackTrace();
