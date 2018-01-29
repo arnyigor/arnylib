@@ -40,3 +40,21 @@ fun getSQLType(fieldType: String): String {
 fun <T> getIntentExtra(intent: Intent?, extraName: String): T? {
     return intent?.extras?.get(extraName) as? T
 }
+
+/**
+ * Универсальная функция окончаний
+ * @param [count] число
+ * @param [zero_other] слово с окончанием значения  [count] либо ноль,либо все остальные варианты включая от 11 до 19 (слов)
+ * @param [one] слово с окончанием значения  [count]=1 (слово)
+ * @param [two_four] слово с окончанием значения  [count]=2,3,4 (слова)
+ */
+fun getTermination(count: Int, zero_other: String, one: String, two_four: String): String {
+    if (count % 100 in 11..19) {
+        return count.toString() + " " + zero_other;
+    }
+    return when (count % 10) {
+        1 -> count.toString() + " " + one;
+        2, 3, 4 -> count.toString() + " " + two_four;
+        else -> count.toString() + " " + zero_other;
+    }
+}
