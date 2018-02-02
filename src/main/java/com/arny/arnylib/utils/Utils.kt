@@ -12,6 +12,16 @@ fun <T> find(list: List<T>, c: T, comp: Comparator<T>): T? {
     return null
 }
 
+fun <T> findPosition(list: List<T>, item: T): Int {
+    return list.indexOf(item)
+}
+
+fun <T> findPosition(list: Array<T>, item: T): Int {
+    return list.indexOf(item)
+}
+
+
+
 fun <T> getExcludeList(list: ArrayList<T>, items: List<T>, comparator: Comparator<T>): ArrayList<T> {
     val res = ArrayList<T>()
     for (t in list) {

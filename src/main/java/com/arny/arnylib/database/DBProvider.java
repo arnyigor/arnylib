@@ -8,8 +8,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import com.arny.arnylib.BuildConfig;
 import com.arny.arnylib.files.FileUtils;
 import com.arny.arnylib.utils.Stopwatch;
+import com.arny.arnylib.utils.ToastMaker;
 import com.arny.arnylib.utils.Utility;
 import com.arny.java.utils.UtilsKt;
 import io.reactivex.Observable;
@@ -300,9 +302,9 @@ public class DBProvider {
 	 * @return
 	 */
 	@NotNull
-	public static ArrayList<String> getSortedRoomMigrations(ArrayList<String> filenames) {
-		ArrayList<String> list = new ArrayList<>();
-		for (String filename : filenames) {
+    private static ArrayList<String> getSortedRoomMigrations(ArrayList<String> filenames) {
+        ArrayList<String> list = new ArrayList<>();
+        for (String filename : filenames) {
 			String match = getRoomMigrationMatch(filename);
 			if (!Utility.empty(match)) {
 				int start = 0;
@@ -405,7 +407,7 @@ public class DBProvider {
         String sql = Utility.readAssetFile(context, "migrations", migrationsFile);
         int migrationVersion = getRoomMigrationVersion(migrationsFile, 0);
         int version = database.getVersion();
-        Log.i(DBProvider.class.getSimpleName(), "runRoomMigrations: migrationsFile:" + migrationsFile + " version:" + version + " end:" + migrationVersion);
+        Log.d(DBProvider.class.getSimpleName(), "runRoomMigrations: migrationsFile:" + migrationsFile + " version:" + version + " end:" + migrationVersion);
         boolean canMigrate = version == 0 || version == migrationVersion;
         if (canMigrate) {
             if (sql != null) {
@@ -424,7 +426,7 @@ public class DBProvider {
                 database.endTransaction();
             }
         }
-        Log.i(DBProvider.class.getSimpleName(), "runRoomMigrations: database ALL execSQL...OK time:" + stopwatch.getElapsedTimeSecs(3));
+        Log.d(DBProvider.class.getSimpleName(), "runRoomMigrations: database ALL execSQL...OK time:" + stopwatch.getElapsedTimeSecs(3));
         stopwatch.stop();
     }
 
