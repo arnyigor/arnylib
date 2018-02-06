@@ -267,13 +267,10 @@ public class DroidUtils {
 	public static void alertDialog(Context context, String title, String btnOkText, final AlertDialogListener dialogListener) {
 		AlertDialog.Builder builder = new AlertDialog.Builder((new ContextThemeWrapper(context, android.R.style.Theme_Holo_Light_Dialog)));
 		builder.setTitle(title);
-		builder.setPositiveButton(btnOkText, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-				dialogListener.onConfirm();
-			}
-		});
+		builder.setPositiveButton(btnOkText, (dialog, which) -> {
+            dialog.dismiss();
+            dialogListener.onConfirm();
+        });
 		AlertDialog dialog = builder.create();
 		dialog.setCancelable(false);
 		dialog.show();
@@ -286,13 +283,10 @@ public class DroidUtils {
 		if (content != null) {
 			builder.setMessage(content);
 		}
-		builder.setPositiveButton(btnOkText, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-				dialogListener.onConfirm();
-			}
-		});
+		builder.setPositiveButton(btnOkText, (dialog, which) -> {
+            dialog.dismiss();
+            dialogListener.onConfirm();
+        });
 		AlertDialog dialog = builder.create();
 		dialog.setCancelable(false);
 		dialog.show();
