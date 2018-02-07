@@ -36,6 +36,15 @@ public class LibUnitTest {
     }
 
     @Test
+    public void transliterate() throws Exception {
+        String transliterate = UtilsKt.transliterate("игорь Седой юрьевич",true);
+        System.out.println(transliterate);
+        assertThat(transliterate).isNotNull();
+    }
+
+
+
+    @Test
     public void findPosition() throws Exception {
         String[] strings = {"f", "b", "1"};
         int position = UtilsKt.findPosition(strings, "1");
