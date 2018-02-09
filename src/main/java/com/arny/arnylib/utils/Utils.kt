@@ -40,7 +40,6 @@ fun <T> findPosition(list: Array<T>, item: T): Int {
 }
 
 
-
 fun <T> getExcludeList(list: ArrayList<T>, items: List<T>, comparator: Comparator<T>): ArrayList<T> {
     val res = ArrayList<T>()
     for (t in list) {

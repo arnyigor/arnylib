@@ -389,7 +389,6 @@ public class DBProvider {
         Log.d(DBProvider.class.getSimpleName(), "getRoomMigrations: migrationsFiles:" + migrationsFiles);
         ArrayList<Migration> migrationArrayList = new ArrayList<>();
         for (String migrationsFile : migrationsFiles) {
-//            String sql = Utility.readAssetFile(context, "migrations", migrationsFile);
             int start = getRoomMigrationVersion(migrationsFile, 0);
             int end = getRoomMigrationVersion(migrationsFile, 1);
             migrationArrayList.add(addRoomMigration(context, start, end, migrationsFile));
