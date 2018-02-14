@@ -285,7 +285,9 @@ public class DroidUtils {
 		}
 		builder.setPositiveButton(btnOkText, (dialog, which) -> {
             dialog.dismiss();
-            dialogListener.onConfirm();
+            if (dialogListener != null) {
+                dialogListener.onConfirm();
+            }
         });
 		AlertDialog dialog = builder.create();
 		dialog.setCancelable(false);

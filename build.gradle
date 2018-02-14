@@ -33,6 +33,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.core:core-ktx:0.1'
 //    // Tests
     testImplementation 'org.json:json:20140107'
     testImplementation "org.robolectric:robolectric:3.6.1"
