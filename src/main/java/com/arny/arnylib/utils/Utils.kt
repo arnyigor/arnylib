@@ -1,15 +1,10 @@
-package com.arny.java.utils
+package com.arny.arnylib.utils
 
 import android.content.Intent
 import java.util.*
 
 fun <T> find(list: List<T>, c: T, comp: Comparator<T>): T? {
-    for (t in list) {
-        if (comp.compare(c, t) == 0) {
-            return t
-        }
-    }
-    return null
+    return list.firstOrNull { comp.compare(c, it) == 0 }
 }
 
 @JvmOverloads
@@ -65,8 +60,8 @@ fun getSQLType(fieldType: String): String {
     return res
 }
 
-fun <T> getIntentExtra(intent: Intent?, extraName: String): T? {
-    return intent?.extras?.get(extraName) as? T
+ fun <T> getIntentExtra(intent: Intent?, extraName: String): T? {
+     return intent?.extras?.get(extraName) as? T
 }
 
 /**
