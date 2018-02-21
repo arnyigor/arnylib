@@ -10,6 +10,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         versionCode 1
         versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
     }
     sourceSets {
         main.resources.srcDirs += '../../modules/arnylib/src/main/assets'
@@ -32,7 +33,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation 'androidx.core:core-ktx:0.1'
 //    // Tests
     testImplementation 'org.json:json:20140107'
@@ -87,6 +88,7 @@ dependencies {
     kapt "android.arch.persistence.room:compiler:$archRoomVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$archRoomVersion"
     implementation "android.arch.persistence.room:rxjava2:$archRoomVersion"
+    implementation "android.arch.lifecycle:common-java8:1.1.0"
     compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
@@ -104,9 +106,6 @@ dependencies {
         transitive = false
     }
     compile 'io.nlopez.smartlocation:rx:3.3.3'
-
-    compile 'com.facebook.stetho:stetho:1.5.0'
-    compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
 }
 repositories {
     mavenCentral()
