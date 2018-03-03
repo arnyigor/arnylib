@@ -380,7 +380,6 @@ public class DateTimeUtils {
 
 	/**
 	 * получение даты String
-	 *
 	 * @param dateTime
 	 * @param format
 	 * @return String
@@ -402,7 +401,6 @@ public class DateTimeUtils {
 
 	/**
 	 * Конвертирование из одного формата в другой
-	 *
 	 * @param dateTimeFrom
 	 * @param formatfrom
 	 * @param formatTo
