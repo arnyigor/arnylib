@@ -12,7 +12,7 @@ import android.util.Log;
 import com.arny.arnylib.files.FileUtils;
 import com.arny.arnylib.utils.Stopwatch;
 import com.arny.arnylib.utils.Utility;
-import com.arny.java.utils.UtilsKt;
+import com.arny.arnylib.utils.UtilsKt;
 import io.reactivex.Observable;
 import org.chalup.microorm.MicroOrm;
 import org.jetbrains.annotations.NotNull;

@@ -1,1 +1,1 @@
--dontwarn org.bouncycastle.**
+-dontwarn org.bouncycastle.*

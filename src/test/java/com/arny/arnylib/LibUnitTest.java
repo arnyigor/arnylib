@@ -3,7 +3,7 @@ package com.arny.arnylib;
 import com.arny.arnylib.models.SMS;
 import com.arny.arnylib.utils.DateTimeUtils;
 import com.arny.arnylib.utils.Utility;
-import com.arny.java.utils.UtilsKt;
+import com.arny.arnylib.utils.UtilsKt;
 import org.junit.Test;
 
 import java.util.ArrayList;
