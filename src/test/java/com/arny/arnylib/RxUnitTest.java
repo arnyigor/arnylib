@@ -42,7 +42,6 @@ public class RxUnitTest {
                     RxJavaPlugins.setIoSchedulerHandler(scheduler -> Schedulers.trampoline());
                     RxJavaPlugins.setComputationSchedulerHandler(scheduler -> Schedulers.trampoline());
                     RxJavaPlugins.setNewThreadSchedulerHandler(scheduler -> Schedulers.trampoline());
-
 					try {
 						base.evaluate();
 					} finally {

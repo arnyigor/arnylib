@@ -378,14 +378,14 @@ public class Utility {
 		for (Field field : fields) {
 			field.setAccessible(true);
 			try {
-				String msg = field.getName() + ":'" + field.get(o) + "'(" + field.getType().getSimpleName() + "); ";
+				String msg = field.getName() + ":'" + field.get(o) + "'(" + field.getType().getSimpleName() + ");";
 				builder.append(msg);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			field.setAccessible(false);
 		}
-		builder.append(")");
+		builder.append(") \n");
 		return builder.toString();
 	}
 

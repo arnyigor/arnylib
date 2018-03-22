@@ -1,26 +1,21 @@
 package com.arny.arnylib.utils
 
-import android.R
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
-import android.support.v7.view.ContextThemeWrapper
-import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.arny.arnylib.interfaces.AlertDialogListener
 import com.arny.arnylib.interfaces.ChoiseDialogListener
 import com.arny.arnylib.interfaces.ConfirmDialogListener
 import com.arny.arnylib.interfaces.ListDialogListener
-import com.mikepenz.fastadapter.adapters.ItemAdapter.items
 
 
 @SuppressLint("RestrictedApi")
 @JvmOverloads
-fun alertDialog(context: Context, title: String, content: String? = null ) {
+fun alertDialog(context: Context, title: String, content: String? = null, dialogListener: AlertDialogListener? = null) {
     val dlg = MaterialDialog.Builder(context)
             .title(title)
             .cancelable(false)
+            .onPositive { _, _ -> dialogListener?.onConfirm() }
             .build()
     if (content != null) {
         dlg.setContent(content)
