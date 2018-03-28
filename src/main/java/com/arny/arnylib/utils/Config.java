@@ -3,12 +3,13 @@ package com.arny.arnylib.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 
 public class Config {
 
     private static SharedPreferences settings = null;
 
-    private static SharedPreferences getSettings(Context context) {
+    private static SharedPreferences getSettings(@NonNull Context context) {
         if(settings == null) {
             settings = PreferenceManager.getDefaultSharedPreferences(context);
         }
@@ -24,7 +25,7 @@ public class Config {
      * @return
      * Значение конфига
      */
-    public static String getString(String key, Context context) {
+    public static String getString(String key,@NonNull Context context) {
         settings = getSettings(context);
         return settings.getString(key, null);
     }
@@ -40,7 +41,7 @@ public class Config {
      * @return
      * Значение конфига
      */
-    public static String getString(String key, Context context,String defaultVal) {
+    public static String getString(String key,@NonNull Context context,String defaultVal) {
         settings = getSettings(context);
         return settings.getString(key, defaultVal);
     }
@@ -54,12 +55,12 @@ public class Config {
      * @return
      * Значение конфига
      */
-    public static Integer getInt(String key, Context context) {
+    public static Integer getInt(String key,@NonNull Context context) {
         settings = getSettings(context);
         return settings.getInt(key, 0);
     }
 
-	public static Long getLong(String key, Context context) {
+	public static Long getLong(String key,@NonNull Context context) {
 		settings = getSettings(context);
 		return settings.getLong(key, 0);
 	}
@@ -73,7 +74,7 @@ public class Config {
      * @return
      * Значение конфига
      */
-    public static boolean getBoolean(String key,boolean defaultVal, Context context) {
+    public static boolean getBoolean(String key,boolean defaultVal,@NonNull Context context) {
         settings = getSettings(context);
         return settings.getBoolean(key, defaultVal);
     }
@@ -87,7 +88,7 @@ public class Config {
      * @param context
      * Текущий контекст
      */
-    public static void setString(String key, String value, Context context) {
+    public static void setString(String key, String value,@NonNull Context context) {
         settings = getSettings(context);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(key, value);
@@ -103,7 +104,7 @@ public class Config {
      * @param context
      * Текущий контекст
      */
-    public static void setBoolean(String key, boolean value, Context context) {
+    public static void setBoolean(String key, boolean value,@NonNull Context context) {
         settings = getSettings(context);
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(key, value);
@@ -119,14 +120,14 @@ public class Config {
      * @param context
      * Текущий контекст
      */
-    public static void setInt(String key, Integer value, Context context) {
+    public static void setInt(String key, Integer value,@NonNull Context context) {
         settings = getSettings(context);
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt(key, value);
         editor.apply();
     }
 
-	public static void setLong(String key, long value, Context context) {
+	public static void setLong(String key, long value,@NonNull Context context) {
 		settings = getSettings(context);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putLong(key, value);
@@ -140,7 +141,7 @@ public class Config {
      * @param context
      * Контекст
      */
-    public static void remove(String key, Context context) {
+    public static void remove(String key,@NonNull Context context) {
         settings = getSettings(context);
         SharedPreferences.Editor editor = settings.edit();
         editor.remove(key);
