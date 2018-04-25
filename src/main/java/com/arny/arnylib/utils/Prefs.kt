@@ -3,7 +3,7 @@ package com.arny.arnylib.utils
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import androidx.content.edit
+import androidx.core.content.edit
 import com.arny.arnylib.database.SingletonHolder
 
 class Prefs private constructor(val context: Context) {
