@@ -1,15 +1,11 @@
 package com.arny.arnylib;
 
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
 
 import com.arny.arnylib.security.CryptoStrings;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
+import static junit.framework.Assert.assertEquals;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
 
 /**
  * Instrumented test, which will execute on an Android device.
