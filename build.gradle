@@ -56,8 +56,8 @@ dependencies {
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.github.GrenderG:Toasty:1.1.4'
-    compile 'com.github.bumptech.glide:glide:4.3.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
+    compile 'com.github.bumptech.glide:glide:4.6.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
     compile 'org.chalup.microorm:microorm:0.8.0'
     compile 'com.mikepenz:google-material-typeface:3.0.1.1.original@aar'
     compile 'com.mikepenz:material-design-iconic-typeface:2.2.0.3@aar'
@@ -75,10 +75,10 @@ dependencies {
     compile 'com.jakewharton.rxbinding2:rxbinding-design:2.1.1'
     compile 'com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:2.1.1'
     /*ROOM DB*/
-    compile "android.arch.persistence.room:runtime:$archRoomVersion"
-    kapt "android.arch.persistence.room:compiler:$archRoomVersion"
-    annotationProcessor "android.arch.persistence.room:compiler:$archRoomVersion"
-    compile "android.arch.persistence.room:rxjava2:$archRoomVersion"
+    implementation  "android.arch.persistence.room:runtime:$rootProject.archRoomVersion"
+    kapt "android.arch.persistence.room:compiler:$rootProject.archRoomVersion"
+    annotationProcessor "android.arch.persistence.room:compiler:$rootProject.archRoomVersion"
+    implementation "android.arch.persistence.room:rxjava2:$rootProject.archRoomVersion"
     compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
