@@ -2,6 +2,7 @@ package com.arny.arnylib.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.support.annotation.ArrayRes
 import com.afollestad.materialdialogs.MaterialDialog
 import com.arny.arnylib.interfaces.AlertDialogListener
 import com.arny.arnylib.interfaces.ChoiseDialogListener
@@ -35,6 +36,20 @@ fun listDialog(context: Context, vararg items: String, title: String? = null, ca
             .build()
     dlg.show()
 }
+
+@JvmOverloads
+fun listDialog(context: Context, @ArrayRes items: Int, title: String? = null, cancelable: Boolean = false, dialogListener: ListDialogListener? = null) {
+    val dlg = MaterialDialog.Builder(context)
+            .title(title.toString())
+            .cancelable(cancelable)
+            .items(items)
+            .itemsCallback({ _, _, which, _ ->
+                dialogListener?.onClick(which)
+            })
+            .build()
+    dlg.show()
+}
+
 
 @JvmOverloads
 fun checkDialog(context: Context, title: String? = null, items: Array<String>, itemsSelected: Array<Int>? = null, cancelable: Boolean = false, dialogListener: ChoiseDialogListener? = null) {
