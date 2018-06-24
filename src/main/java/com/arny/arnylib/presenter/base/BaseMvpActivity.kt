@@ -13,7 +13,7 @@ abstract class BaseMvpActivity<in V : BaseMvpView, T : BaseMvpPresenter<V>> : Ap
 
     protected abstract val mPresenter: T
 
-    override fun showError(error: String?) {
+    override fun toastError(error: String?) {
         ToastMaker.toastError(this, error)
     }
 

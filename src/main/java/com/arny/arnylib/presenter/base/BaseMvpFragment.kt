@@ -14,7 +14,7 @@ abstract class BaseMvpFragment<in V : BaseMvpView, T : BaseMvpPresenter<V>> : Fr
 
     protected abstract val mPresenter: T
 
-    override fun showError(error: String?) {
+    override fun toastError(error: String?) {
         ToastMaker.toastError(context, error)
     }
 
