@@ -22,6 +22,10 @@ abstract class BaseRepository : BaseRepositoryContract {
         getContext().let { Config.setString(key, value, it) }
     }
 
+    override fun setPrefInt(key: String, value: Int) {
+        getContext().let { Config.setInt(key, value, it) }
+    }
+
     override fun setPrefBoolean(key: String, value: Boolean) {
         getContext().let { Config.setBoolean(key, value, it) }
     }

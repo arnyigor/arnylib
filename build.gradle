@@ -65,28 +65,28 @@ dependencies {
     compile 'org.chalup.microorm:microorm:0.8.0'
     compile 'com.mikepenz:google-material-typeface:3.0.1.1.original@aar'
     compile 'com.mikepenz:material-design-iconic-typeface:2.2.0.3@aar'
-    compile 'com.android.support.constraint:constraint-layout:1.1.0'
+    compile "com.android.support.constraint:constraint-layout:$rootProject.constraintVersion"
     compile('com.mikepenz:materialdrawer:5.8.1@aar') {
         transitive = true
     }
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.2'
-    compile 'io.reactivex.rxjava2:rxjava:2.1.12'
-    compile 'com.facebook.stetho:stetho:1.5.0'
-    compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
-    compile 'com.jakewharton.rxbinding2:rxbinding:2.1.1'
-    compile 'com.jakewharton.rxbinding2:rxbinding-support-v4:2.1.1'
-    compile 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.1.1'
-    compile 'com.jakewharton.rxbinding2:rxbinding-design:2.1.1'
-    compile 'com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:2.1.1'
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjavaVersion"
+    implementation 'com.facebook.stetho:stetho:1.5.0'
+    implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
+    implementation "com.jakewharton.rxbinding2:rxbinding:$rootProject.rxbindingVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding-support-v4:$rootProject.rxbindingVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rootProject.rxbindingVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding-design:$rootProject.rxbindingVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$rootProject.rxbindingVersion"
     /*ROOM DB*/
     implementation  "android.arch.persistence.room:runtime:$rootProject.archRoomVersion"
     kapt "android.arch.persistence.room:compiler:$rootProject.archRoomVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$rootProject.archRoomVersion"
     implementation "android.arch.persistence.room:rxjava2:$rootProject.archRoomVersion"
-    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-    compile 'com.squareup.okhttp3:okhttp:3.9.1'
+    compile "com.squareup.retrofit2:adapter-rxjava2:$rootProject.retrofit2Version"
+    compile "com.squareup.retrofit2:retrofit:$rootProject.retrofit2Version"
+    compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofit2Version"
+    compile 'com.squareup.okhttp3:okhttp:3.10.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'
     compile 'joda-time:joda-time:2.9.9'
     compile 'com.code-troopers.betterpickers:library:3.1.0'
