@@ -57,6 +57,8 @@ dependencies {
     compile "com.android.support:support-compat:$rootProject.supportLibraryVersion"
     compile "com.android.support:support-core-ui:$rootProject.supportLibraryVersion"
     compile "com.android.support:support-fragment:$rootProject.supportLibraryVersion"
+    compile 'com.facebook.stetho:stetho:1.5.0'
+    compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.github.GrenderG:Toasty:1.1.4'
