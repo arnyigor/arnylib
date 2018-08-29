@@ -5,178 +5,124 @@ import android.arch.persistence.room.migration.Migration;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import com.arny.arnylib.BuildConfig;
 import com.arny.arnylib.files.FileUtils;
-import com.arny.arnylib.utils.DroidUtils;
+import com.arny.arnylib.utils.Stopwatch;
 import com.arny.arnylib.utils.Utility;
-import com.arny.java.utils.KtlUtilsKt;
+import com.arny.arnylib.utils.UtilsKt;
 import io.reactivex.Observable;
 import org.chalup.microorm.MicroOrm;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.RandomAccessFile;
 import java.lang.reflect.Field;
-import java.nio.ByteBuffer;
 import java.util.*;
 
 public class DBProvider {
 
-    public static long insertDB(String table, ContentValues contentValues, Context context) {
-        Log.d(DBProvider.class.getSimpleName(), "insertDB: table:" + table + " contentValues:" + contentValues  );
-        long rowID = 0;
-        try {
-            rowID = connectDB(context).insert(table, null, contentValues);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        disconnectDB(context);
-        return rowID;
-    }
+	public static long insertDB(String table, ContentValues contentValues, Context context) {
+		Log.d(DBProvider.class.getSimpleName(), "insertDB: table:" + table + " contentValues:" + contentValues);
+		long rowID = 0;
+		SQLiteDatabase db = connectDB(context);
+		db.beginTransaction();
+		rowID = db.insert(table, null, contentValues);
+		db.setTransactionSuccessful();
+		db.endTransaction();
+		return rowID;
+	}
 
-	public static int insertReplaceDB(Context context, String table, String where, String[] args, ContentValues cv){
-        Cursor cursor = null;
-        try {
-            cursor = selectDB(table, null, where,args,null,context);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (cursor != null && cursor.moveToFirst()) {
-			return updateDB(table, cv, where,args, context);
-		}else{
+	public static int insertReplaceDB(Context context, String table, String where, String[] args, ContentValues cv) {
+		Log.d(DBProvider.class.getSimpleName(), "insertReplaceDB: table:" + table + " ContentValues:" + cv + " where:" + where + " args:" + Arrays.toString(args));
+		Cursor cursor = selectDB(table, null, where, args, null, context);
+		if (cursor != null && cursor.moveToFirst()) {
+			return updateDB(table, cv, where, args, context);
+		} else {
 			return (int) insertDB(table, cv, context);
 		}
 	}
 
 	public static long insertOrUpdateDB(Context context, String table, ContentValues contentValues) {
-        if (BuildConfig.DEBUG) {
-            Log.d(DBProvider.class.getSimpleName(), "insertOrUpdateDB: table:" + table + " contentValues:" + contentValues  );
-        }
-        long rowID = 0;
-        try {
-            rowID = connectDB(context).insertWithOnConflict(table, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        disconnectDB(context);
+		Log.d(DBProvider.class.getSimpleName(), "insertOrUpdateDB: table:" + table + " contentValues:" + contentValues);
+		long rowID = 0;
+		SQLiteDatabase db = connectDB(context);
+		db.beginTransaction();
+		rowID = db.insertWithOnConflict(table, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+		db.setTransactionSuccessful();
+		db.endTransaction();
 		return rowID;
 	}
 
-    public static Cursor selectDB(String table, String[] columns, String where, String orderBy, Context context) {
-        if (BuildConfig.DEBUG) {
-            Log.d(DBProvider.class.getSimpleName(), "selectDB: table:" + table + " columns:" + Arrays.toString(columns) + " where:"+  where + " orderBy:"+  orderBy);
-        }
-        Cursor query = null;
-        try {
-            query = connectDB(context).query(table, columns, where, null, null, null, orderBy);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return query;
-    }
-
-    public static Cursor selectDB(String table, String[] columns, String where, String[] whereArgs, String orderBy, Context context) {
-        if (BuildConfig.DEBUG) {
-            Log.d(DBProvider.class.getSimpleName(), "selectDB: table:" + table + " columns:" + Arrays.toString(columns) + " where:"+  where  + " whereArgs:"+ Arrays.toString(whereArgs) + " orderBy:"+  orderBy);
-        }
-        Cursor query = null;
-        try {
-            query = connectDB(context).query(table, columns, where, whereArgs, null, null, orderBy);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return query;
-    }
-
-    public static Cursor queryDB(String sqlQuery, String[] selectionArgs, Context context) {
-        if (BuildConfig.DEBUG) {
-            Log.d(DBProvider.class.getSimpleName(), "queryDB: query:" + sqlQuery + " selectionArgs:" + Arrays.toString(selectionArgs));
-        }
-        Cursor cursor = null;
-        try {
-            cursor = connectDB(context).rawQuery(sqlQuery, selectionArgs);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return cursor;
-    }
-
-    public static int deleteDB(String table, String where, Context context) {
-        if (BuildConfig.DEBUG) {
-            Log.d(DBProvider.class.getSimpleName(), "deleteDB: table:" + table + " where:" + where);
-        }
-        int rowCount = 0;
-        try {
-            rowCount = connectDB(context).delete(table, where, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        disconnectDB(context);
-        return rowCount;
-    }
-
-    public static int deleteDB(String table, String where, String[] whereArgs, Context context) {
-        if (BuildConfig.DEBUG) {
-            Log.d(DBProvider.class.getSimpleName(), "deleteDB: table:" + table + " where:" + where + "=whereArgs:" + Arrays.toString(whereArgs));
-        }
-        int rowCount = 0;
-        try {
-            rowCount = connectDB(context).delete(table, where, whereArgs);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        disconnectDB(context);
-        return rowCount;
-    }
-
-    public static int updateDB(String table, ContentValues contentValues, String where, Context context) {
-        if (BuildConfig.DEBUG) {
-            Log.d(DBProvider.class.getSimpleName(), "updateDB: table:" + table + " contentValues:" + contentValues + " where:" + where);
-        }
-        int rowCount = 0;
-        try {
-            rowCount = connectDB(context).update(table, contentValues, where, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        disconnectDB(context);
-        return rowCount;
-    }
-
-    public static int updateDB(String table, ContentValues contentValues, String where, String[] whereArgs, Context context) {
-        if (BuildConfig.DEBUG) {
-            Log.d(DBProvider.class.getSimpleName(), "updateDB: table:" + table + " contentValues:" + contentValues + " where:" + where + " whereArgs:" + Arrays.toString(whereArgs));
-        }
-        int rowCount = 0;
-        try {
-            rowCount = connectDB(context).update(table, contentValues, where, whereArgs);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        disconnectDB(context);
-        return rowCount;
-    }
-
-	public static void initDB(Context context,String name,int version) {
-		DBHelper.dbName = name;
-		DBHelper.dbVersion = version;
-		connectDB(context).getVersion();
-		disconnectDB(context);
+	public static Cursor selectDB(String table, String[] columns, String where, String orderBy, Context context) {
+		Log.d(DBProvider.class.getSimpleName(), "selectDB: table:" + table + " columns:" + Arrays.toString(columns) + " where:" + where + " orderBy:" + orderBy);
+		return connectDB(context).query(table, columns, where, null, null, null, orderBy);
 	}
 
-    private static void disconnectDB(Context context) {
-        SQLiteDatabase db = DBHelper.getInstance(context).getReadableDatabase();
-        if (db != null && db.isOpen()) {
-            db.close();
-        }
-    }
+	public static Cursor selectDB(String table, String[] columns, String where, String[] whereArgs, String orderBy, Context context) {
+		Log.d(DBProvider.class.getSimpleName(), "selectDB: table:" + table + " columns:" + Arrays.toString(columns) + " where:" + where + " whereArgs:" + Arrays.toString(whereArgs) + " orderBy:" + orderBy);
+		return connectDB(context).query(table, columns, where, whereArgs, null, null, orderBy);
+	}
 
-    private static SQLiteDatabase connectDB(Context context) {
-        return DBHelper.getInstance(context).getWritableDatabase();
-    }
+	public static Cursor queryDB(String sqlQuery, String[] selectionArgs, Context context) {
+		Log.d(DBProvider.class.getSimpleName(), "queryDB: query:" + sqlQuery + " selectionArgs:" + Arrays.toString(selectionArgs));
+		return connectDB(context).rawQuery(sqlQuery, selectionArgs);
+	}
+
+	public static int deleteDB(String table, String where, Context context) {
+		Log.d(DBProvider.class.getSimpleName(), "deleteDB: table:" + table + " where:" + where);
+		int rowCount;
+		SQLiteDatabase db = connectDB(context);
+		db.beginTransaction();
+		rowCount = db.delete(table, where, null);
+		db.setTransactionSuccessful();
+		db.endTransaction();
+		return rowCount;
+	}
+
+	public static int deleteDB(String table, String where, String[] whereArgs, Context context) {
+		Log.d(DBProvider.class.getSimpleName(), "deleteDB: table:" + table + " where:" + where + "=whereArgs:" + Arrays.toString(whereArgs));
+		int rowCount = 0;
+		SQLiteDatabase db = connectDB(context);
+		db.beginTransaction();
+		rowCount = db.delete(table, where, whereArgs);
+		db.setTransactionSuccessful();
+		db.endTransaction();
+		return rowCount;
+	}
+
+	public static int updateDB(String table, ContentValues contentValues, String where, Context context) {
+		Log.d(DBProvider.class.getSimpleName(), "updateDB: table:" + table + " contentValues:" + contentValues + " where:" + where);
+		int rowCount = 0;
+		SQLiteDatabase db = connectDB(context);
+		db.beginTransaction();
+		rowCount = db.update(table, contentValues, where, null);
+		db.setTransactionSuccessful();
+		db.endTransaction();
+		return rowCount;
+	}
+
+	public static int updateDB(String table, ContentValues contentValues, String where, String[] whereArgs, Context context) {
+		Log.d(DBProvider.class.getSimpleName(), "updateDB: table:" + table + " contentValues:" + contentValues + " where:" + where + " whereArgs:" + Arrays.toString(whereArgs));
+		int rowCount = 0;
+		SQLiteDatabase db = connectDB(context);
+		db.beginTransaction();
+		rowCount = db.update(table, contentValues, where, whereArgs);
+		db.setTransactionSuccessful();
+		db.endTransaction();
+		return rowCount;
+	}
+
+	public static void initDB(Context context, String name, int version) {
+		DBHelper.dbName = name;
+		DBHelper.dbVersion = version;
+		SQLiteDatabase db = connectDB(context);
+		db.getVersion();
+	}
+
+	private static SQLiteDatabase connectDB(Context context) {
+		return DBHelper.getInstance(context).getWritableDatabase();
+	}
 
 	public static int getCursorInt(Cursor cursor, String columnname) {
 		return cursor.getInt(cursor.getColumnIndex(columnname));
@@ -198,69 +144,54 @@ public class DBProvider {
 		return Double.parseDouble(getCursorString(cursor, columnname));
 	}
 
-    public static <T> ArrayList<T> getCursorObjectList(Cursor cursor, Class<? extends T> clazz) {
-        ArrayList<T> queue = new ArrayList<>();
-        if (cursor != null && cursor.getCount() > 0) {
-            if (cursor.moveToFirst()) {
-                do {
-                    queue.add(new MicroOrm().fromCursor(cursor, clazz));
-                } while (cursor.moveToNext());
-                cursor.close();
-            }
-        }
-        return queue;
-    }
-
-    public static <T> Observable<ArrayList<T>> getCursorObjectsListRx(Cursor cursor, Class<? extends T> clazz) {
-        return Observable.create(e -> {
-            e.onNext(getCursorObjectList(cursor, clazz));
-            e.onComplete();
-        });
-    }
-
-    public static <T> Observable<ArrayList<T>> getObjectsListRx(Context context, String table, String[] columns, String where, String[] whereArgs, String orderBy, Class<? extends T> clazz) {
-        return Observable.create(e -> {
-            e.onNext(getCursorObjectList(selectDB(table,columns,where,whereArgs,orderBy,context), clazz));
-            e.onComplete();
-        });
-    }
-
-    public static <T> Observable<T> getCursorObjectRx(Cursor cursor, Class<?> clazz) {
-        return Observable.create(e -> {
-            e.onNext(getCursorObject(cursor, clazz));
-            e.onComplete();
-        });
-    }
-
-    public static <T> Observable<T> getObjectRx(Context context, String table, String[] columns, String where, String[] whereArgs, String orderBy, Class<?> clazz) {
-        return Observable.create(e -> {
-            e.onNext(getCursorObject(selectDB(table,columns,where,whereArgs,orderBy,context), clazz));
-            e.onComplete();
-        });
-    }
-
-    public static <T> T getCursorObject(Cursor cursor, Class<?> clazz) {
-        if (cursor != null && cursor.getCount() > 0) {
-            if (cursor.moveToFirst()) {
-                T obj = (T) new MicroOrm().fromCursor(cursor, clazz);
-                cursor.close();
-                return obj;
-            }
-        }
-        return null;
-    }
-
-    public static <T> long saveObject(Context context, String table, T o) {
-        ContentValues values = new MicroOrm().toContentValues(o);
-		return insertOrUpdateDB(context,table, values);
+	public static <T> ArrayList<T> getCursorObjectList(Cursor cursor, Class<? extends T> clazz) {
+		ArrayList<T> queue = new ArrayList<>();
+		if (cursor != null && cursor.getCount() > 0) {
+			if (cursor.moveToFirst()) {
+				do {
+					queue.add(new MicroOrm().fromCursor(cursor, clazz));
+				} while (cursor.moveToNext());
+				cursor.close();
+			}
+		}
+		return queue;
 	}
 
-    public static <T> Observable<Long> saveObjectRx(Context context, String table, T o) {
-        return Observable.create(e -> {
-            e.onNext(insertOrUpdateDB(context, table, new MicroOrm().toContentValues(o)));
-            e.onComplete();
-        });
-    }
+	public static <T> Observable<ArrayList<T>> getCursorObjectsListRx(Cursor cursor, Class<? extends T> clazz) {
+		return Observable.fromCallable(() -> getCursorObjectList(cursor, clazz));
+	}
+
+	public static <T> Observable<ArrayList<T>> getObjectsListRx(Context context, String table, String[] columns, String where, String[] whereArgs, String orderBy, Class<? extends T> clazz) {
+		return Observable.fromCallable(() -> getCursorObjectList(selectDB(table, columns, where, whereArgs, orderBy, context), clazz));
+	}
+
+	public static <T> Observable<T> getCursorObjectRx(Cursor cursor, Class<?> clazz) {
+		return Observable.fromCallable(() -> getCursorObject(cursor, clazz));
+	}
+
+	public static <T> Observable<T> getObjectRx(Context context, String table, String[] columns, String where, String[] whereArgs, String orderBy, Class<?> clazz) {
+		return Observable.fromCallable(() -> getCursorObject(selectDB(table, columns, where, whereArgs, orderBy, context), clazz));
+	}
+
+	public static <T> T getCursorObject(Cursor cursor, Class<?> clazz) {
+		if (cursor != null && cursor.getCount() > 0) {
+			if (cursor.moveToFirst()) {
+				T obj = (T) new MicroOrm().fromCursor(cursor, clazz);
+				cursor.close();
+				return obj;
+			}
+		}
+		return null;
+	}
+
+	public static <T> long saveObject(Context context, String table, T o) {
+		ContentValues values = new MicroOrm().toContentValues(o);
+		return insertOrUpdateDB(context, table, values);
+	}
+
+	public static <T> Observable<Long> saveObjectRx(Context context, String table, T o) {
+		return Observable.fromCallable(() -> insertOrUpdateDB(context, table, new MicroOrm().toContentValues(o)));
+	}
 
 	public static String convertToSQLTable(Object o, String[] fldsToSave) {
 		Collection<Field> fields = new ArrayList<>();
@@ -283,7 +214,7 @@ public class DBProvider {
 			field.setAccessible(true);
 			try {
 				String fldType = field.getType().getSimpleName();
-				String msg = " `" + field.getName() + "` " + KtlUtilsKt.getSQLType(fldType) + ",";
+				String msg = " `" + field.getName() + "` " + UtilsKt.getSQLType(fldType) + ",";
 				builder.append(msg);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -363,123 +294,165 @@ public class DBProvider {
 		return aClass.getSimpleName().toLowerCase();
 	}
 
-    /**
-     * Сортировка файлов миграций Room
-     *
-     * @param filenames
-     * @return
-     */
-    @NotNull
-    public static ArrayList<String> getSortedRoomMigrations(ArrayList<String> filenames) {
-        ArrayList<String> list = new ArrayList<>();
-        for (String filename : filenames) {
-            String match = getRoomMigrationMatch(filename);
-            if (!Utility.empty(match)) {
-                int start = 0;
-                int end = 0;
-                try {
-                    start = getRoomMigrationVersion(filename, 0);
-                    end = getRoomMigrationVersion(filename, 1);
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                }
-                if ((start != 0 && end != 0) && (start < end)) {
-                    list.add(filename);
-                }
-            }
-        }
-        Collections.sort(list, (o1, o2) -> {
-            int start1 = 0;
-            int end1 = 0;
-            int start2 = 0;
-            int end2 = 0;
-            try {
-                String match1 = getRoomMigrationMatch(o1);
-                String match2 = getRoomMigrationMatch(o2);
-                if (!Utility.empty(match1) && !Utility.empty(match2)) {
-                    start1 = getRoomMigrationVersion(o1, 0);
-                    end1 = getRoomMigrationVersion(o1, 1);
-                    start2 = getRoomMigrationVersion(o2, 0);
-                    end2 = getRoomMigrationVersion(o2, 1);
-                }
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-            if (start1 == start2 && end1 == end2) {
-                return 0;
-            }
-            int compareStart = Integer.compare(start1, start2);
-            if (compareStart != 0) {
-                return compareStart;
-            }
-            int compareEnd = Integer.compare(end1, end2);
-            if (compareEnd != 0) {
-                return compareEnd;
-            }
-            return 0;
-        });
-        return list;
-    }
+	/**
+	 * Сортировка файлов миграций Room
+	 *
+	 * @param filenames
+	 * @return
+	 */
+	@NotNull
+	private static ArrayList<String> getSortedRoomMigrations(ArrayList<String> filenames) {
+		ArrayList<String> list = new ArrayList<>();
+		for (String filename : filenames) {
+			String match = getRoomMigrationMatch(filename);
+			if (!Utility.empty(match)) {
+				int start = 0;
+				int end = 0;
+				try {
+					start = getRoomMigrationVersion(filename, 0);
+					end = getRoomMigrationVersion(filename, 1);
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
+				if (start != end && end != 0 && start != 0) {
+					list.add(filename);
+				}
+			}
+		}
+		Collections.sort(list, (o1, o2) -> {
+			int start1 = 0;
+			int end1 = 0;
+			int start2 = 0;
+			int end2 = 0;
+			try {
+				String match1 = getRoomMigrationMatch(o1);
+				String match2 = getRoomMigrationMatch(o2);
+				if (!Utility.empty(match1) && !Utility.empty(match2)) {
+					start1 = getRoomMigrationVersion(o1, 0);
+					end1 = getRoomMigrationVersion(o1, 1);
+					start2 = getRoomMigrationVersion(o2, 0);
+					end2 = getRoomMigrationVersion(o2, 1);
+				}
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+			if (start1 == start2 && end1 == end2) {
+				return 0;
+			}
+			int compareStart = Integer.compare(start1, start2);
+			if (compareStart != 0) {
+				return compareStart;
+			}
+			int compareEnd = Integer.compare(end1, end2);
+			if (compareEnd != 0) {
+				return compareEnd;
+			}
+			return 0;
+		});
+		return list;
+	}
 
-    /**
-     * Версия миграции
-     *
-     * @param filename имя файла
-     * @param position 0 - start|1 - finish
-     * @return номер версии
-     */
-    public static int getRoomMigrationVersion(String filename, int position) {
-        return Integer.parseInt(getRoomMigrationMatch(filename).split("_")[position]);
-    }
+	/**
+	 * Версия миграции
+	 *
+	 * @param filename имя файла
+	 * @param position 0 - start|1 - finish
+	 * @return номер версии
+	 */
+	public static int getRoomMigrationVersion(String filename, int position) {
+		return Integer.parseInt(getRoomMigrationMatch(filename).split("_")[position]);
+	}
 
-    /**
-     * Нахождение версий миграций библиотеки Room
-     *
-     * @param filename
-     * @return
-     */
-    public static String getRoomMigrationMatch(String filename) {
-        return Utility.match(filename, "^room_{1}(\\d+_{1}\\d+)_{1}.*\\.sql", 1);
-    }
+	/**
+	 * Нахождение версий миграций библиотеки Room
+	 *
+	 * @param filename
+	 * @return
+	 */
+	public static String getRoomMigrationMatch(String filename) {
+		return Utility.match(filename, "^room_{1}(\\d+_{1}\\d+)_{1}.*\\.sql", 1);
+	}
 
-    public static Migration[] getRoomMigrations(Context context) {
-        ArrayList<String> migrationsFiles = getSortedRoomMigrations(FileUtils.listAssetFiles(context, "migrations"));
-        ArrayList<Migration> migrationArrayList = new ArrayList<>();
-        for (String migrationsFile : migrationsFiles) {
-            String sql = Utility.readAssetFile(context, "migrations", migrationsFile);
-            int start = getRoomMigrationVersion(migrationsFile, 0);
-            int end = getRoomMigrationVersion(migrationsFile, 1);
-            migrationArrayList.add(addRoomMigration(start, end, sql));
-        }
-        Migration[] migrations = new Migration[migrationArrayList.size()];
-        for (int i = 0; i < migrationArrayList.size(); i++) {
-            migrations[i] = migrationArrayList.get(i);
-        }
-        return migrations;
-    }
+	@NonNull
+	private static Migration addRoomMigration(Context context, int startVersion, int endVersion, String migrationsFile) {
+		Log.d(DBProvider.class.getSimpleName(), "addRoomMigration:  startVersion:" + startVersion + " endVersion:" + endVersion);
+		return new Migration(startVersion, endVersion) {
+			@Override
+			public void migrate(@NonNull SupportSQLiteDatabase database) {
+				runRoomMigrations(context, database, migrationsFile);
+			}
+		};
+	}
 
-    @NonNull
-    public static Migration addRoomMigration(int startVersion, int endVersion, String sql) {
-        return new Migration(startVersion, endVersion) {
-            @Override
-            public void migrate(@NonNull SupportSQLiteDatabase database) {
-                database.beginTransaction();
-                String[] splittedSqls = sql.split("\\;");
-                for (String splittedSql : splittedSqls) {
-                    String sql = splittedSql.trim();
-                    database.execSQL(sql);
-                }
-                database.endTransaction();
-            }
-        };
-    }
+	public static Migration[] getRoomMigrations(Context context) {
+		ArrayList<String> migrationsFiles = getSortedRoomMigrations(FileUtils.listAssetFiles(context, "migrations"));
+		Log.d(DBProvider.class.getSimpleName(), "getRoomMigrations: файлы миграции:" + migrationsFiles);
+		ArrayList<Migration> migrationArrayList = new ArrayList<>();
+		for (String migrationsFile : migrationsFiles) {
+			int start = getRoomMigrationVersion(migrationsFile, 0);
+			int end = getRoomMigrationVersion(migrationsFile, 1);
+			migrationArrayList.add(addRoomMigration(context, start, end, migrationsFile));
+		}
+		Migration[] migrations = new Migration[migrationArrayList.size()];
+		for (int i = 0; i < migrationArrayList.size(); i++) {
+			migrations[i] = migrationArrayList.get(i);
+			Migration migration = migrationArrayList.get(i);
+			Log.i(DBProvider.class.getSimpleName(), "getRoomMigrations:startVersion:" +
+					migration.startVersion + " endVersion:" + migration.endVersion);
+		}
+		return migrations;
+	}
 
-    public static int getDbVersionFromFile(Context context, String filename) throws Exception {
-        File file = DroidUtils.dumpDB(context, filename);
-        RandomAccessFile fp = new RandomAccessFile(file, "r");
-        fp.seek(60);
-        byte[] buff = new byte[4];
-        fp.read(buff, 0, 4);
-        return ByteBuffer.wrap(buff).getInt();
-    }
+	private static void runRoomMigrations(Context context, SupportSQLiteDatabase database, String migrationsFile) {
+		Stopwatch stopwatch = new Stopwatch();
+		stopwatch.start();
+		Cursor cursorMigrations = database.query("SELECT filename FROM migrations WHERE filename='" + migrationsFile + "'");
+		if (cursorMigrations == null || cursorMigrations.getCount() == 0) {
+			String sql = Utility.readAssetFile(context, "migrations", migrationsFile);
+			int migrationVersion = getRoomMigrationVersion(migrationsFile, 0);
+			int version = database.getVersion();
+			Log.d(DBProvider.class.getSimpleName(), "runRoomMigrations: migrationsFile:" + migrationsFile + " version:" + version + " end:" + migrationVersion);
+			runMigration(database, migrationsFile, sql);
+		}
+		Log.d(DBProvider.class.getSimpleName(), "runRoomMigrations: database ALL execSQL...OK time:" + stopwatch.getElapsedTimeSecs(3));
+		stopwatch.stop();
+	}
+
+	private static void runMigration(SupportSQLiteDatabase database, String migrationsFile, String sql) {
+		if (sql != null) {
+			String[] sqls = sql.split(";");
+			database.beginTransaction();
+			try {
+				for (String s : sqls) {
+					if (!Utility.empty(s)) {
+						database.execSQL(s);
+					}
+				}
+				database.execSQL("INSERT INTO migrations (filename) VALUES ('" + migrationsFile + "');");
+				database.setTransactionSuccessful();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			database.endTransaction();
+		}
+	}
+
+	public static void runRoomMigrations(Context context, SupportSQLiteDatabase database) {
+		ArrayList<String> migrationsFiles = getSortedRoomMigrations(FileUtils.listAssetFiles(context, "migrations"));
+		Stopwatch stopwatch = new Stopwatch();
+		stopwatch.start();
+		for (String migrationsFile : migrationsFiles) {
+			Cursor cursorMigrations = database.query("SELECT filename FROM migrations WHERE filename='" + migrationsFile + "'");
+			if (cursorMigrations == null || cursorMigrations.getCount() == 0) {
+				String sql = Utility.readAssetFile(context, "migrations", migrationsFile);
+				int migrationVersion = getRoomMigrationVersion(migrationsFile, 0);
+				int version = database.getVersion();
+				Log.d(DBProvider.class.getSimpleName(), "runRoomMigrations: migrationsFile:" + migrationsFile + " version:" + version + " end:" + migrationVersion);
+				runMigration(database, migrationsFile, sql);
+			}
+		}
+		Log.i(DBProvider.class.getSimpleName(), "runRoomMigrations: database ALL execSQL...OK time:" + stopwatch.getElapsedTimeSecs(3));
+		stopwatch.stop();
+	}
+
 }

@@ -10,16 +10,16 @@ public abstract class BindableViewHolder<T> extends RecyclerView.ViewHolder {
         super(itemView);
     }
 
-    //в этом методе будет происходить обработка данных, сейчас вешается OnItemClickListener
+    //в этом методе будет происходить обработка данных, сейчас вешается onItemClick
     public void bindView(Context context,final int position, final T item, final ActionListener actionListener) {
 	    this.context = context;
 	    if (actionListener != null) {
-            itemView.setOnClickListener(v -> actionListener.OnItemClickListener(position, item));
+            itemView.setOnClickListener(v -> actionListener.onItemClick(position, item));
         }
     }
 
     //это интерфейс который мы будем в дальнейшем расширять
     public interface ActionListener {
-        void OnItemClickListener(int position, Object Item);
+        void onItemClick(int position, Object Item);
     }
 }

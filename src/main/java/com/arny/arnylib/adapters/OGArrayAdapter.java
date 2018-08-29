@@ -400,7 +400,7 @@ public class OGArrayAdapter<T> extends BaseAdapter implements Filterable {
         if (item instanceof CharSequence) {
             text.setText((CharSequence) item);
         } else {
-            text.setText(getObjectName(item));
+            text.setText(getItemTitle(item));
         }
 
         return view;
@@ -491,7 +491,7 @@ public class OGArrayAdapter<T> extends BaseAdapter implements Filterable {
      *
      * @return true, if the object should be in the filteredResult, false otherwise
      */
-    protected String getObjectName(T obj ){
+    protected String getItemTitle(T obj ){
         return obj.toString();
     }
 

@@ -1,6 +1,7 @@
 package com.arny.arnylib.adapters;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import java.lang.reflect.InvocationTargetException;
@@ -15,6 +16,10 @@ public final class SimpleBindableAdapter<T, VH extends BindableViewHolder> exten
 	Class<VH> vhClass;
 	//интерфейс для взаимодействия с элементом
 	BindableViewHolder.ActionListener actionListener;
+
+	public interface EmptyViewCheckListener{
+        void checkEmpty(boolean b);
+    }
 
 	public SimpleBindableAdapter(@LayoutRes int layoutId, Class<VH> vhClass) {
 		this.layoutId = layoutId;
@@ -61,4 +66,33 @@ public final class SimpleBindableAdapter<T, VH extends BindableViewHolder> exten
 	public void setActionListener(BindableViewHolder.ActionListener actionListener) {
 		this.actionListener = actionListener;
 	}
+
+    public void setEmptyView(EmptyViewCheckListener emptyViewCheckListener) {
+       registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+           @Override
+           public void onChanged() {
+               super.onChanged();
+               if (emptyViewCheckListener != null) {
+                   emptyViewCheckListener.checkEmpty(getItemCount()==0);
+               }
+           }
+
+           @Override
+           public void onItemRangeInserted(int positionStart, int itemCount) {
+               super.onItemRangeInserted(positionStart, itemCount);
+               if (emptyViewCheckListener != null) {
+                   emptyViewCheckListener.checkEmpty(getItemCount()==0);
+               }
+           }
+
+           @Override
+           public void onItemRangeRemoved(int positionStart, int itemCount) {
+               super.onItemRangeRemoved(positionStart, itemCount);
+               if (emptyViewCheckListener != null) {
+                   emptyViewCheckListener.checkEmpty(getItemCount()==0);
+               }
+           }
+       });
+    }
+
 }

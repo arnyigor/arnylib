@@ -1,15 +1,18 @@
 package com.arny.arnylib.network;
 
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 public class ApiFactory {
     private static ApiFactory instance = new ApiFactory();
@@ -31,7 +34,9 @@ public class ApiFactory {
 	    httpClient.connectTimeout(timeout, TimeUnit.SECONDS);
         httpClient.readTimeout(timeout, TimeUnit.SECONDS);
         httpClient.followRedirects(true);
+        httpClient.protocols(Collections.singletonList(Protocol.HTTP_1_1));
         httpClient.addInterceptor(logging);
+        httpClient.networkInterceptors().add(new StethoInterceptor());
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(httpClient.build())
