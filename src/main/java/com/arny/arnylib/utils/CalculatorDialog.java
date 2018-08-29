@@ -5,9 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
 import com.arny.arnylib.R;
 import com.arny.arnylib.adapters.ADBuilder;
-import com.arny.arnylib.utils.Calculator;
 public class CalculatorDialog extends ADBuilder {
 	private final CalculatorResultListener resultListener;
     private String title = "Калькулятор";
@@ -18,7 +18,6 @@ public class CalculatorDialog extends ADBuilder {
 	private static final int MAX_BUTTONS = 22; // total of 21 buttons according to the layout.
 	private Button[] mButtons; // auto fill in buttons
 	private String value;
-    private TextView mainDisplay;
     private enum InputButton {
 		EXP(1, "e"),
 		BRACKETL(2, "("),
@@ -83,13 +82,9 @@ public class CalculatorDialog extends ADBuilder {
         this.value = value;
         this.resultListener = resultListener;
     }
-
-	public CalculatorDialog(Context context, CalculatorResultListener resultListener) {
-		this(context, "", resultListener);
-	}
-
 	@Override
 	protected void initUI(View view) {
+		setCancelable(true);
         mTvDisplay = view.findViewById(R.id.main_display);
         mButtons[0] = view.findViewById(R.id.buttonClear);
         mButtons[1] = view.findViewById(R.id.buttonExp);
@@ -165,7 +160,11 @@ public class CalculatorDialog extends ADBuilder {
 					mDisplay.replace(0, mDisplay.length(), b.getChar());
 					mFreshState = false;
 				} else {
-					mDisplay.append(b.getChar());
+					boolean isHasExp = mDisplay.toString().toLowerCase().contains("e");
+					boolean isCharExp = b.getChar().toLowerCase().equals("e");
+					if (!isCharExp || !isHasExp) {
+						mDisplay.append(b.getChar());
+					}
 				}
 				updateMainDisplay();
 			});
@@ -176,8 +175,12 @@ public class CalculatorDialog extends ADBuilder {
 		for (ActionKey k : ActionKey.values()) {
 			final ActionKey ak = k;
 			mButtons[k.getIdx()].setOnClickListener(v -> {
-				processActionKey(ak);
-				updateMainDisplay();
+				try {
+					processActionKey(ak);
+					updateMainDisplay();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			});
 		}
 	}
@@ -191,9 +194,13 @@ public class CalculatorDialog extends ADBuilder {
 				break;
             case DEL:
                 String input = mDisplay.toString();
-                input = input.substring(input.length(), input.length() - 1);
-                mCalculator.setInput(input);
-                setDisplayString(mCalculator.getOutput());
+				boolean empty = Utility.empty(input);
+				if (!empty) {
+					input = input.substring(0, input.length() - 1);
+					mCalculator.setInput(input);
+					mCalculator.handleKeyPress(Calculator.Key.EQUALS);
+					setDisplayString(mCalculator.getOutput());
+				}
                 break;
 			case EQUALS:
 				mCalculator.setInput(mDisplay.toString());

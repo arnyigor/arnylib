@@ -2,4 +2,37 @@
     <string name="app_name">arnylib</string>
     <string name="list_dialog_title">Выберите действие</string>
     <string name="storage_permission_denied">Необходимо разрешение на запись файлов</string>
+    <string name="calc_dialog_clear">Clear</string>
+    <string name="calc_dialog_cancel">Cancel</string>
+    <string name="calc_dialog_ok">OK</string>
+
+    <string name="calc_answer">Ans</string>
+
+    <string-array name="calc_dialog_errors">
+        <item>Division by zero</item>
+        <item>Out of bounds</item>
+        <item>Result must be positive</item>
+        <item>Result must be negative</item>
+    </string-array>
+
+    <string-array name="calc_dialog_btn_texts">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>+</item>
+        <item>-</item>
+        <item>×</item>
+        <item>÷</item>
+        <item>±</item>
+        <item>.</item>
+        <item>=</item>
+    </string-array>
+
 </resources>

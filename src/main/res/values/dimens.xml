@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="calcHeaderHeight">64dp</dimen>
+    <dimen name="calcDialogMaxWidth">400dp</dimen>
+    <dimen name="calcDialogMaxHeight">400dp</dimen>
+</resources>

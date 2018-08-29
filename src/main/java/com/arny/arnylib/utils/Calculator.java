@@ -3,10 +3,8 @@ package com.arny.arnylib.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-
-/* TODO: be more rigorous with checking input statements.
- * Statements such as this: (1+)3 need to be handled.
- */
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Calculator {
     public enum Operator {
@@ -55,7 +53,9 @@ public class Calculator {
         output = "";
     }
 
-    public void setInput(String in) { inputExpression = in; }
+    public void setInput(String in) {
+        inputExpression = in;
+    }
 
     public double getTotal() { return total; }
     public String getOutput() { return output; }
@@ -77,19 +77,50 @@ public class Calculator {
             List<String> parsedExpr = parseInputExpr(inputExpression);
             if (!failState) {
                 total = evalExpr(parsedExpr);
-                output = Double.toString((double)Math.round(total*PRECISION)/PRECISION);
+                output = String.valueOf(total);
             }
         }
     }
 
-    public double popAndCalc(Operator op) {
+    private double popAndCalc(Operator op) {
         double b = numberStack.pop();
         double a = numberStack.pop();
         return calc(a, b, op);
     }
 
+    private String parseExponentInput(String input) {
+        try {
+            String mainNum = match(input, ".*(\\b\\d+)[eE](\\d+)\\b.*", 1);
+            String exp = match(input, ".*(\\b\\d+)[eE](\\d+)\\b.*", 2);
+            if (mainNum != null && mainNum.length() > 0 && exp != null && exp.length() > 0) {
+                int cnt = Integer.parseInt(exp);
+                StringBuilder decDig = new StringBuilder("1");
+                for (int i = 0; i < cnt; i++) {
+                    decDig.append("0");
+                }
+                input = mainNum + "*" + decDig.toString();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return input;
+    }
+
+    private String match(String where, String pattern, int groupnum) {
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(where);
+        while (m.find()) {
+            if (!m.group(groupnum).equals("")) {
+                return m.group(groupnum);
+            }
+        }
+        return null;
+    }
+
     private List<String> parseInputExpr(String input) {
-        List<String> expr = new ArrayList<String>();
+        input = input.toLowerCase();
+        input = parseExponentInput(input);
+        List<String> expr = new ArrayList<>();
 
         if (!isValidInput(input)) {
             output = "Invalid input expression.";
@@ -166,14 +197,13 @@ public class Calculator {
     private boolean isValidInput(String input) {
         Stack<Character> bra = new Stack<Character>();
         for (char c : input.toCharArray()) {
-            if (c < '(' || c >'9') return false;
+            if (c < '(' || c > '9' && c != 'e') return false;
             if ('(' == c) bra.push(c);
             else if (')' == c) {
                 if (bra.isEmpty()) return false;
                 bra.pop();
             }
         }
-
         return bra.isEmpty();
     }
 
