@@ -22,6 +22,19 @@ public class MathUtils {
 		return df.format(d).replace(",", ".");
 	}
 
+	/**
+	 * @param value   number
+	 * @param pattern example #.##
+	 * @return string
+	 */
+	public static String formatNumber(Number value, String pattern) {
+		if (value == null) {
+			return "";
+		}
+		DecimalFormat df = new DecimalFormat(pattern);
+		return df.format(value).replace(",", ".");
+	}
+
     public static String toExpo(double number, int precision) {
         if (precision <= 0) {
             precision = 1;
