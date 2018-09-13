@@ -86,8 +86,8 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:$rootProject.retrofit2Version"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofit2Version"
     compile 'com.squareup.okhttp3:okhttp:3.10.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'
-    compile 'joda-time:joda-time:2.9.9'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+    compile 'joda-time:joda-time:2.10'
     compile 'com.code-troopers.betterpickers:library:3.1.0'
     compile 'com.afollestad.material-dialogs:core:0.9.5.0'
     compile 'com.afollestad.material-dialogs:commons:0.9.5.0'
